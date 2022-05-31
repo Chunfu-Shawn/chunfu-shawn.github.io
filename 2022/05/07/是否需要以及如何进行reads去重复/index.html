@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          是否需要以及如何进行reads去重复 - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/05/07/是否需要以及如何进行reads去重复/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/categories/">Categories</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-NGS.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Next Generation Sequencing" title="Next Generation Sequencing">Next Generation Sequencing</a>
+                        
+                    </div>
+                    <h1>是否需要以及如何进行reads去重复</h1>
+                    <h2 class="subheading">是否需要去除PCR重复，选择去除的工具？</h2>
+                    <span class="meta">
+                        Posted by Chunfu Shawn on
+                        2022-05-07 | 
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <blockquote>
+<p>转载自简书：****<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5781e7d74c40">讨厌又迷人的reads去重复</a>****</p>
+</blockquote>
+<p>在NGS分析入门阶段，我们不需要考虑太多的细节，只用知道一个分析的大致流程并完整跑下来即可。太多的细节，只会让我们对于分析产生莫须有的恐惧，因此一些“无关紧要“细节就被我们刻意的忽略了……</p>
+<p>但是随着我们对于测序数据的认识不断加深，我们要考虑的小细节便越来越多。其中，是否去除PCR重复就是一个很值得思考的问题。</p>
+<p><strong>关键点：</strong></p>
+<ul>
+<li>RNA-seq一般不去重复、ChIP-seq一般去重复、call SNP一般去重复</li>
+<li>万事无绝对，还需参考起始量和PCR扩增数判断是否去重复。reads mapping覆盖均匀度可以判断是否需要去重复。</li>
+<li>PCR去重工具首选Picard</li>
+<li>根源上解决去重复问题：起始量高，循环数少，reads能长不短，能双端不单端</li>
+</ul>
+<h3 id="PCR重复的危害"><a href="#PCR重复的危害" class="headerlink" title="PCR重复的危害"></a>PCR重复的危害</h3><p>理论上来讲，不同的序列在进行PCR扩增时，扩增的倍数应该是相同的。但是由于聚合酶的偏好性，PCR扩增次数过多的情况下，会导致一些序列持续扩增，而另一些序列扩增到一定程度后便不再进行，也就是我们常说的PCR偏好性。</p>
+<p>这种情况对于定量分析（如ChIP-seq），会造成严重的影响。此外，PCR扩增循环数过多，会出现一些扩增偏差，进而影响一些突变识别（比如call SNP)的置信度。</p>
+<p>因此，在一些NGS分析流程中需要考虑去除PCR重复。但是，这并不代表可以无脑去除，你要真这样做了，我这篇文章也就没啥意义了~</p>
+<h3 id="常用的去重工具"><a href="#常用的去重工具" class="headerlink" title="常用的去重工具"></a>常用的去重工具</h3><p>测序所得到的reads是由于超声波或者酶切断裂得到的，因此这些reads比对到基因组上的位置是完全随机的。那么两个reads比对到相同位置的概率是非常低的。如果两个reads比对情况相同或者极其相似，则很有可能是由于PCR重复所导致的。而我们常用的去重工具主要也是遵循这一思想。</p>
+<h3 id="samtools-rmdup"><a href="#samtools-rmdup" class="headerlink" title="samtools rmdup"></a>samtools rmdup</h3><p>samtools的大名，基本上是无人不知，无人不晓。而这个工具其中有一个rmdup方法，可以帮助我们去除重复。虽然我们不需要了解该工具的具体代码实现，但是了解其核心思想将有助于我们深刻认识这个玩意。</p>
+<p>如果多个reads具有相同的比对位置时，rmdup将它们标记为duplicates，然后去除重复，通常只保留第一个识别到的reads。</p>
+<p>该方法对于以下两种情况，有很好的去除效果：</p>
+<ul>
+<li>一些reads由于测序错误导致其不完全相同</li>
+<li>比对错误导致不同的序列比对到相同的位置（可能性不大）</li>
+</ul>
+<p>该方法的缺点：由于samtools去重只考虑reads比对上的起始终止位置，不考虑比对情况，这种去重有时会导致测序信息的丢失。</p>
+<h3 id="Picard"><a href="#Picard" class="headerlink" title="Picard"></a>Picard</h3><p>这是另一个鼎鼎大名的工具，该工具的MarkDuplicates方法也可以识别duplicates。但是与samtools不同的是，该工具仅仅是对duplicates做一个标记，只在需要的时候对reads进行去重。而samtools的rmdup则是直接将其识别出来的重复reads去掉。</p>
+<p>该工具的另一个不同之处在于它不仅考虑reads的比对位置，还会考虑其中的插入错配等情况（即会利用sam/bam文件中的CIGAR值），甚至reads的tail，lane以及flowcell。Picard主要考虑reads的5’端的比对位置，一个每个reads比对上的方向。</p>
+<p>因此我们可以从一定程度上认为，5’端的位置，方向，以及碱基比对情况相同，Picard就将这些reads中碱基比对值Q&gt;15的看作是best pair而其他的reads则当作是duplicate reads。甚至当reads的长度不同时，Picard依然利用上述原理进行去重。</p>
+<blockquote>
+<p>对Picard来说，reads的5’端信息更为重要.若duplicates是PCR重复，那么它们的序列不一定完全相同。但是由于PCR扩增时，酶的前进方向是5’-&gt;3’方向，PCR重复序列中5’端的部分相似的可能性更高。</p>
+</blockquote>
+<p><strong>如果说非要推荐一个去重软件，那我就只能无脑吹一波Picard了。如果不需要考虑太多，那么samtools的去重更加方便</strong></p>
+<h3 id="如何判断是否需要去除重复？"><a href="#如何判断是否需要去除重复？" class="headerlink" title="如何判断是否需要去除重复？"></a>如何判断是否需要去除重复？</h3><p>那么，既然不能无脑去除，那么我们应该根据什么标准去判断呢？</p>
+<p>image.png</p>
+<p>首先我们可以检查FastQC中的原始数据，该数据大致说明reads中的重复水平。虽然该工具仅计入前200,000个序列，但是我们仍然可以借此大致了解其数量级。</p>
+<p>我们之前有说到，两个reads比对到相同位置的概率是非常低的，但是概率低不代表就不会发生。因此当我们准备去除重复时，我们需要清楚这些数据究竟是什么？</p>
+<p>在illumina测序中，通常有两种类型的重复，分别是光学重复和PCR重复，PCR重复就不用多说了，就是在建库过程中PCR扩增导致的重复。那么什么是光学重复呢？具体如下图所示，它是由于illumina测序时照相机错误的的将一个簇识别为两个簇（多个），这就会导致产生完全一样的reads。该重复可以利用tail的坐标进行去除（此处需要回忆一下Picard的去重原理）。</p>
+<p><img src="figure1.png" alt="Untitled"></p>
+<p>当我们做RNA-seq时，我们所得到的reads覆盖度通常是不均匀的（由于不同的基因表达水平不同），如果我们不加考虑的直接remove duplicate，将会导致许多重要信息的丢失。</p>
+<blockquote>
+<p>samtools的作者李恒提供了一个公式用于计算错误去除率：0.28 * m / s / L（其中m是reads的数量，s是插入片段大小分布的标准偏差，L是基因组的长度；插入的片段大小分布越集中（s越小）不幸地增加了错误的重复数据删除率）。如果经验去重率高于0.28 * m / s / L，则这些序列是真的PCR重复</p>
+</blockquote>
+<p>那么RNA-seq是否需要去除重复呢？答案是具体情况具体看看待咯~</p>
+<p>好吧，这句话确实像是废话，但是这真的是实话欸……</p>
+<p>总结一下，若起始量很低，PCR扩增次数很多，那么则需要去除PCR重复。因此：</p>
+<ul>
+<li>RNA-seq由于其建库起始量一般都很高所以不需要去除重复，而且RNA-seq数据中经常会出现某些基因的表达量十分高，这就导致这些基因打断的reads的比对情况有很大概率是一致的。</li>
+<li>而ChIP-seq中，由于起始量不高，且没有那种富集程度很高的位点，因此通常需要考虑去除PCR重复。</li>
+<li>至于call SNP，起始量一般都高（因为要保证测序深度），此外由于PCR扩增会导致一些序列复制错误，这将严重影响SNP位点识别的置信度。因此一般需要去重复。</li>
+</ul>
+<p>当然万事无绝对，还是需要根据起始量和扩增数进行判断，但是如果你说我还是觉得不太安心怎么办，没关系，我还有一个小技巧可以偷偷告诉你。虽然我自己由于时间问题没有测试过，但是这个方法听起来很是蛮靠谱的。</p>
+<p>该方法是由biostar的创始人在其论坛中给出的：利用reads mapping的均匀程度判断是否具有重复。若富集位点周围的reads均匀覆盖，那么没有重复；若富集位点周围覆盖度不均匀，某些区域猛然升高，那么很有可能需要进行PCR去重复</p>
+<h3 id="不仅治标也要治本"><a href="#不仅治标也要治本" class="headerlink" title="不仅治标也要治本"></a>不仅治标也要治本</h3><p>上面给的解决办法，都是治标不治本，那么能不能从根源上减少这种重复带来的影响呢？这个必须有~</p>
+<ul>
+<li>起始量很多时，不需要去重复</li>
+<li>扩增数很少时，15个cycle以内，不需要去重复</li>
+<li>双端测序由于其两个reads的位置矫正，有助于去除PCR重复</li>
+<li>reads长度越长，越容易识别真正的PCR重复</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://seqanswers.com/forums/showthread.php?t=6854">http://seqanswers.com/forums/showthread.php?t=6854</a></li>
+<li><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://seqanswers.com/forums/showthread.php?t=6543">http://seqanswers.com/forums/showthread.php?t=6543</a></li>
+<li><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://seqanswers.com/forums/showthread.php?t=5424">http://seqanswers.com/forums/showthread.php?t=5424</a></li>
+<li><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://www.biostars.org/p/55648">https://www.biostars.org/p/55648</a></li>
+<li><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://www.biostars.org/p/47229">https://www.biostars.org/p/47229</a></li>
+</ol>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2022/05/07/什么是“Insert-插入片段”/" data-toggle="tooltip" data-placement="top" title="什么是“Insert 插入片段”？">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/05/05/（四）Blog的高级附加功能/" data-toggle="tooltip" data-placement="top" title="（四）Blog的高级自定义功能">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Next Generation Sequencing" title="Next Generation Sequencing">Next Generation Sequencing</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/05/07/%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8Creads%E5%8E%BB%E9%87%8D%E5%A4%8D/";
+    var disqus_url = "https://www.chunfu.site/2022/05/07/%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8Creads%E5%8E%BB%E9%87%8D%E5%A4%8D/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Simons-Maddy">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

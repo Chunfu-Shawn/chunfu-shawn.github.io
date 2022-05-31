@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          （二）基于Hexo与Huxpro.github.io搭建Blog  - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/04/30/（二）基于Hexo与Huxpro-github-io搭建Blog/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/categories/">Categories</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Blog" title="Blog">Blog</a>
+                        
+                          <a class="tag" href="/tags/#Hexo" title="Hexo">Hexo</a>
+                        
+                    </div>
+                    <h1>（二）基于Hexo与Huxpro.github.io搭建Blog </h1>
+                    <h2 class="subheading">如何使用Hexo搭建个人Blog？</h2>
+                    <span class="meta">
+                        Posted by Chunfu Shawn on
+                        2022-04-30 | 
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <p>本人发个人博客是希望不受限于微博、知乎或者简书等平台的审核，希望我记录的一些文字能够保存在自己的硬盘里，避免因为某一天公共平台的关闭而消失在互联网中；并且我也希望能够定制自己的页面，设计一些delicate的前端功能，所以才想搭建 <strong>个人博客</strong>。</p>
+<p>但是如果发博客因为使用html进行排版而浪费太多时间又适得其反，所以我选择了Hexo。</p>
+<h3 id="什么是-Hexo？"><a href="#什么是-Hexo？" class="headerlink" title="什么是 Hexo？"></a><strong>什么是 Hexo？</strong></h3><img src="figure1.png" width = 90% />
+
+<p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 <a target="_blank" rel="noopener" href="http://daringfireball.net/projects/markdown/">Markdown</a>（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
+<p>我能采用Markdown文件来进行文字图片的记录，而<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo</a>又能直接将Markdown文件自动转成页面代码，这样发博客的时间会大大压缩，并且也不会丢失自定义网站的自由度。</p>
+<p>关于Hexo的安装和使用，首先，一切以<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo官网</a>为主；其次，最好是了解html/css/js/node.js等语言的用法，并辅助网上搜索来学习hexo的使用。</p>
+<h2 id="一、安装Hexo，配置Hexo文件夹"><a href="#一、安装Hexo，配置Hexo文件夹" class="headerlink" title="一、安装Hexo，配置Hexo文件夹"></a>一、安装Hexo，<strong>配置Hexo文件夹</strong></h2><p>在mac上安装 Node/Npm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew update</span><br><span class="line">brew install node</span><br></pre></td></tr></table></figure>
+
+<p>（windows/linux用户参见<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">此官方教程</a>）</p>
+<p>安装 Hexo</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo -g</span><br><span class="line">hexo init blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line">npm install</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>这时博客就在本地生成了。访问<code>http://localhost:4000</code> 可以看效果。可以说Hexo是很强大的，默认主题网站结构合理，适配手机。只需要优化（改一下失效的链接，添加评论，RSS等模块）就行了。</p>
+<h2 id="二、基本操作"><a href="#二、基本操作" class="headerlink" title="二、基本操作"></a>二、<strong>基本操作</strong></h2><ul>
+<li><code>hexo g</code> 生成/public 文件夹，里面是网站</li>
+<li><code>hexo d</code> 把这个网站文件夹推送到服务器</li>
+<li><code>hexo clean</code> 删除网站文件夹</li>
+<li><code>hexo s</code> 本地查看效果</li>
+</ul>
+<h2 id="三、配置文件"><a href="#三、配置文件" class="headerlink" title="三、配置文件"></a>三、<strong>配置文件</strong></h2><p>配置文件是两个，第一个是根目录的 <code>_config.yml</code>。重要配置有</p>
+<ul>
+<li>language: zh-CN 是中文，不写是英文</li>
+<li>url: （网站地址）</li>
+<li>root: / (根目录在哪里，github就写斜杠，有些服务器会多一层路径)</li>
+<li>skip_render: README.md 这样可以在 /source 里面放一个 README.md，推送的时候自动传到 Github 上面</li>
+<li>theme: landscape 这里可以换主题</li>
+</ul>
+<p>推送设置 (GitHub)</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">deploy:</span></span><br><span class="line"><span class="symbol">  type:</span> git</span><br><span class="line"><span class="symbol">  repository:</span> https:<span class="comment">//github.com/hans2936/hans2936.github.io.git</span></span><br><span class="line"><span class="symbol">  branch:</span> master</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果网站在服务器上，则可以用 rsync</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">deploy:</span></span><br><span class="line"><span class="symbol">  type:</span> rsync</span><br><span class="line"><span class="symbol">  host:</span> 服务器名</span><br><span class="line"><span class="symbol">  user:</span> 用户名</span><br><span class="line"><span class="symbol">  root:</span> 放网站的文件夹</span><br><span class="line"><span class="symbol">  port:</span> <span class="number">22</span></span><br></pre></td></tr></table></figure>
+
+<p>第二个配置文件，是主题的配置文件 <code>themes/landscape/_config.yml</code>，主要有导航栏(<code>menu</code>)，侧边栏(<code>widgets</code>)，网站图标(<code>favicon</code>)等。</p>
+<h2 id="四、写新文章"><a href="#四、写新文章" class="headerlink" title="四、写新文章"></a>四、<strong>写新文章</strong></h2><p><code>hexo new &quot;article name&quot;</code></p>
+<p>这条命令会在<code>source/_posts</code>产生新文件，然后改改文件名，在进入编辑MarkDown就行了。</p>
+<p>每篇文章最上面是配置区，能用到的主要是</p>
+<ul>
+<li>title: 题目</li>
+<li>date: 日期 （会影响在主页的顺序）</li>
+<li>tags: 标签</li>
+<li>categories: 分类</li>
+<li>updated: 修改日期</li>
+</ul>
+<p>配置区下面就随便写了。值得一提的是，文章正文是支持html语言的，这样特殊字体和元素就可以直接加进去。</p>
+<h2 id="五、创建页面"><a href="#五、创建页面" class="headerlink" title="五、创建页面"></a>五、<strong>创建页面</strong></h2><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">new</span> <span class="type">page</span> about</span><br></pre></td></tr></table></figure>
+
+<p>会在 <code>source/about</code> 里面产生新文件，跟文章是一样编辑的。然后再从主题配置的导航栏里面加上这一页。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  <span class="string">...</span></span><br><span class="line">  关于: <span class="string">/about</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="六、引用图片"><a href="#六、引用图片" class="headerlink" title="六、引用图片"></a>六、<strong>引用图片</strong></h2><p>执行 <code>npm install hexo-asset-image --save</code>然后，主配置文件 <code>_config.yml</code> 设置为</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>这个时候创建新文章就会产生一个<strong>同名文件夹</strong>，把图片放入即可。同名文件夹和新文章.md在一个目录下，然后在文章正文这样引用放进去的图片。可以参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45509582/article/details/108582689">hexo插入图片及控制大小</a></p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!<span class="selector-attr">[图片描述]</span>(文章名/图片名)</span><br></pre></td></tr></table></figure>
+
+<p>也可以在Markdown文件中使用html语句，设置图片的大小和对齐，例如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- src为同名文件夹中的图片名 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;figure1.png&quot;</span> <span class="attr">width</span>=<span class="string">&quot;70%&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这种按照百分比显示方法，是以width方向为准，并保持纵横比的，换句话说，把设置width的部分去掉，height的值改为任意百分比，显示的图像都是原图大小（个人觉得这根博客窗口有关，毕竟现实截面的宽度相对是固定的，而高度/长度却是变化着的）。因此用此方法的时候，可以把height设置缺省。</p>
+<h2 id="七、引用视频文件"><a href="#七、引用视频文件" class="headerlink" title="七、引用视频文件"></a>七、<strong>引用视频文件</strong></h2><p>对某个链接中的视频文件，可以执行 <code>npm install hexo-tag-dplayer</code>这是一个播放器插件，使用时在文章中加入：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="meta">%</span> dplayer <span class="string">&quot;url=&quot;</span>  <span class="string">&quot;pic=&quot;</span> <span class="string">&quot;loop=yes&quot;</span> <span class="string">&quot;theme=#FADFA3&quot;</span> <span class="string">&quot;autoplay=false&quot;</span> <span class="string">&quot;token=tokendemo&quot;</span> <span class="meta">%</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>url</code> 是视频地址，<code>pic</code> 是缩略图地址。</p>
+<p>这个方法是引入视频的最佳方法，但是需要一个地方来存放这些文件（url）。Github只有1G太少了，可以考虑使用<a target="_blank" rel="noopener" href="https://oss.console.aliyun.com/">阿里云oss存储</a>，淘宝账户就能开，还很便宜。</p>
+<h2 id="八、引入第三方视频"><a href="#八、引入第三方视频" class="headerlink" title="八、引入第三方视频"></a>八、<strong>引入第三方视频</strong></h2><p>对视频网站上的视频，可在Markdown文件中明码使用html语言 <code>iframe</code>，比如</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class<span class="operator">=</span><span class="string">&quot;selfadapting-video&quot;</span>&gt;</span><br><span class="line">&lt;iframe src<span class="operator">=</span><span class="string">&quot;&quot;</span> scrolling<span class="operator">=</span><span class="string">&quot;no&quot;</span> border<span class="operator">=</span><span class="string">&quot;0&quot;</span> frameborder<span class="operator">=</span><span class="string">&quot;no&quot;</span> framespacing<span class="operator">=</span><span class="string">&quot;0&quot;</span> allowfullscreen<span class="operator">=</span><span class="string">&quot;true&quot;</span>&gt; &lt;/iframe&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>class=&quot;selfadapting-video&quot;</code> 是一个自适应长宽比例的容器</p>
+<h2 id="九、创建侧边栏"><a href="#九、创建侧边栏" class="headerlink" title="九、创建侧边栏"></a>九、<strong>创建侧边栏</strong></h2><p>比如在 <code>themes/landscape/layout/_widget/</code> 创建一个 about.ejs</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span> (site.tags.<span class="built_in">length</span>)&#123; %&gt;</span><br><span class="line">  &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">&quot;widget-wrap&quot;</span>&gt;</span><br><span class="line">    &lt;h3 <span class="built_in">class</span>=<span class="string">&quot;widget-title&quot;</span>&gt;About&lt;/h3&gt;</span><br><span class="line">    &lt;<span class="keyword">div</span> <span class="built_in">class</span>=<span class="string">&quot;widget&quot;</span>&gt;</span><br><span class="line">      E-mail: xyz@<span class="number">123.</span>com</span><br><span class="line">    &lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">  &lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后在主题配置的侧边栏中加上：</p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">widgets</span>:</span><br><span class="line"><span class="literal">-</span> ...</span><br><span class="line"><span class="literal">-</span> about</span><br></pre></td></tr></table></figure>
+
+<h2 id="十、RSS-订阅"><a href="#十、RSS-订阅" class="headerlink" title="十、RSS 订阅"></a>十、<strong>RSS 订阅</strong></h2><p>执行 <code>npm install hexo-generator-feed</code> 下载rss功能包，然后在主配置文件 <code>_config.yml</code> 里面加上</p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">plugin</span>:</span><br><span class="line"><span class="literal">-</span> hexo-generator-feed</span><br><span class="line"><span class="attribute">feed</span>:</span><br><span class="line"><span class="attribute">type</span>: atom</span><br><span class="line"><span class="attribute">path</span>: atom.xml</span><br><span class="line"><span class="attribute">limit</span>: 20</span><br></pre></td></tr></table></figure>
+
+<p>然后在主题配置文件里加上 <code>rss: /atom.xml</code>。</p>
+<p>网上的教程都是这样的，但是当我实际加入的时候，发现rss软件里面的图片都是空的。后来我找到了这个<a target="_blank" rel="noopener" href="https://github.com/atika/hexo-generator-feed">Fork of hexo-generator-feed</a>，用它来替换官方的包，然后去掉包里面 <code>atom.xml</code> 里面的 <code>cdata</code>就可以了。这个包还剩下一个bug是当程序框里的某一行code过长(出现左右拖动的功能后)，rss显示的code字体过大，但是不涉及编程的文章就没有问题了。</p>
+<h2 id="十一、站点地图"><a href="#十一、站点地图" class="headerlink" title="十一、站点地图"></a>十一、<strong>站点地图</strong></h2><h3 id="1-Google-版本"><a href="#1-Google-版本" class="headerlink" title="1. Google 版本"></a><strong>1. Google 版本</strong></h3><p>进入到根目录下，打开<code>CMD</code>，运行下面的命令：</p>
+<p><code>npm install hexo-generator-sitemap --save</code></p>
+<h3 id="2-Baidu-版本"><a href="#2-Baidu-版本" class="headerlink" title="2. Baidu 版本"></a><strong>2. Baidu 版本</strong></h3><p>进入到根目录下，打开<code>CMD</code>，运行下面的命令：</p>
+<p><code>npm install hexo-generator-baidu-sitemap --save</code></p>
+<h3 id="3-生成站点地图"><a href="#3-生成站点地图" class="headerlink" title="3. 生成站点地图"></a><strong>3. 生成站点地图</strong></h3><p>安装结束后，在<code>_config.yml</code>中找到<code>url</code>，改成你自己的域名。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># URL</span><br><span class="line">## If your site is put in a subdirectory, </span><br><span class="line">set url as &#x27;http://yoursite.com/child&#x27; and root as &#x27;/child/&#x27;</span><br><span class="line">url: 改成你自己的域名</span><br><span class="line">root: /</span><br><span class="line">permalink: :year/:month/:day/:title/</span><br><span class="line">permalink_defaults:</span><br><span class="line">pretty_urls:</span><br><span class="line">  trailing_index: true # Set to false to remove trailing &#x27;index.html&#x27; from permalinks</span><br><span class="line">  trailing_html: true # Set to false to remove trailing &#x27;.html&#x27; from permalinks</span><br></pre></td></tr></table></figure>
+
+<p>更改完成后，每次进行打包的时候，会自动在<code>public</code>文件夹下生成<code>sitemap.xml</code>和<code>baidusitemap.xml</code>分别用于Google和百度。</p>
+<h3 id="4-查看"><a href="#4-查看" class="headerlink" title="4**. 查看**"></a>4**. 查看**</h3><p>将页面提交到服务器后，通过<code>域名/sitemap.xml</code>或者<code>域名/baidusitemap.xml</code>可以进行访问<code>sitemap</code>。</p>
+<p>最后到Google或百度对应的站长工具进行提交<code>sitemap</code>就可以了。</p>
+<h2 id="十二、高级修改-评论，分享"><a href="#十二、高级修改-评论，分享" class="headerlink" title="十二、高级修改 (评论，分享)"></a>十二、<strong>高级修改 (评论，分享)</strong></h2><p>Hexo的网页其实是被拆开成很多零件的，主要在<code>themes/landscape/layout/_partial/</code></p>
+<p>主题自带的功能也可以改，比如说分享功能可以在<code>themes/landscape/source/js/script.js</code>加一句</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;http://service.weibo.com/share/share.php?&amp;title=&#x27; + encodedUrl + &#x27;&quot;</span> <span class="attr">class</span>=<span class="string">&quot;article-share-sina&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span> <span class="attr">title</span>=<span class="string">&quot;微博&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后找到<code>themes/landscape/source/css/_partial/article.styl</code> 比照着定义一个 <code>.article-share-sina</code> 就可以了。</p>
+<p>像这种高级修改，对有一定网页知识的人来说有无限可能，自己做一个主题都是可以的。</p>
+<blockquote>
+<p><em>最后，最好是去学习一下HTML，CSS，JavaScript和Node.js/React.js，实现个人网站的自由定制！</em></p>
+</blockquote>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p>[1] <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo官网</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://hans2936.github.io/2018/06/06/HexoLog/">Github Pages(三)：使用Hexo博客生成工具</a>；</p>
+<p>[3] <a target="_blank" rel="noopener" href="https://github.com/Huxpro/huxpro.github.io/blob/master/_doc/Manual.md">Huxpro.github.io指南</a>；</p>
+<p>[4] <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45509582/article/details/108582689">hexo插入图片及控制大小</a>；</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2022/05/01/（三）使用Hexo-搭建Blog过程中的报错/" data-toggle="tooltip" data-placement="top" title="（三）使用Hexo搭建Blog过程中的报错">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/04/28/（一）依靠GitHub-Pages的个人Blog/" data-toggle="tooltip" data-placement="top" title="（一）依靠GitHub Pages的个人Blog">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blog" title="Blog">Blog</a>
+                        
+                          <a class="tag" href="/tags/#Hexo" title="Hexo">Hexo</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/04/30/%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9F%BA%E4%BA%8EHexo%E4%B8%8EHuxpro-github-io%E6%90%AD%E5%BB%BABlog/";
+    var disqus_url = "https://www.chunfu.site/2022/04/30/%EF%BC%88%E4%BA%8C%EF%BC%89%E5%9F%BA%E4%BA%8EHexo%E4%B8%8EHuxpro-github-io%E6%90%AD%E5%BB%BABlog/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Simons-Maddy">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          0-based &amp; 1-based的解释和转换实例 - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/05/08/0-based-1-based的解释和转换实例/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/categories/">Categories</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-NGS.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Next Generation Sequencing" title="Next Generation Sequencing">Next Generation Sequencing</a>
+                        
+                          <a class="tag" href="/tags/#Data format" title="Data format">Data format</a>
+                        
+                    </div>
+                    <h1>0-based &amp; 1-based的解释和转换实例</h1>
+                    <h2 class="subheading">0-based &amp; 1-based的区别、优劣势、原因和转换实例</h2>
+                    <span class="meta">
+                        Posted by Chunfu Shawn on
+                        2022-05-08 | 
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <blockquote>
+<p>转载自：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f8dd323d3c2c">https://www.jianshu.com/p/f8dd323d3c2c</a></p>
+</blockquote>
+<h3 id="CheatSheet"><a href="#CheatSheet" class="headerlink" title="CheatSheet"></a>CheatSheet</h3><p>首先先放上 0-based 和 1-based 的cheatsheet</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UCSC Genome Browser tables（USCS浏览器背后的数据集）</td>
+<td>0-based</td>
+</tr>
+<tr>
+<td>BED</td>
+<td>0-based</td>
+</tr>
+<tr>
+<td>BAM</td>
+<td>0-based</td>
+</tr>
+<tr>
+<td>BCF</td>
+<td>0-based</td>
+</tr>
+<tr>
+<td>narrowPeak (MACS2)</td>
+<td>0-based</td>
+</tr>
+<tr>
+<td>SAF (featureCount)</td>
+<td>0-based</td>
+</tr>
+<tr>
+<td>bedGraph</td>
+<td>0-based</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>关于USCS浏览器背后的数据集，可见Database/browser start coordinates differ by 1 base</p>
+</blockquote>
+<blockquote>
+<p>关于SAF的格式，网上好像没有找到确切的答案。只有 biostar 这里提了下，认为是0-based</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UCSC Genome Browser web interface（USCS浏览器上坐标）</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>GTF</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>GFF</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>SAM</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>VCF</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>Wiggle</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>GenomicRanges</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>IGV</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>BLAST</td>
+<td>1-based</td>
+</tr>
+<tr>
+<td>GenBank/EMBL Feature Table</td>
+<td>1-based</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>IGV的话，至少从fa的坐标来看，是1-based的<br>对于BigWig格式而言，有两种类型，具体见1-start coordinate system in use for variableStep and fixedStep</p>
+<ul>
+<li>如果其是从bedgraph创建而来的，那么其就是0-based。</li>
+<li>如果是从wiggle创建而来，其就是1-based。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>cheatsheet的整合综合了 </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://genome-blog.soe.ucsc.edu/blog/2016/12/12/the-ucsc-genome-browser-coordinate-counting-systems/">The UCSC Genome Browser Coordinate Counting Systems</a></li>
+<li><a target="_blank" rel="noopener" href="https://biostars.org/p/84686/">Tutorial: Cheat Sheet For One-Based Vs Zero-Based Coordinate Systems</a></li>
+<li>Bioinformatics Data Skill-p268的表格</li>
+</ul>
+</blockquote>
+<h2 id="1-based与0-based"><a href="#1-based与0-based" class="headerlink" title="1-based与0-based"></a>1-based与0-based</h2><p>事实上，生信的文件系统中存在着两种坐标系统，1-based 和 0-based。这两种坐标系统各有利弊，产生的原因也很复杂，其中还关系到<strong>不同编程语言的坐标格式</strong>。</p>
+<p>0-based和1-based的主要区别和优势有:</p>
+<table>
+<thead>
+<tr>
+<th>0-based</th>
+<th>1-based</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>每条染色体的第一个碱基坐标为0</td>
+<td>每条染色体的第一个碱基坐标为1</td>
+</tr>
+<tr>
+<td>半闭半开区间 -&gt; [start, end)</td>
+<td>闭区间 -&gt; [start, end]</td>
+</tr>
+<tr>
+<td>区间长度为 end-start</td>
+<td>区间长度为 end-start + 1</td>
+</tr>
+<tr>
+<td>最小的区间单位为0，例如[1,1)</td>
+<td>最小的区间单位为1，例如[1,1]</td>
+</tr>
+<tr>
+<td>相关语言：Python, C</td>
+<td>相关语言：R</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>0-based的话，其计算区间更加的方便，比如一个区间是[4,10)，那么其就是6个碱基长度。而对应的，1-based，就是[5,10]了，要 10-5+1 = 6 。</p>
+</blockquote>
+<blockquote>
+<p>0-based事实上还可以代表 宽度为0 的区间，这一点在你定义核酸酶切割位点的时候是比较有用的，比如[23, 23)。毕竟你切得是两个碱基之间，而不是某个特定碱基。当然 1-based 的话，有时候会用[24,23] 来代表……</p>
+</blockquote>
+<blockquote>
+<p>Py（应该还有C）的话，对于一个字符串的选择是从0开始的，其在区间选择的时候，是半闭半开区间，比如下面</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">&quot;CTTACTTCGAAGGCTG&quot;</span>[<span class="number">1</span>:<span class="number">5</span>]</span><br><span class="line"><span class="string">&#x27;TTAC&#x27;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>而R在区间选择的时候，对于一个字符串的选择是从1开始的，用到的是闭区间</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">&gt;</span> substr<span class="punctuation">(</span><span class="string">&quot;CTTACTTCGAAGGCTG&quot;</span><span class="punctuation">,</span> <span class="number">2</span><span class="punctuation">,</span> <span class="number">5</span><span class="punctuation">)</span></span><br><span class="line"><span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span> <span class="string">&quot;TTAC&quot;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>这部分主要来自Bioinformatics Data Skill p265-266</p>
+</blockquote>
+<p><img src="figure1.png" alt="Untitled"></p>
+<ul>
+<li>1-based：数字是直接代表一个碱基的</li>
+<li>0-based：在两个数字之间才代表一个碱基</li>
+</ul>
+<p><img src="figure2.png" alt="Untitled"></p>
+<ul>
+<li>1-based：单个碱基，单个多态性位点，碱基区间都是与数字对应的</li>
+<li>0-based：单个碱基，单个多态性位点，碱基区间是由两个数字之间对应的</li>
+</ul>
+<p><img src="figure3.png" alt="Untitled"></p>
+<ul>
+<li>1-based：<ul>
+<li>缺失对应的是这个缺失碱基的数字坐标，这里是5号碱基T的缺失，我们之前使用[5, 5]代表的T，那么坐标就是[5, 5]</li>
+<li>插入对应的是两个碱基数字坐标中间，这里是3号C和4号G之间插入了TTA。我们之前使用[3, 4]代表的CG，那么插入坐标就是[3,4]</li>
+</ul>
+</li>
+<li>0-based：<ul>
+<li>缺失对应的是这个缺失碱基两侧的数字坐标，比如我们之前是用[4,5)代表的T，那么这里就是4-5</li>
+<li>插入对应的是这个插入发生的数字坐标，这里插入发生在C和G之间。我们用[2,3)代表C，用[3,4)代表了G，那么[3,3)就代表了CG中间那个位置。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>其实 0-based 和 1-based 一般还不太要紧，但对于 VCF 这种锱铢必较的位点位点，了解 0 和 1就很重要了。</p>
+</blockquote>
+<p>实际上，0 和 1之间的转换还是比较方便的，根据 <a target="_blank" rel="noopener" href="https://genome-blog.soe.ucsc.edu/blog/2016/12/12/the-ucsc-genome-browser-coordinate-counting-systems/">The UCSC Genome Browser Coordinate Counting Systems</a> 里面说</p>
+<ul>
+<li><strong>0-start, half-open (0-based)</strong> -&gt; **1-start, fully-closed (1-based)**，只需要在start那里+1，而end不用动</li>
+<li><strong>1-start, fully-closed (1-based)</strong> -&gt; <strong>0-start, half-open (0-based)</strong> ，只需要在start那里-1，而end不用动</li>
+</ul>
+<h2 id="一些转换实例"><a href="#一些转换实例" class="headerlink" title="一些转换实例"></a>一些转换实例</h2><h3 id="USCS基因组浏览器的转换"><a href="#USCS基因组浏览器的转换" class="headerlink" title="USCS基因组浏览器的转换"></a>USCS基因组浏览器的转换</h3><p><a target="_blank" rel="noopener" href="https://genome-blog.soe.ucsc.edu/blog/2016/12/12/the-ucsc-genome-browser-coordinate-counting-systems/">The UCSC Genome Browser Coordinate Counting Systems</a> 文章中提到了，USCS内源数据和基因组浏览器上数据的转换:</p>
+<table>
+<thead>
+<tr>
+<th>0-based</th>
+<th>1-based</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“BED” format (Browser Extensible Data):  chr1 127140000 127140001  Note: Spaces, not punctuation  When using BED format, browser &amp; utilities  assume coords are 0-start, half-open.</td>
+<td>“Position” format:  chr1:127140001-127140001  Note: Punctuation used, no spaces  When using “position” format, browser &amp; utilities  assume coords are 1-start, fully-closed.</td>
+</tr>
+<tr>
+<td>Stored in UCSC Genome Browser tables</td>
+<td>Positioned in UCSC Genome Browser web interface</td>
+</tr>
+<tr>
+<td>To convert to 1-start, fully-closed:  add 1 to start, end = same</td>
+<td>To convert to 0-start, half-open:  subtract 1 from start, end = same</td>
+</tr>
+</tbody></table>
+<p>还提到了用liftOver软件转换的一些实例，大家可以自己去看</p>
+<blockquote>
+<p>前面那篇biostar文章中，也提到了他们课题组自己开发的一个格式转换工具convert_zero_one_based</p>
+</blockquote>
+<h3 id="IGV的格式转换"><a href="#IGV的格式转换" class="headerlink" title="IGV的格式转换"></a>IGV的格式转换</h3><p>亲测narrowPeak放入IGV里面会start会加1，大家可以随便拿个narrowPeak试试</p>
+<p><code>Chr1    802633  802999 -&gt; Chr1  802634  802999</code></p>
+<h3 id="Grange转换成bed"><a href="#Grange转换成bed" class="headerlink" title="Grange转换成bed"></a>Grange转换成bed</h3><p>可以参考<a target="_blank" rel="noopener" href="https://www.biostars.org/p/89341/">Question: How To Write Data In A Granges Object To A Bed File.</a> 这个问答</p>
+<p>里面提到了手动转换</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意 1 -&gt; 0的话，start要-1</span></span><br><span class="line">gr &lt;- GRanges(seqnames = Rle(c(<span class="string">&quot;chr1&quot;</span>, <span class="string">&quot;chr2&quot;</span>, <span class="string">&quot;chr1&quot;</span>, <span class="string">&quot;chr3&quot;</span>), c(1, 3, 2, 4)),</span><br><span class="line">  ranges = IRanges(1:10, end = 7:16, names = <span class="built_in">head</span>(letters, 10)),</span><br><span class="line">  strand = Rle(strand(c(<span class="string">&quot;-&quot;</span>, <span class="string">&quot;+&quot;</span>, <span class="string">&quot;*&quot;</span>, <span class="string">&quot;+&quot;</span>, <span class="string">&quot;-&quot;</span>)), c(1, 2, 2, 3, 2)))</span><br><span class="line"><span class="built_in">df</span> &lt;- data.frame(seqnames=seqnames(gr),</span><br><span class="line">  starts=start(gr)-1,</span><br><span class="line">  ends=end(gr),</span><br><span class="line">  names=c(rep(<span class="string">&quot;.&quot;</span>, length(gr))),</span><br><span class="line">  scores=c(rep(<span class="string">&quot;.&quot;</span>, length(gr))),</span><br><span class="line">  strands=strand(gr))</span><br><span class="line">write.table(<span class="built_in">df</span>, file=<span class="string">&quot;foo.bed&quot;</span>, quote=F, sep=<span class="string">&quot;\t&quot;</span>, row.names=F, col.names=F)</span><br></pre></td></tr></table></figure>
+
+<p>也可以用 <a target="_blank" rel="noopener" href="http://www.bioconductor.org/packages/devel/bioc/html/rtracklayer.html">rtracklayer</a> 包转换。</p>
+<h3 id="narrowPeak用ChIPseeker注释"><a href="#narrowPeak用ChIPseeker注释" class="headerlink" title="narrowPeak用ChIPseeker注释"></a>narrowPeak用ChIPseeker注释</h3><p>其实这篇文章的一开始起意于Y叔这篇文章<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/5d47AOAwe-BccWuW41_V7Q">基因组位置读进去竟然有一个位移</a>，才让我花了时间去好好探究下 0 和 1。经过上面的理解，我们就会明白，之所以输出的结果会比，输入的bed文件或者narrowPeak文件，start部分要+1。就是因为bed是0-based，而Y叔的注释Peak的主体是<strong>Grange</strong>格式，其是1-based格式。如果我们去细究Y叔的代码的话，就会发现其在读取Peak那个函数中，在start部分+1了。</p>
+<p>但还有个小问题就是，由于Txdb对象的seqlevels有时候跟我们narrowPeak的seqlevels是不匹配的，比如一个是1，另一个是Chr1。所以我们时常会自己手动转换GRange。但annotatePeak对于+1这一步实际上是发生在读取Peak那一步的，所以你如果输入的是自己准备的GRange，那么annotatePeak就不会+1了。这就意味着，如果你是自己用GRange函数手动转换bed成的GRange或者由其他包产生的GRange格式，就要自己考虑下是否+1这个问题了。</p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2022/05/09/哺乳动物大脑皮层的发育过程/" data-toggle="tooltip" data-placement="top" title="哺乳动物大脑皮层（Cerebral cortex）的发育过程">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/05/08/生信常见文件的格式以及查看方式/" data-toggle="tooltip" data-placement="top" title="生信常见文件的格式以及查看方式">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Next Generation Sequencing" title="Next Generation Sequencing">Next Generation Sequencing</a>
+                        
+                          <a class="tag" href="/tags/#Data format" title="Data format">Data format</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/05/08/0-based-1-based%E7%9A%84%E8%A7%A3%E9%87%8A%E5%92%8C%E8%BD%AC%E6%8D%A2%E5%AE%9E%E4%BE%8B/";
+    var disqus_url = "https://www.chunfu.site/2022/05/08/0-based-1-based%E7%9A%84%E8%A7%A3%E9%87%8A%E5%92%8C%E8%BD%AC%E6%8D%A2%E5%AE%9E%E4%BE%8B/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Simons-Maddy">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

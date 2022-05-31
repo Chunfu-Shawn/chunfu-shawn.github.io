@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          生信常见文件的格式以及查看方式 - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/05/08/生信常见文件的格式以及查看方式/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/categories/">Categories</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-NGS.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Data format" title="Data format">Data format</a>
+                        
+                    </div>
+                    <h1>生信常见文件的格式以及查看方式</h1>
+                    <h2 class="subheading">fasta、fastq、gff、gtf、bed、bed12、sam、bam、wig、bigwig、bedgraph等文件格式的介绍和处理</h2>
+                    <span class="meta">
+                        Posted by Chunfu Shawn on
+                        2022-05-08 | 
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <p>生信分析过程中，会与很多不同格式的文件打交道，除了原始测序数据fastq之外，还需要准备基因组文件fasta格式和基因注释文件gtf格式。在分析的过程中还会有众多中间文件的生成，如bed、bed12、sam、bam、wig、bigwig、bedgraph等，生成后我们一般会查看下内容了解文件每一列的含义，以此来决定需要提取哪些有用信息列来进行下一步分析。</p>
+<h2 id="一、测序数据FASTQ文件"><a href="#一、测序数据FASTQ文件" class="headerlink" title="一、测序数据FASTQ文件"></a>一、测序数据FASTQ文件</h2><p>1）文件用途：样品测序返回的数据一般存储为fastq文件，通常是压缩文件filename.fq.gz的格式，节省存储空间和传输时间。NGS基础 - FASTQ格式解释和质量评估</p>
+<p>2）查看方式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># zcat查看gzip压缩的文件</span></span><br><span class="line"><span class="comment"># head -n 8 显示前8行文件内容（前8行代表2条序列）</span></span><br><span class="line"> </span><br><span class="line">zcat filename.fq.gz | <span class="built_in">head</span> -n 8</span><br><span class="line"> </span><br><span class="line"><span class="comment"># @SRR1039521.13952745/1</span></span><br><span class="line"><span class="comment"># TTCCTTCCTCCTCTCCCTCCCTCCCTCCTTTCTTTCTTCCTGTGGTTTTTTCCTCTCTTCTTC</span></span><br><span class="line"><span class="comment"># +</span></span><br><span class="line"><span class="comment"># HIJIIJHGHHIJIIIJJJJJJJJJJJJJJJJJJJJJIIJJFIDHIBGHJIHHHHHHFFFFFFE</span></span><br></pre></td></tr></table></figure>
+
+<p>3）格式说明：fastq文件每4行代表一条序列<br>第一行：记录序列测序时所用仪器以及在测序通道中坐标信息，以@开头；<br>第二行：测序的序列信息，以ATCGN表示，由于荧光信号干扰无法判断是什么碱基时就用N表示；<br>第三行：通常一个+;<br>第四行：与第二行碱基信息一一对应，存储测序碱基的质量值。</p>
+<p>4）其他常用命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算read数</span></span><br><span class="line"><span class="comment"># wc -l: 计算行数</span></span><br><span class="line"><span class="comment"># bc -l: 计算器 (-l：浮点运算)</span></span><br><span class="line"><span class="comment"># 为什么除以4，又除以1000000，计算的是million值</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;`zcat trt_N061011_1.fq.gz | wc-l` / (4*1000000)&quot;</span> | bc -l</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 测序碱基数计算</span></span><br><span class="line">zcat trt_N061011_1.fq.gz | awk<span class="string">&#x27;&#123;if(FNR%4==0) base+=length&#125;END&#123;print base/10^9,&quot;G&quot;;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>awk的介绍见：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ==&idx=1&mid=2247484502&scene=21&sn=dfe60fc225a6cf82d59e953eda32b184#wechat_redirect">常用和不太常用的awk命令</a></p>
+<h2 id="二、基因组FASTA文件"><a href="#二、基因组FASTA文件" class="headerlink" title="二、基因组FASTA文件"></a>二、基因组FASTA文件</h2><p>此文件可以从ensemble数据库下载的（<a target="_blank" rel="noopener" href="https://www.ensembl.org/info/data/ftp/index.html%EF%BC%89%EF%BC%8C">https://www.ensembl.org/info/data/ftp/index.html），</a> 一般选择下载primary assemblyfasta（<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ==&idx=1&mid=2247484148&scene=21&sn=525233898721a9c3ebdf275babf14944#wechat_redirect">想知道为什么，点这里</a>）。fasta文件用于序列存储，可以是DNA或蛋白序列，在此FASTA文件存储了基因组序列的信息。</p>
+<p><strong>序列名字行：</strong>以&gt;符号开头，记录了该序列类型和所在基因组位置信息；</p>
+<p><strong>序列行（一行或多行）：</strong>序列信息，soft-masked基因组会把所有重复区和低复杂区的序列用小写字母标出的基因组，小写字母n表示未知碱基。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;1 dna_sm:chromosomechromosome:GRCh38:1:1:248956422:1 REF</span><br><span class="line">nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</span><br><span class="line">nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</span><br><span class="line">.....</span><br><span class="line">ttgggctggggcctggccatgtgtatttttttaaatttccactgatgattttgctgcatg</span><br><span class="line">gccggtgttgagaatgactgCGCAAATTTGCCGGATTTCCTTTGCTGTTCCTGCATGTAG</span><br><span class="line">TTTAAACGAGATTGCCAGCACCGGGTATCATTCACCATTTTTCTTTTCGTTAACTTGCCG</span><br><span class="line">.....</span><br><span class="line">nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</span><br><span class="line"><span class="comment"># 通常要求序列名字行简单为好，而且一般加chr作为开头</span></span><br><span class="line"><span class="comment"># 给第一行添加chr标签，并去掉其他多余信息</span></span><br><span class="line"><span class="comment"># 下面的写法复杂了些，是为了避免给已经有chr信息的名字再加一次</span></span><br><span class="line"><span class="comment"># 帮助无脑操作</span></span><br><span class="line">sed <span class="string">&#x27;s/^&gt;\([^chr]\)/&gt;chr\1/&#x27;</span>  Homo_sapiens.GRCh38.dna.primary_assembly.fa |<span class="built_in">cut</span> -f 1 -d <span class="string">&#x27; &#x27;</span> &gt; GRCh38.fa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、基因组注释文件gff和gtf"><a href="#三、基因组注释文件gff和gtf" class="headerlink" title="三、基因组注释文件gff和gtf"></a>三、基因组注释文件gff和gtf</h2><p>gff全称General featureformat，主要是用来注释基因组。gtf全称Gene transfer format，主要是用来对基因进行注释。两者均是一个9列的基因信息注释文件，前8列的信息几乎一样，区别在于第9列。具体可见历史推文NGS基础 - <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ==&idx=1&mid=2247484166&scene=21&sn=417e155672bd718def86003b16bf0078#wechat_redirect">NGS基础 - GTF/GFF文件格式解读和转换</a> </p>
+<p>GFF文件是以<code>tab</code>键分割的9列组成，以下为每一列的对应信息：</p>
+<ol>
+<li>seq_id：序列的编号，一般为chr或者scanfold编号；</li>
+<li>source: 注释的来源，一般为数据库或者注释的机构，如果未知，则用点“.”代替</li>
+<li>type: 注释信息的类型，比如Gene、cDNA、mRNA、CDS等;</li>
+<li>start: 该基因或转录本在参考序列上的起始位置；(从1开始，包含);</li>
+<li>end: 该基因或转录本在参考序列上的终止位置；(从1开始，包含);</li>
+<li>score: 得分，数字，是注释信息可能性的说明，可以是序列相似性比对时的E-values值或者基因预测是的P-values值，<code>.</code>表示为空;</li>
+<li>strand: 该基因或转录本位于参考序列的正链(+)或负链(-)上;</li>
+<li>phase: 仅对注释类型为“CDS”有效，表示起始编码的位置，有效值为0、12. (对于编码蛋白质的CDS来说，本列指定下一个密码子开始的位置。每3个核苷酸翻译一个氨基酸，从0开始，CDS的起始位置，除以3，余数就是这个值，，表示到达下一个密码子需要跳过的碱基个数。该编码区第一个密码子的位置，取值0,1,2。0表示该编码框的第一个密码子第一个碱基位于其5’末端；1表示该编码框的第一个密码子的第一个碱基位于该编码区外；2表示该编码框的第一个密码子的第一、二个碱基位于该编码区外；如果Feature为CDS时，必须指明具体值。)；</li>
+<li>attributes: 一个包含众多属性的列表，格式为“标签＝值”(tag=value)，以多个键值对组成的注释信息描述，键与值之间用“=”，不同的键值用“；”隔开，一个键可以有多个值，不同值用“,”分割。注意如果描述中包括tab键以及“，= ；”，要用URL转义规则进行转义，如tab键用 代替。键是区分大小写的，以大写字母开头的键是预先定义好的，在后面可能被其他注释信息所调用。</li>
+</ol>
+<p>从ensemble下载的gtf文件前5行一般是以#开头的注释信息，后续分析中用不上需要去除，同时需要给第一列添加chr标签（与基因组序列一致），可通过下面的命令对文件进行加工：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep 匹配查询 -v 输出不匹配的行</span></span><br><span class="line">gunzip Homo_sapiens.GRCh38.94.gtf.gz -c |grep -v <span class="string">&#x27;^#&#x27;</span> | sed <span class="string">&#x27;/^[^chr]/ s/^/chr/&#x27;</span> &gt;GRCh38.gtf</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、bed文件"><a href="#四、bed文件" class="headerlink" title="四、bed文件"></a>四、bed文件</h2><h3 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>分析过程中的bed文件一般代表区域信息，如表示Peak位置的bed文件，表示基因注释的bed12文件。</p>
+<p>表示基因注释时，gtf/gff和bed文件的区别：</p>
+<p>1）gtf/gff文件一行表示一个exon/CDS等子区域，多行联合表示一个gene；bed文件一行表示一个gene；<br>2）<strong>gtf文件中碱基位置定位方式是1-based，而bed中碱基定位方式是0-based</strong>，如下图所示:</p>
+<blockquote>
+<p>可以参考我的另外一篇博客：<a target="_blank" rel="noopener" href="https://chunfu.site/2022/05/08/0-based-1-based%E7%9A%84%E8%A7%A3%E9%87%8A%E5%92%8C%E8%BD%AC%E6%8D%A2%E5%AE%9E%E4%BE%8B/">0-based &amp; 1-based的解释和转换实例</a></p>
+</blockquote>
+<p><img src="figure1.png" alt="0-based &amp; 1-based"></p>
+<p><strong>bed文件每一行对应信息</strong></p>
+<p><strong>必须包含的3列信息：</strong><br>1）chrom：染色体名字 (e.g.chr3, chrY, chr2_random或者scaffold10671)。<br>2）chromStart：基因在染色体或scaffold上的起始位置（0-based）。<br>3）chromEnd：基因在染色体或scaffold上的终止位置 （前闭后开）。</p>
+<p><strong>可选的9列信息：</strong><br>4）name：bed文件的行名。<br>5）score：本条基因在注释数据集文件中的评分（0-1000），在Genome Browser中会根据不同区段的评分显示对应的阴影强度（评分越高灰度越高）。<br>6）strand：链的方向+、-或. (.表示不确定链的方向)<br>7）thickStart：CDS区（编码区）的起始位置，即起始密码子的位置。<br>8）thickEnd：The ending position at which the feature is drawn thickly (for example the stop codon in gene displays).<br>9）itemRgb：RGB颜色值（如：255,0,0），方便在GenomeBrowser中查看。<br>10）blockCount：bed行中外显子的数目。<br>11）blockSizes：逗号分割的列，数目与blockCount值对应，每个数表示对应外显子的碱基数。<br>12）blockStarts：逗号分割的列，数目与blockCount值对应，每个数表示对应外显子的起始位置（数值是相对ChromStart计算的）。</p>
+<h3 id="2、narrow-broad-gapped-peak-三种格式之间的区别与联系"><a href="#2、narrow-broad-gapped-peak-三种格式之间的区别与联系" class="headerlink" title="2、narrow, broad, gapped peak:三种格式之间的区别与联系"></a>2、<strong>narrow, broad, gapped peak:三种格式之间的区别与联系</strong></h3><p>在进行peak calling分析时，经常会接触到以下3种peak格式：narrow peaks format，broad peaks fotmat，gapped peaks format</p>
+<p>peak被定义为基因组上一段reads富集的区域，核心信息是在染色体上的起始和终止位置，除此之外，还有软件对于该peak区域的打分，比如常见的pvalue, qvalue, fold_enrichment等值。</p>
+<p>和基因组比对信息用BAM格式来存储类似，为了标准化不同peak calling软件的输出，特意制定了以上3种数据格式。<strong>这三种格式本质上都是bed文件，只不过列数不太类似</strong>。</p>
+<p><strong>1. Narrow Peaks Format；</strong></p>
+<p>该格式又称之为point-source peaks format, macs2默认输出就是这种格式，是一种BED6+4的格式，列数为10列，如下：</p>
+<blockquote>
+<p>前四列分别代表chrom, chromStart, chromEnd, name, 用于描述peak区间和名称，注意bed格式中起始位置从0开始计数。<br>第五列代表score,在macs2的输出结果中为int(-10*log10qvalue)；<br>第六列代表strand, 在macs2的输出结果中为；<br>第七列代表signalvalue, 通常使用fold_enrichment的值；<br>第八列代表pvalue, 在macs2的输出结果中为-log10(pvalue)；<br>第九列代表qvalue, 在macs2的输出结果中为-log10(qvalue)；<br>第十列代表peak, 在macs2的输出结果中为peak的中心，即summit距离peak起始位置的距离。</p>
+</blockquote>
+<p><strong>2. Broad Peaks Format</strong></p>
+<p>这种格式就是在narrow peaks format的基础上丢掉了最后一列的信息，为BED6+3的格式， 列数为9列。</p>
+<p><strong>3. Gapped Peaks Format</strong></p>
+<p>前两种格式都是由于描述连续的peak区间，适用于DNA水平上的富集区域信息的存储，比如chip_seq, ATAC_seq鉴定到的peak区间，而gapped peaks format用于描述非连续的peak区间，这里的非连续通常指的是在peak的区间内会包含多个exon区域，适用于RNA水平上的富集区域信息的存储，比如m6A_seq鉴定到的peak区间。</p>
+<p>该格式在BED12的基础上进行延伸，演变为BED12+3的格式，列数为15列，每列的含义示意如下</p>
+<blockquote>
+<p>前6列的含义和上述两种peak格式完全相同，后3列的含义和broad peak完全相同，为了专区表示peak区间内包含的exon信息，借鉴转录本的BED12格式，引入了以下6列：<br><strong>thickStart，thickEnd，itemRgb，blockCount，blockSizes，blockStarts</strong><br>thickStart和thickEnd有点类似转录本中CDS的起始和终止位置，在存储peak信息时，通常的做法是将这两列的值和chromStart和chromEnd的值设置成相同的，itemRgb是一个RGB颜色值，比如255,0,0, 如果没有对应的颜色信息，则用0来表示。<br>blockCount代表该peak区间包含的exon的个数，blockSizes代表每个exon区间的长度，多个exon用逗号连接，blockStarts代表每个exon区间在基因组上的起始位置，多个exon用逗号连接。</p>
+</blockquote>
+<p>关于这三种格式的相关介绍请参考以下链接</p>
+<p><a target="_blank" rel="noopener" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format13">https://genome.ucsc.edu/FAQ/FAQformat.html#format13</a></p>
+<h3 id="3、bed数据处理"><a href="#3、bed数据处理" class="headerlink" title="3、bed数据处理"></a><strong>3、bed数据处理</strong></h3><p>详细可以参考官方网页：<a target="_blank" rel="noopener" href="https://bedtools.readthedocs.io/en/latest/content/bedtools-suite.html">The BEDTools Suite</a></p>
+<p>中文参考文档：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f8bbd51b5199">最全Bedtools使用说明–只看本文就够了</a></p>
+<h2 id="五、sam和bam文件"><a href="#五、sam和bam文件" class="headerlink" title="五、sam和bam文件"></a>五、sam和bam文件</h2><h3 id="1、介绍-1"><a href="#1、介绍-1" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>sam文件全称The SequencingAlignment/Map Format，是Alignment/Map步骤bwa/STAR/HISAT2等软件对结果的标准输出文件，用于存储reads比对到参考基因组的比对结果，是一个纯文本格式，文件一般较大。为了节省硬盘存储，一般使用其高效压缩的二进制格式bam文件。</p>
+<p>利用samtools view的-b参数就能把sam文件转为bam文件。</p>
+<p>1）sam文件查看方式<br>在linux终端直接用less即可进行查看；</p>
+<p>2）bam文件查看方式<br>需要借助samtools view工具进行查看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">samtools view filename.bam | less -S</span><br><span class="line">samtools view -h filename.bam | less -S</span><br></pre></td></tr></table></figure>
+
+<p>NGS分析中大多数文件都是由header和record两部分组成，加上-h参数后可以将header显示出来，默认是不显示的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@HD    VN:1.5  SO:coordinate</span><br><span class="line">@SQ    SN:chr1 LN:248956422</span><br><span class="line">@SQ    SN:chr10        LN:133797422</span><br><span class="line">......</span><br><span class="line">@SQ    SN:chrKI270392.1        LN:971</span><br><span class="line">@SQ    SN:chrKI270394.1        LN:970</span><br><span class="line">@RG    ID:BH_H3K27ac_2 LB:BH_H3K27ac_2 SM:BH_H3K27ac_2</span><br><span class="line">@PG    ID:bwa  PN:bwa  VN:0.7.15-r1140 CL:bwa mem -M -t 8 -R@RG\tID:BH_H3K27ac_2\tLB:BH_H3K27ac_2\tSM:BH_H3K27ac_2\tPL: /MP</span><br><span class="line">@PG    ID:MarkDuplicates      VN:1.138(aa51703435dc6a423013e74e56b0b68405facd79_1439324166)   CL:picard.sam.markduplicates.</span><br><span class="line">K00141:244:HVL3NBBXX:8:2119:27235:3145399      chr1    10016  32      115M    =      10016   115     CCCTAACCCTAACCCTAACCC</span><br><span class="line">K00141:244:HVL3NBBXX:8:2119:27235:31453147     chr1    10016  32      115M    =      10016   -115   CCCTTACCCTAACCCTAACCC</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>header内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@HD：是必须的标准文件头，包含版本信息；</span><br><span class="line">@SQ：参考序列染色体名字和长度信息 (SN:scaffold name; LN: length)；</span><br><span class="line">@RG：重要<span class="built_in">read</span> group信息，通常包含测序平台，测序文库和样本ID等信息，分析时用于区分不同样本（重测序时用到）；</span><br><span class="line">@PG：生成此文件的操作过程和参数信息 （program）。</span><br></pre></td></tr></table></figure>
+
+<p>record内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">每一行就是一条<span class="built_in">read</span>比对上参考基因组的信息，总共12列，用tab键分割。</span><br><span class="line"><span class="comment"># 1. read名称；也就是ID（如果是双短测序的话，则同一个ID会有两条reads）</span></span><br><span class="line"><span class="comment"># 2. 比对信息位flag值；为各个标志的和</span></span><br><span class="line"><span class="comment"># 3. 参考序列染色体编号；</span></span><br><span class="line"><span class="comment"># 4. 5′端起始位置；</span></span><br><span class="line"><span class="comment"># 5. MAPQ：mapping quality，描述比对的质量，数字越大，特异性越高；</span></span><br><span class="line"><span class="comment"># 6. CIGAR字符串，记录插入、删除、错配等信息；</span></span><br><span class="line"><span class="comment"># 7. mate read所比对到的染色体，仅双端测序的数据才有；如果是“=”，则表示在同一条染色体上</span></span><br><span class="line"><span class="comment"># 8. mate read所比对到的位置，仅双端测序的数据才有；</span></span><br><span class="line"><span class="comment"># 9. 插入片段的长度，仅双端测序的数据才有；</span></span><br><span class="line"><span class="comment"># 10. read序列；</span></span><br><span class="line"><span class="comment"># 11. read质量值；</span></span><br><span class="line"><span class="comment"># 12. 12列以后的信息都是metadata，程序用标记</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、flag信息"><a href="#2、flag信息" class="headerlink" title="2、flag信息"></a>2、flag信息</h3><p>sam文件中第二列flag信息很重要，下面做进一步解释。</p>
+<p>利用samtools flagstat工具可以查看bam文件中比对的flag信息，并输出比对的统计结果。</p>
+<p><code>samtools flagstat *.bam</code></p>
+<p>flag一共有12个标签，使用16进制数表示，每个标签值是2^(n-1)，其中n&lt;=12，每个值有其对应的唯一解释含义，具体见下图。</p>
+<img src=figure2.png width=50%/>
+
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">1 </span>： 代表这个序列采用的是PE双端测序</span><br><span class="line"><span class="number">2</span>： 代表这个序列和参考序列完全匹配，没有插入缺失</span><br><span class="line"><span class="number">4</span>： 代表这个序列没有mapping到参考序列上</span><br><span class="line"><span class="number">8</span>： 代表这个序列的另一端序列没有比对到参考序列上，比如这条序列是R1,它对应的R2端序列没有比对到参考序列上</span><br><span class="line"><span class="number">16</span>：代表这个序列比对到参考序列的负链上</span><br><span class="line"><span class="symbol">32 </span>：代表这个序列对应的另一端序列比对到参考序列的负链上</span><br><span class="line"><span class="symbol">64 </span>： 代表这个序列是R1端序列， read1;</span><br><span class="line"><span class="symbol">128 </span>: 代表这个序列是R2端序列，read2；</span><br><span class="line"><span class="number">256</span>： 代表这个序列不是主要的比对，一条序列可能比对到参考序列的多个位置，只有一个是首要的比对位置，其他都是次要的</span><br><span class="line"><span class="number">512</span>： 代表这个序列在QC时失败了，被过滤不掉了（# 这个标签不常用）</span><br><span class="line"><span class="number">1024</span>: 代表这个序列是PCR重复序列（#这个标签不常用）</span><br><span class="line"><span class="number">2048</span>: 代表这个序列是补充的比对（#这个标签具体什么意思，没搞清楚，但是不常用）</span><br></pre></td></tr></table></figure>
+
+<p>你会发现随机挑选几个值做加和运算，他们的结果都是唯一的，所以在bam文件中第二列flag的值代表这条序列符合下图所示条件的值的和。</p>
+<p>所以根据这个值我们可以判断这条序列是双端测序还是单端测序；如果是双端测序，reads来自左端还是右端。比如65只能是1和64组成，代表这个序列是双端测序，而且是read1。</p>
+<p>每次转换很头疼？别担心，网上有很多解码flag含义的在线工具，如SAM Format（网址：<a target="_blank" rel="noopener" href="https://www.samformat.info/sam-format-flag%EF%BC%89">https://www.samformat.info/sam-format-flag）</a><br>也可以使用我博客中的软件：<a href="https://www.chunfu.site/SAM_FLAG.html">SAM FLAG</a></p>
+<p>输入flag的值，解析工具会返回匹配上的信息。如果是单端测序，flag值都是偶数。</p>
+<p>如果是双端测序，工具会帮我们把另外一端序列的flag值返回，并且将这些数字情况大致分为5类，在右侧进一步显示这个值对应的含义。</p>
+<h3 id="3、sam-bam文件处理"><a href="#3、sam-bam文件处理" class="headerlink" title="3、sam/bam文件处理"></a>3、sam/bam文件处理</h3><p>详细可以参考官方网页：<a target="_blank" rel="noopener" href="http://www.htslib.org/doc/samtools.html">Samtools</a></p>
+<p>中文参考文档：****<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/a3791cf16474">samtools常用命令详解</a>****</p>
+<h2 id="wig、bigwig和bedgraph文件"><a href="#wig、bigwig和bedgraph文件" class="headerlink" title="wig、bigwig和bedgraph文件"></a>wig、bigwig和bedgraph文件</h2><p>上述bam和sam文件可以帮助我们探索reads在参考基因组中的比对情况，导入基因组浏览器查看比对状态和突变信息。而wiggle(简称wig)、bigwig(简写bw)以及bedgraph(简写bdg)只包含区域和区域的覆盖度信息，文件更小，用于可视化更方便，可以导入基因组浏览器（Genome Browser）中进行可视化，以查看reads在参考基因组各个区域的覆盖度并检测测序深度。这几个文件在ChIP-seq数据分析Call Peak阶段会生成，可以利用IGV等工具进行可视化，方便查看组蛋白修饰的程度。</p>
+<h2 id="六、wig-bigwig介绍"><a href="#六、wig-bigwig介绍" class="headerlink" title="六、wig/bigwig介绍"></a>六、wig/bigwig介绍</h2><p>wig 文件全称叫 Wiggle Track Format， 用来绘制基因组上的图形轨迹的文件格式。wig 格式是较老的格式，用来显示密集且连续的数据，比如GC含量，概率分数，转录组数据等，而bigwig是wig格式的压缩形式。</p>
+<p>wig 数据有两种类型：variableStep 和 fixedStep。</p>
+<p>我们先来研究这两种类型的文件，后面在基因组浏览器中利用这些文件显示轨迹。</p>
+<h3 id="1、variableStep-格式"><a href="#1、variableStep-格式" class="headerlink" title="1、variableStep 格式"></a><strong>1、variableStep 格式</strong></h3><p><strong>（1）特点及适用场景：</strong></p>
+<ul>
+<li>在指定的染色体片段区域绘制条形图</li>
+<li>用于全基因组数据集（大约百万分之十的数据点）</li>
+<li>指定的区域必须为恒定大小（由span参数指定）</li>
+<li>数据点间具有不规则间隔的数据，但是在某些情况下建议谨慎</li>
+<li>如果数据点的不规则间距太极端，此格式在编码和显示期间可能效率很低。在这种情况下，“bedGraph”是最佳格式。</li>
+<li>一般UCSC不建议采用该格式作为基因组浏览器输入文件，因为考虑到数据集大小与索引构建，都不如 bigwig 更高效</li>
+<li>使用 wigToBigWig 将 Wig 转换为 bigWig 文件</li>
+</ul>
+<p><strong>（2）格式：</strong></p>
+<p>声明行：以单词variableStep开头，后跟染色体规范。</p>
+<p>数据行：两列，分别包含染色体位置和数据值。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">variableStep  chrom=chrN</span><br><span class="line">[span=windowSize]</span><br><span class="line">chromStartA  dataValueA</span><br><span class="line">chromStartB  dataValueB</span><br><span class="line"><span class="string">...</span> etc <span class="string">...</span>  <span class="string">...</span> etc <span class="string">...</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）例子：</strong></p>
+<p>下面表示在2号染色体上的300701-300705位置均显示12.5</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">variableStep</span> chrom=chr2</span><br><span class="line"><span class="attribute">300701</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300702</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300703</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300704</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300705</span> <span class="number">12</span>.<span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>可选的span参数（默认值：span = 1）允许更简洁地指定由连续的具有相同数据值的碱基组成的数据。</p>
+<p>跨度从指定的每个染色体位置开始，并指示数据值应覆盖的碱基数。例如： 应用span=5后，相当于：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">variableStep <span class="attribute">chrom</span>=chr2 <span class="attribute">span</span>=5</span><br><span class="line">300701 12.5</span><br></pre></td></tr></table></figure>
+
+<p>wiggle 格式用于快速显示非常密集的数据。当每1,024个碱基只有几个数据点时，variableStep格式会变得效率极低。<br>如果variableStep数据点相距大于约100个碱基，则建议使用 BedGraph格式。</p>
+<h3 id="2、fixedStep-格式"><a href="#2、fixedStep-格式" class="headerlink" title="2、fixedStep 格式"></a><strong>2、fixedStep 格式</strong></h3><p><strong>（1）特点及适用场景：</strong></p>
+<ul>
+<li>在指定的染色体片段区域绘制条形</li>
+<li>最适合用于全基因组数据集（大约百万分之十的数据点）</li>
+<li>指定的区域必须为恒定大小（由span参数指定）</li>
+<li>染色体位置精确地有规律的间隔（由step参数指定）</li>
+</ul>
+<p><strong>（2）格式：</strong></p>
+<p>声明行：单词fixedStep开头，并包含染色体，起始坐标和步长的规范 。</p>
+<p>数据行：一列，包含数据值。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fixedStep  <span class="attribute">chrom</span>=chrN</span><br><span class="line"><span class="attribute">start</span>=position  <span class="attribute">step</span>=stepInterval</span><br><span class="line">[<span class="attribute">span</span>=windowSize]</span><br><span class="line">dataValue1</span><br><span class="line">dataValue2</span><br><span class="line"><span class="built_in">..</span>. etc <span class="built_in">..</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）例子：</strong></p>
+<p>表示3号染色体上的三个区域（每个区域5个碱基）：400601-400605、400701-400705和400801-400805，分别显示值11、22和33</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fixedStep <span class="attribute">chrom</span>=chr3 <span class="attribute">start</span>=400601 <span class="attribute">step</span>=100 <span class="attribute">span</span>=5</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<p>对于variableStep和fixedStep格式，必须在整个数据集中使用相同的。如果未指定跨度，则使用默认跨度1。<br>顾名思义，fixedStep 在整个数据集中需要相同的大小步长。如果未指定，则步长为1。</p>
+<p><strong>3、数据值</strong></p>
+<p>wiggle 格式的数据值可以包含整数，实数，正值或负值，但不支持 NaN 值。未指定的位置没有数据，也就不会显示。</p>
+<blockquote>
+<p>需要注意：wiggle文件（variableStep and fixedStep ）的染色体坐标是从1开始。<br>例如，对于长度为N的染色体，第一个位置为1，最后一个位置为N。<br>对于 bigwig 文件，使用 wiggle 转换为 bigwig，使用的染色体坐标是从1开始。<br>而使用bedGraph格式创建的BigWig文件使用0开始。<br>自定义 wiggle 轨迹的参数:</p>
+</blockquote>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">track <span class="attribute">type</span>=wiggle_0 <span class="attribute">name</span>=track_label</span><br><span class="line"><span class="attribute">description</span>=center_label</span><br><span class="line"><span class="attribute">visibility</span>=display_mode <span class="attribute">color</span>=r,g,b</span><br><span class="line"><span class="attribute">altColor</span>=r,g,b <span class="attribute">priority</span>=priority</span><br><span class="line"><span class="attribute">autoScale</span>=on|off <span class="attribute">alwaysZero</span>=on|off</span><br><span class="line"><span class="attribute">gridDefault</span>=on|off</span><br><span class="line"><span class="attribute">maxHeightPixels</span>=max:default:min</span><br><span class="line"><span class="attribute">graphType</span>=bar|points</span><br><span class="line"><span class="attribute">viewLimits</span>=lower:upper</span><br><span class="line"><span class="attribute">yLineMark</span>=real-value <span class="attribute">yLineOnOff</span>=on|off</span><br><span class="line"><span class="attribute">windowingFunction</span>=mean+whiskers|maximum|mean|minimum</span><br><span class="line"><span class="attribute">smoothingWindow</span>=off|2-16</span><br></pre></td></tr></table></figure>
+
+<p>其他参数:</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">autoScale         &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">on</span></span><br><span class="line">alwaysZero        &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">gridDefault       &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">maxHeightPixels   max:<span class="keyword">default</span>:min                    # <span class="keyword">default</span> <span class="keyword">is</span> <span class="number">128</span>:<span class="number">128</span>:<span class="number">11</span></span><br><span class="line">graphType         &lt;bar|points&gt;                         # <span class="keyword">default</span> <span class="keyword">is</span> bar</span><br><span class="line">viewLimits        lower:upper                        # <span class="keyword">default</span> <span class="keyword">is</span> range <span class="built_in">found</span> <span class="keyword">in</span> data</span><br><span class="line">viewLimitsMax     lower:upper                        # suggested bounds <span class="keyword">of</span> viewLimits, but <span class="keyword">not</span> enforced</span><br><span class="line">yLineMark         &lt;<span class="type">real</span>-<span class="keyword">value</span>&gt;                         # <span class="keyword">default</span> <span class="keyword">is</span> <span class="number">0.0</span></span><br><span class="line">yLineOnOff        &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">windowingFunction &lt;mean+whiskers|maximum|mean|minimum&gt; # <span class="keyword">default</span> <span class="keyword">is</span> maximum, mean+whiskers <span class="keyword">is</span> recommended</span><br><span class="line">smoothingWindow   &lt;<span class="keyword">off</span>|[<span class="number">2</span><span class="number">-16</span>]&gt;                         # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">transformFunc     &lt;<span class="keyword">NONE</span>|<span class="keyword">LOG</span>&gt;                           # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">NONE</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>4、例子</strong></p>
+<p>（1）下面是 Wig 格式的文件，分别包含 variableStep 和 fixedStep 格式创建的两段轨迹</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">browser position chr19:49304200-49310700</span><br><span class="line">browser hide all</span><br><span class="line"><span class="comment"># 150 base wide bar graph at arbitrarily spaced positions,</span></span><br><span class="line"><span class="comment"># threshold line drawn at y=11.76</span></span><br><span class="line"><span class="comment"># autoScale off viewing range set to [0:25]</span></span><br><span class="line"><span class="comment"># priority = 10 positions this as the first graph</span></span><br><span class="line"><span class="comment"># Note, one-relative coordinate system in use for this format</span></span><br><span class="line">track <span class="attribute">type</span>=wiggle_0 <span class="attribute">name</span>=<span class="string">&quot;variableStep&quot;</span> <span class="attribute">description</span>=<span class="string">&quot;variableStep format&quot;</span> <span class="attribute">visibility</span>=full <span class="attribute">autoScale</span>=off <span class="attribute">viewLimits</span>=0.0:25.0 <span class="attribute">color</span>=50,150,255 <span class="attribute">yLineMark</span>=11.76 <span class="attribute">yLineOnOff</span>=on <span class="attribute">priority</span>=10</span><br><span class="line">variableStep <span class="attribute">chrom</span>=chr19 <span class="attribute">span</span>=150</span><br><span class="line">49304701 10.0</span><br><span class="line">49304901 12.5</span><br><span class="line">49305401 15.0</span><br><span class="line">49305601 17.5</span><br><span class="line">49305901 20.0</span><br><span class="line">49306081 17.5</span><br><span class="line">49306301 15.0</span><br><span class="line">49306691 12.5</span><br><span class="line">49307871 10.0</span><br><span class="line"><span class="comment"># 200 base wide points graph at every 300 bases, 50 pixel high graph</span></span><br><span class="line"><span class="comment"># autoScale off and viewing range set to [0:1000]</span></span><br><span class="line"><span class="comment"># priority = 20 positions this as the second graph</span></span><br><span class="line"><span class="comment"># Note, one-relative coordinate system in use for this format</span></span><br><span class="line">track <span class="attribute">type</span>=wiggle_0 <span class="attribute">name</span>=<span class="string">&quot;fixedStep&quot;</span> <span class="attribute">description</span>=<span class="string">&quot;fixedStep format&quot;</span> <span class="attribute">visibility</span>=full <span class="attribute">autoScale</span>=off <span class="attribute">viewLimits</span>=0:1000 <span class="attribute">color</span>=0,200,100 <span class="attribute">maxHeightPixels</span>=100:50:20 <span class="attribute">graphType</span>=points <span class="attribute">priority</span>=20</span><br><span class="line">fixedStep <span class="attribute">chrom</span>=chr19 <span class="attribute">start</span>=49307401 <span class="attribute">step</span>=300 <span class="attribute">span</span>=200</span><br><span class="line">1000</span><br><span class="line">900</span><br><span class="line">800</span><br><span class="line">700</span><br><span class="line">600</span><br><span class="line">500</span><br><span class="line">400</span><br><span class="line">300</span><br><span class="line">200</span><br><span class="line">100</span><br></pre></td></tr></table></figure>
+
+<p>（2） 选择菜单栏My Data的Custom Tracks</p>
+<p><img src="figure3.png" alt="Untitled"></p>
+<p>（3）将上面的代码粘贴到输入框，点 Submit</p>
+<p><img src="figure4.png" alt="Untitled"></p>
+<p>（4）简要信息显示，点Go进行绘制</p>
+<p><img src="figure5.png" alt="Untitled"></p>
+<p>（5）拿到绘制好的轨迹图</p>
+<p><img src="figure6.png" alt="Untitled"></p>
+<h2 id="七、BedGraph（基因组浏览器绘制）"><a href="#七、BedGraph（基因组浏览器绘制）" class="headerlink" title="七、BedGraph（基因组浏览器绘制）"></a>七、<strong><strong>BedGraph（基因组浏览器绘制）</strong></strong></h2><p>1<strong>、特点及适用场景：</strong></p>
+<ul>
+<li>存放区间的坐标轴信息和相关评分(score)的文件，主要用于存储稀疏，不连续的数据</li>
+<li>后缀名.bedGraph</li>
+<li>一般UCSC不建议采用该格式作为基因组浏览器输入文件，因为考虑到数据集大小与索引构建，都不如 bigwig 更高效，尤其在如果bedGraph数据集非常大（超过5000万行 ），推荐转为 bigwig 文件</li>
+<li>使用WigTobigWig将 bedGraph 转换为bigWig 文件</li>
+<li>需要注意 bedGraph 文件不能转换为 wig 文件</li>
+</ul>
+<p><strong>2、格式</strong></p>
+<p>一共包含四列：chromA  chromStartA  chromEndA  dataValue，<strong>有点类似bed文件</strong><br>分别为：</p>
+<blockquote>
+<p>chromA 染色体号<br>chromStartA 起始位点：染色体坐标从 0 开始，这意味着第一个染色体位置为0，而长度为N的染色体的最后位置将为N-1。<br>chromEndA 终止位点<br>dataValue 数据值：数据值可以是整数或实数，正值或负值。输入数据中列出的位置必须按数字顺序，并且仅会绘制指定位置的图。</p>
+</blockquote>
+<p>参数:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">track <span class="attribute">type</span>=bedGraph <span class="attribute">name</span>=track_label <span class="attribute">description</span>=center_label</span><br><span class="line"><span class="attribute">visibility</span>=display_mode <span class="attribute">color</span>=r,g,b <span class="attribute">altColor</span>=r,g,b</span><br><span class="line"><span class="attribute">priority</span>=priority <span class="attribute">autoScale</span>=on|off <span class="attribute">alwaysZero</span>=on|off <span class="attribute">gridDefault</span>=on|off</span><br><span class="line"><span class="attribute">maxHeightPixels</span>=max:default:min <span class="attribute">graphType</span>=bar|points <span class="attribute">viewLimits</span>=lower:upper</span><br><span class="line"><span class="attribute">yLineMark</span>=real-value <span class="attribute">yLineOnOff</span>=on|off</span><br><span class="line"><span class="attribute">windowingFunction</span>=maximum|mean|minimum <span class="attribute">smoothingWindow</span>=off|2-16</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、例子</strong></p>
+<p>下面的文件可以描述为：</p>
+<p>在第19号染色体的49,302,001到49,304,701区域的三个轨迹中指定9个独立的数据点。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">browser</span> position chr19:<span class="number">49302001</span>-<span class="number">49304701</span></span><br><span class="line"><span class="attribute">browser</span> hide <span class="literal">all</span></span><br><span class="line"><span class="attribute">browser</span> pack refGene encodeRegions</span><br><span class="line"><span class="attribute">browser</span> full altGraph</span><br><span class="line"><span class="comment"># 300 base wide bar graph, autoScale is on by default == graphing</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># limits will dynamically change to always show full range of data</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># in viewing window, priority = 20 positions this as the second graph</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Note, zero-relative, half-open coordinate system in use for bedGraph format</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">track</span> type=bedGraph name=<span class="string">&quot;BedGraph Format&quot;</span> description=<span class="string">&quot;BedGraph format&quot;</span> visibility=full color=<span class="number">200</span>,<span class="number">100</span>,<span class="number">0</span> altColor=<span class="number">0</span>,<span class="number">100</span>,<span class="number">200</span> priority=<span class="number">20</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302000</span> <span class="number">49302300</span> -<span class="number">1</span>.<span class="number">0</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302300</span> <span class="number">49302600</span> -<span class="number">0</span>.<span class="number">75</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302600</span> <span class="number">49302900</span> -<span class="number">0</span>.<span class="number">50</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302900</span> <span class="number">49303200</span> -<span class="number">0</span>.<span class="number">25</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49303200</span> <span class="number">49303500</span> <span class="number">0</span>.<span class="number">0</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49303500</span> <span class="number">49303800</span> <span class="number">0</span>.<span class="number">25</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49303800</span> <span class="number">49304100</span> <span class="number">0</span>.<span class="number">50</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49304100</span> <span class="number">49304400</span> <span class="number">0</span>.<span class="number">75</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49304400</span> <span class="number">49304700</span> <span class="number">1</span>.<span class="number">00</span></span><br></pre></td></tr></table></figure>
+
+<p>粘贴上面的代码，点 Submit</p>
+<p><a target="_blank" rel="noopener" href="https://genome.ucsc.edu/cgi-bin/hgCustom">https://genome.ucsc.edu/cgi-bin/hgCustom</a></p>
+<p><img src="figure7.png" alt="Untitled"></p>
+<p>绘制轨迹</p>
+<p><img src="figure8.png" alt="Untitled"></p>
+<p>上面的示例是一个定制轨迹，其中包括track type = 一行特定于在浏览器中加载数据的行。<br>此行将导致原始bedGraph数据文件无法通过validateFiles浏览器外部的其他工具进行验证。</p>
+<p>推荐大家阅读UCSC官网对这几个文件的详细解释：</p>
+<p>wiggle(WIG)：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/wiggle.html">https://genome.ucsc.edu/goldenPath/help/wiggle.html</a></p>
+<p>bedGraph：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/bedgraph.html">https://genome.ucsc.edu/goldenPath/help/bedgraph.html</a></p>
+<p>bigWig：<a target="_blank" rel="noopener" href="http://genome.ucsc.edu/goldenPath/help/bigWig.html">http://genome.ucsc.edu/goldenPath/help/bigWig.html</a></p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qazplm12_3/article/details/108162714">https://blog.csdn.net/qazplm12_3/article/details/108162714</a></p>
+<p><a target="_blank" rel="noopener" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format13">https://genome.ucsc.edu/FAQ/FAQformat.html#format13</a></p>
+<p>wiggle(WIG)：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/wiggle.html">https://genome.ucsc.edu/goldenPath/help/wiggle.html</a></p>
+<p>bedGraph：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/bedgraph.html">https://genome.ucsc.edu/goldenPath/help/bedgraph.html</a></p>
+<p>bigWig：<a target="_blank" rel="noopener" href="http://genome.ucsc.edu/goldenPath/help/bigWig.html">http://genome.ucsc.edu/goldenPath/help/bigWig.html</a></p>
+<p><strong><strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011262253/article/details/109367395">生信格式 | wig（基因组浏览器绘制）</a></strong></strong></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2022/05/08/0-based-1-based的解释和转换实例/" data-toggle="tooltip" data-placement="top" title="0-based & 1-based的解释和转换实例">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/05/07/什么是“Insert-插入片段”/" data-toggle="tooltip" data-placement="top" title="什么是“Insert 插入片段”？">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Data format" title="Data format">Data format</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/05/08/%E7%94%9F%E4%BF%A1%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%BB%A5%E5%8F%8A%E6%9F%A5%E7%9C%8B%E6%96%B9%E5%BC%8F/";
+    var disqus_url = "https://www.chunfu.site/2022/05/08/%E7%94%9F%E4%BF%A1%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%BB%A5%E5%8F%8A%E6%9F%A5%E7%9C%8B%E6%96%B9%E5%BC%8F/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Simons-Maddy">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
