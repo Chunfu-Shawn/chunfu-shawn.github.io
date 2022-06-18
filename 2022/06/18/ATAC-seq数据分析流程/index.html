@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          ATAC-seq数据分析流程 - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/06/18/ATAC-seq数据分析流程/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/categories/">Categories</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-statistics.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Next Generation Sequencing" title="Next Generation Sequencing">Next Generation Sequencing</a>
+                        
+                          <a class="tag" href="/tags/#ATAC-seq" title="ATAC-seq">ATAC-seq</a>
+                        
+                    </div>
+                    <h1>ATAC-seq数据分析流程</h1>
+                    <h2 class="subheading">多种相似性量度的公式、比较分析和应用</h2>
+                    <span class="meta">
+                        Posted by Chunfu Shawn on
+                        2022-06-18 | 
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <p>ATACseq 基本原理如下图所示。真核生物 DNA 与核小体结合形成染色质，结合的紧密程度是动态变化的。当 DNA 需要复制或转录时，结合变得松散让 DNA 暴露。暴露的 DNA 能被 Tn5 转座酶切割，与核小体紧密结合的 DNA 无法被切割。Tn5 转座酶切割 DNA 时插入测序接头，经过 PCR 扩增等步骤就完成了测序建库。</p>
+<p><img src="figure1.png" alt="figure1"></p>
+<p>ATACseq 建库</p>
+<p>如下图所示，因为间隔的核小体数目不同，ATACseq 测序插入片段（fragments）分布会呈现多个峰的分布。在约 &lt;100,200,400,600bp 处有峰，分别对应着 NER (nucleosome-free regions) 和 单、双、三核小体区域的 reads. 因此我认为常用的 2<em>150 的双端测序不适合 ATACseq. 因为最需要的 NER 区域 reads 是很短的，用 2</em>150 等于浪费许多的测序通量。</p>
+<p><img src="figure2.png" alt="figure2"></p>
+<p>核小体数目不同产生片段长度不同</p>
+<p>ATACseq 一般人种要求 50M 以上比对的 fragments (reads), 因为线粒体 DNA 没有核小体结合，测序出现大量线粒体数据是正常的，线粒体数据占比在 20-80% 都有可能。</p>
+<p>ATACseq 分析流程如下图所示。质控、比对、peak calling 是必须的上游分析，Motif 等下游分析是个性化的。</p>
+<p><img src="figure3.png" alt="figure3"></p>
+<p>流程示意图</p>
+<h3 id="1-参考基因组建立索引"><a href="#1-参考基因组建立索引" class="headerlink" title="1. 参考基因组建立索引"></a>1. 参考基因组建立索引</h3><p>首先要安装bowtie2，可以参考：<a target="_blank" rel="noopener" href="http://www.360doc.com/content/21/1017/08/15690396_1000103096.shtml">短读长序列比对软件bowtie2的安装和使用</a>，我们使用conda安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># conda install bowtie2</span></span><br><span class="line">ATAC_DATA=/rd1/user/pengq/6ma/atac/Clean</span><br><span class="line">REF_INDEX=~/atac-seq/data/Caenorhabditis_elegans.WBcel235.dna.fa.bybowtie2</span><br><span class="line">REF=/home/pengq/data/ce11/fna/Caenorhabditis_elegans.WBcel235.dna.fa</span><br><span class="line"><span class="built_in">mkdir</span> -p ~/atac-seq/data</span><br><span class="line">bowtie2-build -f /home/pengq/data/ce11/fna/Caenorhabditis_elegans.WBcel235.dna.fa <span class="variable">$REF_INDEX</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-数据质控"><a href="#2-数据质控" class="headerlink" title="2. 数据质控"></a>2. 数据质控</h3><p>质控需要用到fastqc，安装方法可以参考：****<a target="_blank" rel="noopener" href="https://blog.csdn.net/HUANWEIFENXI/article/details/124127201">FastQC的安装与使用</a>****</p>
+<p>使用MultiQC进行质控数据的整合，安装和使用方法可以参考：****<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d5d5479c2d39">MultiQC的安装和使用</a>****</p>
+<p>我们使用conda安装fastqc和MultiQC</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># conda install -c bioconda fastqc</span></span><br><span class="line"><span class="comment"># conda install -c bioconda multiqc</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/atac-seq/data/fastqc_report</span><br><span class="line">fastqc <span class="variable">$ATAC_DATA</span>/*/*fq.gz -o ~/atac-seq/data/fastqc_report</span><br><span class="line">multiqc ~/atac-seq/data/fastqc_report</span><br></pre></td></tr></table></figure>
+
+<p>生成了两个文件，1个html报告和1个multiqc_data的文件夹，前者直接网页打开就可以查看，后者包含一些数据基本的统计信息和日志文档；</p>
+<p><img src="figure4.png" alt="figure4"></p>
+<p><img src="figure5.png" alt="figure5"></p>
+<h3 id="3-比对"><a href="#3-比对" class="headerlink" title="3. 比对"></a>3. 比对</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/atac-seq/align</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">ls</span> <span class="variable">$ATAC_DATA</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">bowtie2 -x <span class="variable">$REF_INDEX</span> -X 1000 -1 <span class="variable">$ATAC_DATA</span>/<span class="variable">$&#123;i&#125;</span>/<span class="variable">$&#123;i&#125;</span>_1.fq.gz -2 <span class="variable">$ATAC_DATA</span>/<span class="variable">$&#123;i&#125;</span>/<span class="variable">$&#123;i&#125;</span>_2.fq.gz | samtools view -F 4 -bS - &gt; ~/atac-seq/align/<span class="variable">$&#123;i&#125;</span>.bam &amp;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>bowtie2 参数：</strong></p>
+<p>bowtie2 [options] -x <bt2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]<br>-X/–maxins <int>  maximum fragment length (500)</p>
+<p><strong>samtools view 参数：</strong></p>
+<p>-F 4表示：只要flag中（是一个累加值）含有4，就不要这一个reads比对记录；4表示：read unmapped (0x4)</p>
+<p>-f 2表示：只要flag中（是一个累加值）含有2，就保留这个比对记录；2表示：read mapped in proper pair (0x2)</p>
+<p>-b output BAM</p>
+<p>-S ignored (input format is auto-detected)</p>
+<p>-q INT : only include reads with mapping quality &gt;= INT [0]</p>
+<p>-o FILE : output file name [stdout]</p>
+<p>-@, –threads INT : Number of additional threads to use [0]</p>
+<p>-h include header in SAM output</p>
+<h3 id="4-比对之后的质控"><a href="#4-比对之后的质控" class="headerlink" title="4. 比对之后的质控"></a><strong><strong>4. 比对之后的质控</strong></strong></h3><ol>
+<li>过滤低质量的比对，<em>Bowtie2</em> 设置比对质量大于 30，</li>
+<li>需要用 picard 对 PCR 重复进行标记，使用conda安装<em>picard</em></li>
+</ol>
+<p>参考：<a target="_blank" rel="noopener" href="http://cncbi.github.io/Picard-Manual-CN/">picard中文使用指南</a></p>
+<ol>
+<li>线粒体 DNA 与核基因组不同，他没有缠绕组蛋白形成核小体，因此都是开放的。一般来说会导致测序结果里有不少线粒体信号，<strong>需要移除。</strong>同时移除基因组 Blacklist 区域。如果使用 <em>Genrich</em> 进行 Peak calling 那么这些步骤不需要进行，他有相应参数实现。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># conda install -c bioconda picard</span></span><br><span class="line"><span class="built_in">cd</span> ~/atac-seq/align</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">ls</span> <span class="variable">$ATAC_DATA</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">samtools view -f 2 -q 30 -o <span class="variable">$&#123;i&#125;</span>.f2.q30.bam <span class="variable">$&#123;i&#125;</span>.bam <span class="comment">#过滤低质量的比对， *Bowtie2* 设置比对质量大于 30. </span></span><br><span class="line">samtools <span class="built_in">sort</span> -@ 4 -o <span class="variable">$&#123;i&#125;</span>.f2.q30.sort.bam <span class="variable">$&#123;i&#125;</span>.f2.q30.bam</span><br><span class="line">picard MarkDuplicates VERBOSITY=ERROR QUIET=<span class="literal">true</span> \</span><br><span class="line">CREATE_INDEX=<span class="literal">false</span> REMOVE_DUPLICATES=<span class="literal">true</span> \</span><br><span class="line">INPUT=<span class="variable">$&#123;i&#125;</span>.f2.q30.sort.bam \</span><br><span class="line">OUTPUT=<span class="variable">$&#123;i&#125;</span>.f2.q30.sort.rmdup.bam \</span><br><span class="line">M=<span class="variable">$&#123;i&#125;</span>.marked_dup.log</span><br><span class="line">samtools view -h <span class="variable">$&#123;i&#125;</span>.f2.q30.sort.rmdup.bam | grep <span class="string">&quot;Mt&quot;</span> -v | grep <span class="string">&quot;Pt&quot;</span> -v | samtools view -bS -o <span class="variable">$&#123;i&#125;</span>.final.bam <span class="comment">#需要移除线粒体DNA</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-插入片段长度分布"><a href="#5-插入片段长度分布" class="headerlink" title="5. 插入片段长度分布"></a><strong><strong>5. 插入片段长度分布</strong></strong></h3><ol>
+<li>什么叫insert size？ 参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/41782202">《一篇文章说清楚什么是“插入片段”》——公众号“碱基矿工”</a></li>
+<li>如何从sam文件中求得insert size：在“read mapped in proper pair”的前提下，取第九列</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/atac-seq/align</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">ls</span> <span class="variable">$ATAC_DATA</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">samtools view -f 64 <span class="variable">$&#123;i&#125;</span>.final.bam | awk <span class="string">&#x27;BEGIN&#123;OFS=FS=&quot;\t&quot;&#125;&#123;print sqrt($9*$9)&#125;&#x27;</span> | <span class="built_in">sort</span> -n &gt; <span class="variable">$&#123;i&#125;</span>.insert_size.txt &amp;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>这里<code>-f 64</code>的<code>64</code>就是<code>0x40</code>，表示提取一半的比对记录，因为两条reads对应一个insert size。</p>
+<p>在RStudio上运行</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df <span class="operator">=</span> read.table<span class="punctuation">(</span><span class="string">&quot;G:/6mA/atac-seq/data/fastqc_report/align/T1.insert_size.txt&quot;</span><span class="punctuation">,</span>header <span class="operator">=</span> <span class="built_in">F</span><span class="punctuation">)</span></span><br><span class="line">df_ggplot <span class="operator">=</span> ggplot<span class="punctuation">(</span>data<span class="operator">=</span>df<span class="punctuation">,</span>aes<span class="punctuation">(</span>x<span class="operator">=</span>V1<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">df_ggplot <span class="operator">+</span> geom_histogram<span class="punctuation">(</span>binwidth <span class="operator">=</span> <span class="number">5</span><span class="punctuation">,</span>fill <span class="operator">=</span> <span class="string">&quot;SteelBlue3&quot;</span><span class="punctuation">,</span>color <span class="operator">=</span> <span class="string">&quot;SteelBlue2&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> scale_y_continuous<span class="punctuation">(</span>name <span class="operator">=</span> <span class="string">&quot;Read count&quot;</span><span class="punctuation">,</span>expand <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">0</span><span class="punctuation">,</span><span class="number">0</span><span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span> scale_x_continuous<span class="punctuation">(</span>name <span class="operator">=</span> <span class="string">&quot;Insert size&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> theme<span class="punctuation">(</span>panel.background <span class="operator">=</span> element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span>axis.line <span class="operator">=</span> element_line<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="figure6.png" alt="figure6.png"></p>
+<h3 id="6-Peak-Calling"><a href="#6-Peak-Calling" class="headerlink" title="6. Peak Calling"></a>6. Peak Calling</h3><p>Chip-seq与ATAC-seq call peaks的区别，前者peaks是代表抗体结合转录因子的位点，后者peaks是代表Tn5转座酶切开染色质开放区的两端，因此在一个位置，前者peaks有一个，后者有两个</p>
+<p><img src="figure7.png" alt="figure7"></p>
+<h3 id="6-1-bamtobed"><a href="#6-1-bamtobed" class="headerlink" title="6.1 bamtobed"></a>6.1 bamtobed</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">ls</span> <span class="variable">$ATAC_DATA</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">bedtools bamtobed -i <span class="variable">$&#123;i&#125;</span>.final.bam &gt; <span class="variable">$&#123;i&#125;</span>.final.bed &amp;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>这里需要留意一下bam和bed两种文件的起始坐标，分别是以1、0开始的</p>
+<h3 id="6-2-call-peaks"><a href="#6-2-call-peaks" class="headerlink" title="6.2 call peaks"></a>6.2 call peaks</h3><p>需要用到macs2，我们还是使用conda进行安装；</p>
+<p>参数的解读参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e83a7e10ea2e">MACS2文档学习</a>，<a target="_blank" rel="noopener" href="https://github.com/macs3-project/MACS/blob/master/docs/callpeak.md">MACS2 Call peaks parameters</a> </p>
+<p>—SPMR：如果为True, MACS将为碎片堆积配置文件保存每百万次读取的信号。它不会在峰值呼叫期间干扰计算pvalue/qvalue，因为内部MACS2一直使用原始堆积和较小数据集之间的缩放因子来计算统计测量。如果你计划使用bedGraph中的信号输出来使用bdgcmp和bdgpeakcall调用峰值，你不应该使用这个选项，因为你会得到不同的结果。但是，在跨多个数据集显示规范化的堆积轨迹时，建议使用此选项。要求设置-B。默认值:false</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># conda install -c bioconda macs2</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/atac-seq/peak/</span><br><span class="line"><span class="built_in">cd</span> ~/atac-seq/peak/</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">ls</span> <span class="variable">$ATAC_DATA</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">macs2 callpeak -t ~/atac-seq/align/<span class="variable">$&#123;i&#125;</span>.final.bed -n <span class="variable">$&#123;i&#125;</span> --<span class="built_in">shift</span> -75 --extsize 150 --nomodel -B --SPMR -g ce --keep-dup all &amp;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>以上是ATAC-seq数据分析的必要上游分析，之后的分析都是不必要的个性化的下游分析。</p>
+<h3 id="7-bedGraphToBigWig"><a href="#7-bedGraphToBigWig" class="headerlink" title="7. bedGraphToBigWig"></a>7. bedGraphToBigWig</h3><p>之前ChIP-seq里面讲过deeptools来转格式bam2bw，现在学的是bdg2bw，是一回事吗？这一步使用到的工具：bedSort bedClip bedGraphToBigWig。</p>
+<p>下载：<br><a target="_blank" rel="noopener" href="http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedSort">http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedSort</a><br><a target="_blank" rel="noopener" href="http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip">http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedClip</a><br><a target="_blank" rel="noopener" href="http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig">http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig</a></p>
+<p>下载之后，赋予权限，再转移到一个PATH包含的目录下，<code>mv bedSort bedClip bedGraphToBigWig</code> ~/biosoft</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/atac-seq/peak/</span><br><span class="line"><span class="comment">#求染色体序列大小</span></span><br><span class="line">samtools view -H ../align/T1.final.bam | perl -ne <span class="string">&#x27;if(/SN:(\S+)\s+LN:(\d+)/)&#123;print &quot;$1\t$2\n&quot;&#125;&#x27;</span> &gt; chr.size</span><br><span class="line">CHR_SIZE=~/NGS_data/ce11.chrom.sizes</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">ls</span> <span class="variable">$ATAC_DATA</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="comment">#对treat_pileup.bdg文件的前三列排序，原文件的染色体顺序不定</span></span><br><span class="line">bedSort <span class="variable">$&#123;i&#125;</span>_treat_pileup.bdg <span class="variable">$&#123;i&#125;</span>_treat_pileup.sort.bdg</span><br><span class="line"><span class="comment">#根据染色体的最大坐标，修正部分记录的第三列（原文件的这些记录的第三列大于max_chr_pos，原因是前面在call peaks的时候reads有偏移）；</span></span><br><span class="line"><span class="comment">#这样一来，这些记录的第二列就比第三列大了，需要过滤掉</span></span><br><span class="line">bedClip -<span class="built_in">truncate</span> <span class="variable">$&#123;i&#125;</span>_treat_pileup.sort.bdg chr.size stdout | perl -ane <span class="string">&#x27;print if($F[1] &lt; $F[2])&#x27;</span> &gt; <span class="variable">$&#123;i&#125;</span>_treat_pileup.bedgraph</span><br><span class="line"><span class="comment">#以上两步的目的是生成一个“可读性”良好的bedgraph文件，与原bedgraph文件有区别</span></span><br><span class="line"><span class="comment">#bedgraph to bigwig</span></span><br><span class="line">bedGraphToBigWig <span class="variable">$&#123;i&#125;</span>_treat_pileup.bedgraph chr.size <span class="variable">$&#123;i&#125;</span>_treat_pileup.bw &amp;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="8-可视化"><a href="#8-可视化" class="headerlink" title="8. 可视化"></a>8. 可视化</h3><h3 id="8-1-TSS-Enrichment"><a href="#8-1-TSS-Enrichment" class="headerlink" title="8.1 TSS Enrichment"></a>8.1 TSS Enrichment</h3><p>TSS富集结果依赖于基因注释结果。这个图在学习ChIP-seq的时候也画过，方法一样</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/ATAC_seq/visual</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> SRR58746&#123;57..62&#125;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">~/miniconda3/bin/computeMatrix reference-point -S ~/ATAC_seq/peak/<span class="variable">$&#123;i&#125;</span>_treat_pileup.bw -R ~/Ref/Arabidopsis/Arabidopsis_thaliana.TAIR10.44.gtf -a 3000 -b 3000 -p 1 -o <span class="variable">$&#123;i&#125;</span>.matrix.TSS.3k.gz</span><br><span class="line">~/miniconda3/bin/plotHeatmap -m <span class="variable">$&#123;i&#125;</span>.matrix.TSS.3k.gz -o <span class="variable">$&#123;i&#125;</span>.TSS.3k.png --colorMap Reds</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-IGV中查看数据"><a href="#8-2-IGV中查看数据" class="headerlink" title="8.2 IGV中查看数据"></a>8.2 IGV中查看数据</h3><p>导入bigwig文件和narrowPeak文件到IGV中（可以显示peaks的名称），即可查看ATAC-Seq数据的结果。这一步之前也做过</p>
+<h3 id="8-3-deeptools"><a href="#8-3-deeptools" class="headerlink" title="8.3 deeptools"></a>8.3 <strong>deeptools</strong></h3><p>deeptools 提供了 bam, bigwig 处理、QC、画图等许多工具。本教程介绍 plotHeatmap 画 ATACseq 信号热图。</p>
+<p>第一步 <code>bamCoverage</code> 命令将 Bam 文件转换成 bigwig 文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bamCoverage --numberOfProcessors 8 --effectiveGenomeSize 2747877777 --normalizeUsing RPGC \</span><br><span class="line">--outFileFormat bigwig -b <span class="variable">$&#123;bam_dir&#125;</span>/<span class="variable">$&#123;sample&#125;</span>_MD.bam -o <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;sample&#125;</span>.bw</span><br></pre></td></tr></table></figure>
+
+<p>参数 <code>--effectiveGenomeSize</code> 的设置值在 <a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://deeptools.readthedocs.io/en/latest/content/feature/effectiveGenomeSize.html">Effective Genome Size — deepTools 3.4.3 documentation</a> 查看。</p>
+<p>RPGC 计算方法：</p>
+<p><a href="figure8.svg">figure8</a></p>
+<p>Scale factor 计算方法：(total number of mapped reads * fragment length) / effective genome size</p>
+<p>第二步 <code>computeMatrix</code> 命令生成画图矩阵。但是先用 R 语言提取包含 peak 的启动子区域。注意输出的 BED 要包含 strand 列，computeMatrix 命令会正确处理 strand 信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">library(rtracklayer)</span><br><span class="line">library(TxDb.Hsapiens.UCSC.hg38.knownGene)</span><br><span class="line"></span><br><span class="line">txdb &lt;- TxDb.Hsapiens.UCSC.hg38.knownGene</span><br><span class="line"></span><br><span class="line">promoter &lt;- promoters(genes(txdb), upstream = 3000, downstream = 3000)</span><br><span class="line">peak &lt;- import(peak_path, format = <span class="string">&quot;narrowPeak&quot;</span>)</span><br><span class="line">overlap_index &lt;- findOverlaps(promoter, peak)</span><br><span class="line">keep_promoter &lt;- unique(promoter[queryHits(overlap_index)])</span><br><span class="line">export.bed(keep_promoter, bed_path)</span><br></pre></td></tr></table></figure>
+
+<p>从 bigwig 文件生成用于热图的矩阵，多个 bigwig 文件用空格分隔。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">computeMatrix scale-regions --regionsFileName <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;group&#125;</span>_promoter.bed --regionBodyLength 6000 \</span><br><span class="line">--outFileName <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;group&#125;</span>_matrix.gz --binSize 60 --numberOfProcessors 4 \</span><br><span class="line">--scoreFileName <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;group&#125;</span>_1.bw <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;group&#125;</span>_2.bw <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;group&#125;</span>_3.bw</span><br></pre></td></tr></table></figure>
+
+<p>最后 plotHeatmap 命令画图。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plotHeatmap --matrixFile <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;group&#125;</span>_matrix.gz --outFileName <span class="variable">$&#123;bw_dir&#125;</span>/<span class="variable">$&#123;group&#125;</span>_heatmap.pdf \</span><br><span class="line">--zMin 0 --zMax 8 --xAxisLabel Promoter --startLabel 3Kb --endLabel 3Kb</span><br></pre></td></tr></table></figure>
+
+<p><img src="figure9.png" alt="figure9"></p>
+<h3 id="8-4-EnrichedHeatmap"><a href="#8-4-EnrichedHeatmap" class="headerlink" title="8.4 EnrichedHeatmap"></a>8.4 <strong>EnrichedHeatmap</strong></h3><p>EnrichedHeatmap 基于 ComplexHeatmap 的信号富集热图 R 包。其原理是将 peakset 信号转换为矩阵并热图可视化。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">library<span class="punctuation">(</span>rtracklayer<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>TxDb.Hsapiens.UCSC.hg38.knownGene<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>ChIPseeker<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>EnrichedHeatmap<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>circlize<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+
+<p>取得基因组启动子区域，注意用 <code>genes(txdb)</code> 而不是 <code>txdb</code> 限制为基因的启动子，否则条目将非常多。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">txdb <span class="operator">&lt;-</span> TxDb.Hsapiens.UCSC.hg38.knownGene</span><br><span class="line">promoter <span class="operator">&lt;-</span> promoters<span class="punctuation">(</span>genes<span class="punctuation">(</span>txdb<span class="punctuation">)</span><span class="punctuation">,</span> upstream <span class="operator">=</span> <span class="number">3000</span><span class="punctuation">,</span> downstream <span class="operator">=</span> <span class="number">3000</span><span class="punctuation">)</span></span><br><span class="line">promoter<span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span><span class="number">3</span><span class="punctuation">]</span></span><br><span class="line">GRanges object with <span class="number">3</span> ranges and <span class="number">1</span> metadata column<span class="operator">:</span></span><br><span class="line">      seqnames            ranges strand <span class="operator">|</span>     gene_id</span><br><span class="line">         <span class="operator">&lt;</span>Rle<span class="operator">&gt;</span>         <span class="operator">&lt;</span>IRanges<span class="operator">&gt;</span>  <span class="operator">&lt;</span>Rle<span class="operator">&gt;</span> <span class="operator">|</span> <span class="operator">&lt;</span>character<span class="operator">&gt;</span></span><br><span class="line">    <span class="number">1</span>    chr19 <span class="number">58359752</span><span class="operator">-</span><span class="number">58365751</span>      <span class="operator">-</span> <span class="operator">|</span>           <span class="number">1</span></span><br><span class="line">   <span class="number">10</span>     chr8 <span class="number">18388282</span><span class="operator">-</span><span class="number">18394281</span>      <span class="operator">+</span> <span class="operator">|</span>          <span class="number">10</span></span><br><span class="line">  <span class="number">100</span>    chr20 <span class="number">44649234</span><span class="operator">-</span><span class="number">44655233</span>      <span class="operator">-</span> <span class="operator">|</span>         <span class="number">100</span></span><br><span class="line">  <span class="operator">-</span><span class="operator">-</span><span class="operator">-</span><span class="operator">-</span><span class="operator">-</span><span class="operator">-</span><span class="operator">-</span></span><br><span class="line">  seqinfo<span class="operator">:</span> <span class="number">595</span> sequences <span class="punctuation">(</span><span class="number">1</span> circular<span class="punctuation">)</span> from hg38 genome</span><br></pre></td></tr></table></figure>
+
+<p>用 ChIPseeker 包的 <code>readPeakFile</code> 函数读取 narrowPeak 文件。或者如果是 rtracklayer 包的 <code>import</code> 函数，它支持读取更多的格式，比如 bigwig,bed 等。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peak <span class="operator">&lt;-</span> readPeakFile<span class="punctuation">(</span>peakPath<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+
+<p>将启动子区 peakset 数据转换为画图矩阵。注意将没信号的启动子区数据移除。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mat <span class="operator">&lt;-</span> normalizeToMatrix<span class="punctuation">(</span>peak<span class="punctuation">,</span> promoter<span class="punctuation">,</span> extend <span class="operator">=</span> <span class="number">0</span><span class="punctuation">,</span> value_column <span class="operator">=</span> <span class="string">&quot;V5&quot;</span><span class="punctuation">,</span> k <span class="operator">=</span> <span class="number">100</span><span class="punctuation">,</span> mean_mode <span class="operator">=</span> <span class="string">&quot;w0&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 移除没信号启动子区</span></span><br><span class="line">mat <span class="operator">&lt;-</span> mat<span class="punctuation">[</span>rowSums<span class="punctuation">(</span>mat<span class="punctuation">)</span> <span class="operator">&gt;</span> <span class="number">0</span><span class="punctuation">,</span><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>读取后 narrowPeak 数据 “V5” 列为峰信号强度值，所以 <code>value_column</code> 参数设置 “V5”.参数 <code>k</code> 决定 bins/windows 数目（矩阵的列数）。参数 <code>mean_mode</code> 决定计算平均信号强度方法，可选以下方法：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Following illustrates different settings <span class="keyword">for</span> mean_mode <span class="punctuation">(</span>note there is one signal region overlapping with other signals<span class="punctuation">)</span><span class="operator">:</span></span><br><span class="line"></span><br><span class="line">      <span class="number">40</span>      <span class="number">50</span>     <span class="number">20</span>     values <span class="keyword">in</span> signal regions</span><br><span class="line">    <span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span>   <span class="operator">+</span><span class="operator">+</span><span class="operator">+</span>    <span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span>   signal regions</span><br><span class="line">           <span class="number">30</span>               values <span class="keyword">in</span> signal region</span><br><span class="line">         <span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span><span class="operator">+</span>             signal region</span><br><span class="line">      <span class="operator">==</span><span class="operator">==</span><span class="operator">==</span><span class="operator">==</span><span class="operator">==</span><span class="operator">==</span><span class="operator">==</span><span class="operator">==</span><span class="operator">=</span>     a window <span class="punctuation">(</span><span class="number">17</span>bp<span class="punctuation">)</span><span class="punctuation">,</span> there are <span class="number">4</span>bp not overlapping to <span class="built_in">any</span> signal regions.</span><br><span class="line">        <span class="number">4</span>  <span class="number">6</span>  <span class="number">3</span>      <span class="number">3</span>      overlap</span><br><span class="line"></span><br><span class="line">    absolute<span class="operator">:</span> <span class="punctuation">(</span><span class="number">40</span> <span class="operator">+</span> <span class="number">30</span> <span class="operator">+</span> <span class="number">50</span> <span class="operator">+</span> <span class="number">20</span><span class="punctuation">)</span><span class="operator">/</span><span class="number">4</span></span><br><span class="line">    weighted<span class="operator">:</span> <span class="punctuation">(</span><span class="number">40</span><span class="operator">*</span><span class="number">4</span> <span class="operator">+</span> <span class="number">30</span><span class="operator">*</span><span class="number">6</span> <span class="operator">+</span> <span class="number">50</span><span class="operator">*</span><span class="number">3</span> <span class="operator">+</span> <span class="number">20</span><span class="operator">*</span><span class="number">3</span><span class="punctuation">)</span><span class="operator">/</span><span class="punctuation">(</span><span class="number">4</span> <span class="operator">+</span> <span class="number">6</span> <span class="operator">+</span> <span class="number">3</span> <span class="operator">+</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">    w0<span class="operator">:</span>       <span class="punctuation">(</span><span class="number">40</span><span class="operator">*</span><span class="number">4</span> <span class="operator">+</span> <span class="number">30</span><span class="operator">*</span><span class="number">6</span> <span class="operator">+</span> <span class="number">50</span><span class="operator">*</span><span class="number">3</span> <span class="operator">+</span> <span class="number">20</span><span class="operator">*</span><span class="number">3</span><span class="punctuation">)</span><span class="operator">/</span><span class="punctuation">(</span><span class="number">4</span> <span class="operator">+</span> <span class="number">6</span> <span class="operator">+</span> <span class="number">3</span> <span class="operator">+</span> <span class="number">3</span> <span class="operator">+</span> <span class="number">4</span><span class="punctuation">)</span></span><br><span class="line">    coverage<span class="operator">:</span> <span class="punctuation">(</span><span class="number">40</span><span class="operator">*</span><span class="number">4</span> <span class="operator">+</span> <span class="number">30</span><span class="operator">*</span><span class="number">6</span> <span class="operator">+</span> <span class="number">50</span><span class="operator">*</span><span class="number">3</span> <span class="operator">+</span> <span class="number">20</span><span class="operator">*</span><span class="number">3</span><span class="punctuation">)</span><span class="operator">/</span><span class="number">17</span></span><br></pre></td></tr></table></figure>
+
+<p>最后 <code>EnrichedHeatmap</code> 函数画图。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hm_color <span class="operator">&lt;-</span> colorRamp2<span class="punctuation">(</span>breaks <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">0</span><span class="punctuation">,</span> <span class="number">1000</span><span class="punctuation">)</span><span class="punctuation">,</span> colors <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;#fff5f0&quot;</span><span class="punctuation">,</span> <span class="string">&quot;#cb1c1d&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">top_anno <span class="operator">&lt;-</span> HeatmapAnnotation<span class="punctuation">(</span>enriched <span class="operator">=</span> anno_enriched<span class="punctuation">(</span>gp<span class="operator">=</span>gpar<span class="punctuation">(</span>col<span class="operator">=</span><span class="string">&quot;black&quot;</span><span class="punctuation">,</span> lwd <span class="operator">=</span> <span class="number">1.2</span><span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">enrich_hm <span class="operator">&lt;-</span> EnrichedHeatmap<span class="punctuation">(</span>mat <span class="operator">=</span> mat<span class="punctuation">,</span> col <span class="operator">=</span> hm_color<span class="punctuation">,</span> axis_name <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="operator">-</span><span class="number">3000</span><span class="punctuation">,</span> <span class="number">3000</span><span class="punctuation">)</span><span class="punctuation">,</span>top_annotation <span class="operator">=</span> top_anno<span class="punctuation">,</span> show_heatmap_legend <span class="operator">=</span> <span class="literal">FALSE</span><span class="punctuation">,</span> use_raster <span class="operator">=</span> <span class="literal">FALSE</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="figure10.png" alt="figure10"></p>
+<h3 id="9-多样品数据可重复评估"><a href="#9-多样品数据可重复评估" class="headerlink" title="9. 多样品数据可重复评估"></a>9. 多样品数据可重复评估</h3><h3 id="9-1-用bedtools计算overlap"><a href="#9-1-用bedtools计算overlap" class="headerlink" title="9.1 用bedtools计算overlap"></a>9.1 用bedtools计算overlap</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -l SRR587465&#123;7..9&#125;_peaks.narrowPeak</span><br><span class="line">30123 SRR5874657_peaks.narrowPeak</span><br><span class="line">30644 SRR5874658_peaks.narrowPeak</span><br><span class="line">30806 SRR5874659_peaks.narrowPeak</span><br><span class="line">bedtools intersect -a SRR5874657_peaks.narrowPeak -b SRR5874658_peaks.narrowPeak -wa &gt; tmp</span><br><span class="line">bedtools intersect -a tmp -b SRR5874659_peaks.narrowPeak -wa | <span class="built_in">wc</span> -l &amp;&amp; <span class="built_in">rm</span> -f tmp</span><br><span class="line">29310</span><br><span class="line"></span><br><span class="line"><span class="built_in">wc</span> -l SRR587466&#123;0..2&#125;_peaks.narrowPeak</span><br><span class="line">23965 SRR5874660_peaks.narrowPeak</span><br><span class="line">26038 SRR5874661_peaks.narrowPeak</span><br><span class="line">24812 SRR5874662_peaks.narrowPeak</span><br><span class="line">bedtools intersect -a SRR5874660_peaks.narrowPeak -b SRR5874661_peaks.narrowPeak -wa &gt; tmp</span><br><span class="line">bedtools intersect -a tmp -b SRR5874662_peaks.narrowPeak -wa | <span class="built_in">wc</span> -l &amp;&amp; <span class="built_in">rm</span> -f tmp</span><br><span class="line">22773</span><br></pre></td></tr></table></figure>
+
+<p>由以上可知，重复性不错。</p>
+<h3 id="9-2-IDR评估"><a href="#9-2-IDR评估" class="headerlink" title="9.2 IDR评估"></a>9.2 IDR评估</h3><p>同时考虑peaks间的overlap和富集倍数的一致性。使用和结果解读参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d8a7056b4294">https://www.jianshu.com/p/d8a7056b4294</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装</span></span><br><span class="line">~/miniconda3/bin/conda install idr</span><br><span class="line"><span class="comment">#先根据-log10(p-value)进行排序</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> SRR58746&#123;57..62&#125;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">sort</span> -k8,8nr ~/ATAC_seq/peak/<span class="variable">$&#123;i&#125;</span>_peaks.narrowPeak &gt; ~/ATAC_seq/idr/<span class="variable">$&#123;i&#125;</span>_peaks_sort.narrowPeak</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="comment">#使用示例</span></span><br><span class="line">~/miniconda3/bin/idr --samples SRR5874657_peaks_sort.narrowPeak SRR5874658_peaks_sort.narrowPeak -o SRR5874657_SRR5874658_idr --plot --input-file-type narrowP</span><br><span class="line">eak --rank p.value &amp;</span><br></pre></td></tr></table></figure>
+
+<p>会生成两个文件：SRR5874657_SRR5874658_idr.pngSRR5874657_SRR5874658_idr</p>
+<p><img src="figure11.png" alt="figure11"></p>
+<p>没有通过特定IDR阈值的peaks显示为红色</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">wc</span> -l SRR5874657_SRR5874658_idr</span><br><span class="line">28433 <span class="comment">#共有的部分</span></span><br><span class="line">awk <span class="string">&#x27;&#123;if($5 &gt;= 540) print $0&#125;&#x27;</span> SRR5874657_SRR5874658_idr | <span class="built_in">wc</span> -l</span><br><span class="line">19317 <span class="comment">#满足IDR的部分</span></span><br><span class="line">19317/28433=67.9%</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-注释"><a href="#10-注释" class="headerlink" title="10. 注释"></a>10. 注释</h3><p>这一步前面ChIP-seq也做了，感觉差不多</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">library(ChIPseeker)</span><br><span class="line">library(GenomicFeatures)</span><br><span class="line"></span><br><span class="line">ath &lt;- makeTxDbFromGFF(<span class="string">&quot;E:/Computational_Biologist/生信积累/测序类/表观遗传/ChIP-seq/拟南芥ChIP-seq_BMC基因组/ref/Arabidopsis_thaliana.TAIR10.44.gff3&quot;</span>)</span><br><span class="line">peaksfile &lt;- <span class="string">&quot;SRR5874658_peaks.narrowPeak&quot;</span></span><br><span class="line">peak &lt;- readPeakFile(peaksfile,header=F)</span><br><span class="line">outname=<span class="string">&quot;SRR5874658&quot;</span></span><br><span class="line"></span><br><span class="line">peakAnno &lt;- annotatePeak(peak,TxDb = ath,assignGenomicAnnotation = TRUE)</span><br><span class="line"></span><br><span class="line">pdf(file = paste0(outname,<span class="string">&quot;peakAnnotation.pdf&quot;</span>))</span><br><span class="line">plotAnnoPie(peakAnno,main=paste0(outname,<span class="string">&quot;\nDistribution of Peaks&quot;</span>),line=-8)</span><br><span class="line">dev.off()</span><br><span class="line"></span><br><span class="line"><span class="comment">#保存peaks的注释文件方便改图</span></span><br><span class="line">write.table(as.data.frame(peakAnno@anno),file = paste0(outname,<span class="string">&quot;peakAnnotation.txt&quot;</span>),sep = <span class="string">&quot;\t&quot;</span>,row.names = FALSE)</span><br></pre></td></tr></table></figure>
+
+<p><img src="figure12.png" alt="figure12"></p>
+<p>以上是一些ATAC-seq分析的部分过程，一些差异分析、motif 分析可以见这篇文章：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e043bc8c1bae">ATAC-Seq 分析流程</a>，希望对大家有帮助。</p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b7bd87315b6e">ATAC-seq 分析（上）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e043bc8c1bae">ATAC-Seq 分析流程</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.360doc.com/content/21/1017/08/15690396_1000103096.shtml">短读长序列比对软件bowtie2的安装和使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/HUANWEIFENXI/article/details/124127201">FastQC的安装与使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d5d5479c2d39">MultiQC的安装和使用</a></li>
+<li><a target="_blank" rel="noopener" href="http://cncbi.github.io/Picard-Manual-CN/">picard中文使用指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e83a7e10ea2e">MACS2文档学习</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/macs3-project/MACS/blob/master/docs/callpeak.md">MACS2 Call peaks parameters</a></li>
+</ol>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/05/24/相似性量度（Similarity-Measurement）大总结/" data-toggle="tooltip" data-placement="top" title="相似性量度（Similarity Measurement）大总结">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Bioinformatics" title="Bioinformatics">Bioinformatics</a>
+                        
+                          <a class="tag" href="/tags/#Next Generation Sequencing" title="Next Generation Sequencing">Next Generation Sequencing</a>
+                        
+                          <a class="tag" href="/tags/#ATAC-seq" title="ATAC-seq">ATAC-seq</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/06/18/ATAC-seq%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B/";
+    var disqus_url = "https://www.chunfu.site/2022/06/18/ATAC-seq%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Simons-Maddy">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
