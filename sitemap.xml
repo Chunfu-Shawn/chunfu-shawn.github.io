@@ -230,13 +230,6 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/tags/ATAC-seq/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.chunfu.site/tags/Biology/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -252,6 +245,34 @@
   
   <url>
     <loc>https://www.chunfu.site/tags/6mA/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/Programming/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/JavaScript/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/R/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/ATAC-seq/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -307,13 +328,6 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/tags/Similarity-Measurement/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.chunfu.site/tags/Blog/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -335,21 +349,7 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/tags/Programming/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/tags/JavaScript/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/tags/R/</loc>
+    <loc>https://www.chunfu.site/tags/Similarity-Measurement/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -386,7 +386,7 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/categories/Math-Statistics/</loc>
+    <loc>https://www.chunfu.site/categories/Programming/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -400,7 +400,7 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/categories/Bioinformatics/Data-format/</loc>
+    <loc>https://www.chunfu.site/categories/Math-Statistics/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -414,28 +414,21 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/categories/Blog/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Math-Statistics/Non-parametric-test/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/Data-format/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.chunfu.site/categories/Biology/Brain-science/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Bioinformatics/Data-format/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Blog/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -449,35 +442,21 @@
   </url>
   
   <url>
+    <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/Data-format/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Math-Statistics/Non-parametric-test/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.chunfu.site/categories/Biology/Epigenetics/6mA/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Math-Statistics/Similarity-Measurement/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Blog/Github-Pages/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Math-Statistics/Non-parametric-test/Correlation/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Blog/Hexo/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -491,6 +470,27 @@
   </url>
   
   <url>
+    <loc>https://www.chunfu.site/categories/Blog/Github-Pages/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Math-Statistics/Similarity-Measurement/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Math-Statistics/Non-parametric-test/Correlation/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.chunfu.site/categories/Blog/Github-Pages/Hexo/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -498,7 +498,7 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/categories/Programming/</loc>
+    <loc>https://www.chunfu.site/categories/Blog/Hexo/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
