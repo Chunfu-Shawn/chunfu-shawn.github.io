@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.chunfu.site/about/index.html</loc>
+    
+    <lastmod>2022-08-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.chunfu.site/2022/05/24/%E7%9B%B8%E4%BC%BC%E6%80%A7%E9%87%8F%E5%BA%A6%EF%BC%88Similarity-Measurement%EF%BC%89%E5%A4%A7%E6%80%BB%E7%BB%93/</loc>
     
     <lastmod>2022-07-27</lastmod>
@@ -39,15 +48,6 @@
   
   <url>
     <loc>https://www.chunfu.site/2022/05/01/%EF%BC%88%E4%B8%89%EF%BC%89%E4%BD%BF%E7%94%A8Hexo-%E6%90%AD%E5%BB%BABlog%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%8A%A5%E9%94%99/</loc>
-    
-    <lastmod>2022-05-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/about/index.html</loc>
     
     <lastmod>2022-05-31</lastmod>
     
@@ -230,6 +230,13 @@
   </url>
   
   <url>
+    <loc>https://www.chunfu.site/tags/ATAC-seq/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.chunfu.site/tags/Biology/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -266,13 +273,6 @@
   
   <url>
     <loc>https://www.chunfu.site/tags/R/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/tags/ATAC-seq/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -328,27 +328,6 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/tags/Blog/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/tags/Github-Pages/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/tags/Hexo/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.chunfu.site/tags/Similarity-Measurement/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -364,6 +343,27 @@
   
   <url>
     <loc>https://www.chunfu.site/tags/Python/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/Blog/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/Github-Pages/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/Hexo/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -407,20 +407,6 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/categories/Biology/Epigenetics/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Biology/Brain-science/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Data-format/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -428,14 +414,7 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/categories/Blog/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/ATAC-seq/</loc>
+    <loc>https://www.chunfu.site/categories/Biology/Epigenetics/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -456,21 +435,21 @@
   </url>
   
   <url>
+    <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/ATAC-seq/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Biology/Brain-science/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.chunfu.site/categories/Biology/Epigenetics/6mA/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Biology/Brain-science/Cerebral-cortex/</loc>
-    <lastmod>2022-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Blog/Github-Pages/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -491,7 +470,21 @@
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/categories/Blog/Github-Pages/Hexo/</loc>
+    <loc>https://www.chunfu.site/categories/Biology/Brain-science/Cerebral-cortex/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Blog/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Blog/Github-Pages/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -499,6 +492,13 @@
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/Hexo/</loc>
+    <lastmod>2022-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/categories/Blog/Github-Pages/Hexo/</loc>
     <lastmod>2022-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
