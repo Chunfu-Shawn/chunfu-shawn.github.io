@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          深究JS中的数据类型和变量拷贝（其他语言类似) - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/08/11/深究JS中的数据类型和变量赋值（其他语言类似）/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-NGS.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Programming" title="Programming">Programming</a>
+                        
+                          <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+                        
+                          <a class="tag" href="/tags/#Data Structure" title="Data Structure">Data Structure</a>
+                        
+                    </div>
+                    <h1>深究JS中的数据类型和变量拷贝（其他语言类似)</h1>
+                    <h2 class="subheading">学习变量的存储结构</h2>
+                    <span class="meta">
+                        Posted by Chunfu Shawn on
+                        2022-08-11 | 
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <h3 id="一、数据类型"><a href="#一、数据类型" class="headerlink" title="一、数据类型"></a>一、数据类型</h3><p>JS中的每一个值都属于一种数据类型，一共有六种：</p>
+<ul>
+<li>（1）数值（number）：整数和小数；（2）字符串（string）：文本；（3）布尔值（boolen）：表示真伪的两个特殊值，true/false；（4）undefined：表示未定义或者不存在；（5）null：表示空值；（5）对象（object）：各种值的合成；（ES6又添加了两种数据类型，Symbol：独一无二的值；和BigInt：任何位数的整数）</li>
+<li>根据这些数据类型的定义也能看出，他们通常分为两大类，number、string、boolen、undefined、null、symbol和bigint合称为“<strong>原始类型</strong>”（primitive type），也称作基本数据类型，即他们是最基本的数据类型，不能再细分了；而object对象则称作“<strong>合成类型</strong>”（complex type），也称作引用数据类型，因为一个对象往往是多个原始类型的值合成的，而一般用的数组（array）、日期（date）等等都是对象，所以也是引用数据类型。</li>
+</ul>
+<h3 id="二、数据结构"><a href="#二、数据结构" class="headerlink" title="二、数据结构"></a>二、数据结构</h3><ol>
+<li><p><strong>堆（heap）</strong><br>是一种非连续储存的<strong>树形数据结构</strong>，每一个节点一个值，整棵树是经过排序的，特点是根节点的值最小（或最大），且节点的两个字数也是一个堆，常用来实现优先队列。例如二叉树。</p>
+</li>
+<li><p><strong>栈（stack）</strong><br>是一种连续储存的数据结构，具有<strong>先进后出</strong>的性质。通常的操作有入栈（压栈），出栈和栈顶元素，要读取某个元素，需要将栈顶元素和其之间的所有元素出栈才能完成。</p>
+</li>
+</ol>
+<h3 id="三、内存：堆内存（heap）和栈内存（stack）"><a href="#三、内存：堆内存（heap）和栈内存（stack）" class="headerlink" title="三、内存：堆内存（heap）和栈内存（stack）"></a>三、内存：堆内存（heap）和栈内存（stack）</h3><ol>
+<li><strong>堆内存</strong>：一般为程序员手动分配和释放，在程序结束后可能由操作系统自动释放，（Java有自动回收机制，而C++需要手动释放），通常用new关键字来分配，<strong>允许程序在运行时动态地申请某个大小的内存空间。</strong>是不连续的内存区域，分配的速度较慢，但比较灵活，获得的空间较大。</li>
+<li><strong>栈内存：为编译器自动分配和释放，</strong>如函数参数、局部变量、临时变量等等；是一块连续的内存区域，分配的速度较快，大小通常是系统预设好的，所以能从栈内存获得的空间较小。</li>
+<li>除了这两部分，还有静态存储区：内存在程序编译的时候就已经分配好了，这块内存在整个运行期间都存在，主要存放静态数据、全局变量和一些常量。</li>
+</ol>
+<h3 id="四、JS不同数据类型变量的存储方法"><a href="#四、JS不同数据类型变量的存储方法" class="headerlink" title="四、JS不同数据类型变量的存储方法"></a>四、JS不同数据类型变量的存储方法</h3><ol>
+<li>原始类型数据，包括Number、String、Boolen等，在<strong>栈内存</strong>中直接存储<strong>变量名和值</strong>；</li>
+<li>而合成类型数据，对象Object的<strong>真实数据存储在堆内存</strong>中，它在<strong>栈内存</strong>中存储的是<strong>变量名和堆内存的位置</strong>。（“引用类型”这个名称可以体现出这种数据类型的特点，引用了堆内存的地址）<br>例如：<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = <span class="number">0</span> <span class="comment">//栈内存</span></span><br><span class="line"><span class="keyword">let</span> a2 = <span class="string">&quot;String&quot;</span> <span class="comment">//栈内存</span></span><br><span class="line"><span class="keyword">let</span> a3 = <span class="literal">null</span> <span class="comment">//栈内存</span></span><br><span class="line"><span class="keyword">let</span> b = &#123; x :<span class="number">10</span> &#125; <span class="comment">//变量名b和值地址存在栈中，&#123;x : 10&#125;作为对象存在堆中</span></span><br><span class="line"><span class="keyword">let</span> c =[ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ] <span class="comment">//变量名c和值地址存在栈中，[ 1, 2, 3 ]作为对象存在堆中</span></span><br></pre></td></tr></table></figure>
+<img src="figure1.png" alt="figure1.png"></li>
+</ol>
+<h3 id="五、不同数据类型变量的拷贝"><a href="#五、不同数据类型变量的拷贝" class="headerlink" title="五、不同数据类型变量的拷贝"></a>五、不同数据类型变量的拷贝</h3><ul>
+<li><p><strong>基础类型变量</strong>的拷贝，是在栈内存中新增一个储存空间来存放数值，两个变量是相互独立的，例如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">let</span> a = <span class="number">1</span></span><br><span class="line">&gt; <span class="keyword">let</span> b = a</span><br><span class="line">&gt; b</span><br><span class="line"><span class="number">1</span></span><br><span class="line">&gt; b =<span class="number">2</span> <span class="comment">//改变变量b的值</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line">&gt; a <span class="comment">//变量a还是原值</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure></li>
+<li><p><strong>合成类型数据</strong>例如对象，拷贝后的不同变量之间是共享一个值地址，更改属性值只是更改了堆内存中的值，栈内存的不同变量名还是指向同一个堆内存地址，例如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">let</span> a1 = &#123;<span class="string">&quot;a1&quot;</span> : <span class="number">1</span>&#125;</span><br><span class="line">&gt; <span class="keyword">let</span> b1 = a1</span><br><span class="line">&gt; b1.<span class="property">a1</span> = <span class="number">2</span> <span class="comment">//改变变量b1其中一个属性的值</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line">&gt; a1 <span class="comment">//变量a1的该属性值更改</span></span><br><span class="line">&#123; <span class="attr">a1</span>: <span class="number">2</span> &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>通过数组的forEach方法来进一步分析，先来看一个例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">let</span> info=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>];</span><br><span class="line">&gt; info.<span class="title function_">forEach</span>( <span class="function"><span class="params">item</span> =&gt;</span>&#123;</span><br><span class="line">	index = <span class="number">10</span>;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(info); <span class="comment">// [1,2,3,4,5]</span></span><br></pre></td></tr></table></figure>
+
+<p>forEach方法没有返回值，只是操作数据，<strong>遍历数组的每一项</strong>，在使用forEach方法时对数组中每个数据都创建了一个<strong>拷贝变量index</strong>，我们之后操作index变量。对于基础类型数据，index变量就是新创建的一个内存，index变量的改变并不影响原变量info地址值的改变，例如例子中index分布是1、2、3等等；<strong>但是当index变量对应的是合成类型时，index存储的是一个引用地址，操作它更改的是对应的堆内存！</strong>例如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">let</span> info=[&#123;<span class="attr">age</span>:<span class="number">1</span>&#125;,&#123;<span class="attr">age</span>:<span class="number">2</span>&#125;,&#123;<span class="attr">age</span>:<span class="number">3</span>&#125;,&#123;<span class="attr">age</span>:<span class="number">4</span>&#125;,&#123;<span class="attr">age</span>:<span class="number">5</span>&#125;];</span><br><span class="line">&gt; info.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item,index,arr</span>)=&gt;</span>&#123;</span><br><span class="line">		item.<span class="property">age</span>=<span class="number">10</span>;</span><br><span class="line">		<span class="comment">//不过这样也可以的：arr[index].age=10;</span></span><br><span class="line">		&#125;);</span><br><span class="line">&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(info); <span class="comment">//[&#123;age:10&#125;,&#123;age:10&#125;,&#123;age:10&#125;,&#123;age:10&#125;,&#123;age:10&#125;];</span></span><br></pre></td></tr></table></figure>
+
+<p>所以forEach方法对于存储了基本数据类型的数组，是不能更改原数据的，但对于元素含有引用数据类型时，因为拷贝了地址值变量，会直接更改堆内存，所以原数据的地址值指向的数值改变了，因此改变了原数据。多多品味一下其中的差别，主要是弄清楚在forEach方法中变量拷贝时发生了什么。</p>
+<h3 id="六、对象拷贝的方法"><a href="#六、对象拷贝的方法" class="headerlink" title="六、对象拷贝的方法"></a>六、对象拷贝的方法</h3><p><strong>1、浅拷贝和深拷贝</strong></p>
+<p><strong>对象（Object、Array）克隆或者拷贝时，分为浅拷贝和深拷贝</strong></p>
+<p>浅拷贝只是复制指向某个对象的指针，而不复制对象本身，新旧对象还是共享同一块内存；但深拷贝会另外创造一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象。</p>
+<p><img src="figure2.jpg" alt="figure2.jpg"></p>
+<p><strong>2、赋值和浅拷贝的区别</strong></p>
+<ul>
+<li>当我们把一个对象<strong>赋值</strong>给一个新的变量时，赋的其实是该对象的在栈中的地址，而不是堆中的数据。也就是两个对象指向的是同一个存储空间，无论哪个对象发生改变，其实都是改变的存储空间的内容，因此，两个对象是联动的。</li>
+<li>浅拷贝是按位拷贝对象，它会创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。如果属性是基本类型，拷贝的就是基本类型的值；如果属性是内存地址（引用类型），拷贝的就是内存地址 ，因此如果其中一个对象改变了这个地址，就会影响到另一个对象。即默认拷贝构造函数只是对对象进行浅拷贝复制(逐个成员依次拷贝)，即只复制对象空间而不复制资源。<br>具体案例请参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/56741046">浅拷贝和深拷贝</a></li>
+</ul>
+<p><strong>3、如何进行深拷贝？</strong></p>
+<p>ES6新增的拓展运算符(…)可以实现浅拷贝和深拷贝</p>
+<p>如果只是一层数组或是对象，其元素只是简单类型的元素，那么属于深拷贝（就是一层拷贝，暂时就理解为深拷贝吧！！！！）</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aa = &#123;</span><br><span class="line">	<span class="attr">age</span>: <span class="number">18</span>,</span><br><span class="line">	<span class="attr">name</span>: <span class="string">&#x27;aaa&#x27;</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">let</span> bb = &#123;...aa&#125;;</span><br><span class="line">bb.<span class="property">age</span> = <span class="number">22</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(aa.<span class="property">age</span>); <span class="comment">// 18</span></span><br></pre></td></tr></table></figure>
+
+<p>如果数组或对象中的元素是引用类型的元素，那么就是浅拷贝</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aa = &#123;</span><br><span class="line">		<span class="attr">age</span>: <span class="number">18</span>,</span><br><span class="line">		<span class="attr">name</span>: <span class="string">&#x27;aaa&#x27;</span>,</span><br><span class="line">		<span class="attr">address</span>: &#123;</span><br><span class="line">			<span class="attr">city</span>: <span class="string">&#x27;shanghai&#x27;</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">let</span> bb = &#123;...aa&#125;;</span><br><span class="line">bb.<span class="property">address</span>.<span class="property">city</span> = <span class="string">&#x27;shenzhen&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(aa.<span class="property">address</span>.<span class="property">city</span>); <span class="comment">// shenzhen</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>如何深拷贝？</strong></p>
+<p><strong>1）递归方法，遍历对象、数组直到里面都是基本数据类型</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aa = &#123;</span><br><span class="line">	<span class="attr">age</span>: <span class="number">18</span>,</span><br><span class="line">	<span class="attr">name</span>: <span class="string">&#x27;aaa&#x27;</span>,</span><br><span class="line">	<span class="attr">address</span>: &#123;</span><br><span class="line">			<span class="attr">city</span>: <span class="string">&#x27;shanghai&#x27;</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">let</span> bb = &#123;</span><br><span class="line">		...aa,</span><br><span class="line">		<span class="attr">address</span>: &#123;...aa.<span class="property">address</span>&#125;</span><br><span class="line">	&#125;;</span><br><span class="line">bb.<span class="property">address</span>.<span class="property">city</span> = <span class="string">&#x27;shenzhen&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(aa.<span class="property">address</span>.<span class="property">city</span>); <span class="comment">// shanghai</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>2）利用JSON.parse(JSON.stringify(xxx))来实现深拷贝</strong></p>
+<p>注意：JSON.parse(JSON.stringify(xxx))的方法，如果变量中含有Promise对象，则不可以使用该方法</p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a target="_blank" rel="noopener" href="https://wangdoc.com/javascript/types/general.html">网道-数据类型概述</a></p>
+<p><a target="_blank" rel="noopener" href="https://waitfof.blog.csdn.net/article/details/83583466?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-83583466-blog-114527738.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-83583466-blog-114527738.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1">基础知识篇——堆内存和栈内存</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44628533/article/details/102495129">forEach到底可以改变原数组吗</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/56741046">浅拷贝与深拷贝</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43925630/article/details/111299038">对象的扩展运算符（…）深拷贝还是浅拷贝</a></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/07/15/R和JavaScript中的特殊值/" data-toggle="tooltip" data-placement="top" title="R和JavaScript中的特殊值">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Programming" title="Programming">Programming</a>
+                        
+                          <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+                        
+                          <a class="tag" href="/tags/#Data Structure" title="Data Structure">Data Structure</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/08/11/%E6%B7%B1%E7%A9%B6JS%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%EF%BC%88%E5%85%B6%E4%BB%96%E8%AF%AD%E8%A8%80%E7%B1%BB%E4%BC%BC%EF%BC%89/";
+    var disqus_url = "https://www.chunfu.site/2022/08/11/%E6%B7%B1%E7%A9%B6JS%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%EF%BC%88%E5%85%B6%E4%BB%96%E8%AF%AD%E8%A8%80%E7%B1%BB%E4%BC%BC%EF%BC%89/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Simons-Maddy">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
