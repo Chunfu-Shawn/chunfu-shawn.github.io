@@ -59,7 +59,123 @@
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <!-- xiaocf 2022-5-2 -->
     <script></script>
-</head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
 
 
 <!-- hack iOS CSS :active style -->
@@ -202,6 +318,41 @@
 
 <div class="post-preview">
 
+    <a href="/2022/09/20/求解无约束最优化问题的方法总结/">
+        <h2 class="post-title">
+            求解无约束最优化问题的方法总结
+        </h2>
+        <h3 class="post-subtitle">
+            求解无约束最优化问题的方法
+        </h3>
+        <div class="post-content-preview">
+            
+持续填坑中。。。
+
+假设多元目标函数是上具有一阶连续偏导的函数，要求解的无约束最优化如下：
+
+一些经典的无约束优化问题，例如：
+1、数据拟合，类似最小二乘法，但是我们想用一个指数来拟合：
+
+2、假设数据为正态分布，使用正态分布来拟合：
+正态分布模型： 
+代价函数： 
+要求估算出 来最大化概率分布
+3、找到一堆数据的几何中心，几何中心满足跟所有多元数据的二范式最小：
+
+一、分块松弛法对于多元......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Chunfu Shawn on
+        2022-09-20
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2022/08/11/深究JS中的数据类型和变量赋值（其他语言类似）/">
         <h2 class="post-title">
             深究JS中的数据类型和变量拷贝（其他语言类似)
@@ -257,11 +408,11 @@
             汇总了JavaScript、R、Bash、Python等一些学习网站
         </h3>
         <div class="post-content-preview">
-            本人使用的编程语言包括：JavaScript、R、Bash和Python等，这篇文章主要是总结一些自己自学编程过程中认真看过的网站，省去了许多自己买实体书的费用（感慨网络让知识获取更加方便了）。一些综合性差的网站和博客我就不贴上来了，一些好的我没有看过的网站也欢迎大家来补充！
+            本人使用的编程语言包括：JavaScript、R、Bash和Python等，这篇文章主要是总结一些自己自学编程过程中认真看过的网站，省去了许多自己买实体书的费用（网络让知识获取更加方便了），很多一般的网站我就不贴上来了，一些好的网站我没有看过也欢迎大家来补充！
 
 大家可以参考着自学，学习也需要日积月累，名单不定期更新！
 
-1、JavaScript学习JavaScript建议从......
+1、JavaScript学习JavaScript建议从CommonJS......
         </div>
     </a>
     <p class="post-meta">
@@ -439,34 +590,6 @@ BCF
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2022/05/07/是否需要以及如何进行reads去重复/">
-        <h2 class="post-title">
-            是否需要以及如何进行reads去重复
-        </h2>
-        <h3 class="post-subtitle">
-            是否需要去除PCR重复，选择去除的工具？
-        </h3>
-        <div class="post-content-preview">
-            
-转载自简书：****讨厌又迷人的reads去重复****
-
-在NGS分析入门阶段，我们不需要考虑太多的细节，只用知道一个分析的大致流程并完整跑下来即可。太多的细节，只会让我们对于分析产生莫须有的恐惧，因此一些“无关紧要“细节就被我们刻意的忽略了……
-但是随着我们对于测序数据的认识不断加深，我们要考虑的小细节便越来越多。其中，是否去除PCR重复就是一个很值得思考的问题。
-关键点：
-
-RNA-......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chunfu Shawn on
-        2022-05-07
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -518,7 +641,7 @@ RNA-......
                             
                         
                             
-                            <a href="/tags/#Biology" title="Biology" rel="2">Biology</a>
+                            <a href="/tags/#Biology" title="Biology" rel="3">Biology</a>
                             
                         
                             
@@ -530,11 +653,11 @@ RNA-......
                             
                         
                             
-                            <a href="/tags/#Programming" title="Programming" rel="3">Programming</a>
+                            <a href="/tags/#Programming" title="Programming" rel="2">Programming</a>
                             
                         
                             
-                            <a href="/tags/#JavaScript" title="JavaScript" rel="3">JavaScript</a>
+                            <a href="/tags/#JavaScript" title="JavaScript" rel="2">JavaScript</a>
                             
                         
                             
@@ -542,7 +665,7 @@ RNA-......
                             
                         
                             
-                            <a href="/tags/#Math&amp;Statistics" title="Math&amp;Statistics" rel="2">Math&amp;Statistics</a>
+                            <a href="/tags/#Math&amp;Statistics" title="Math&amp;Statistics" rel="3">Math&amp;Statistics</a>
                             
                         
                             
@@ -554,19 +677,19 @@ RNA-......
                             
                         
                             
-                            <a href="/tags/#Brain science" title="Brain science" rel="1">Brain science</a>
+                            <a href="/tags/#Brain science" title="Brain science" rel="2">Brain science</a>
                             
                         
                             
-                            <a href="/tags/#Neuron" title="Neuron" rel="1">Neuron</a>
+                            <a href="/tags/#Neuron" title="Neuron" rel="2">Neuron</a>
                             
                         
                             
-                            <a href="/tags/#Cerebral cortex" title="Cerebral cortex" rel="1">Cerebral cortex</a>
+                            <a href="/tags/#Cerebral cortex" title="Cerebral cortex" rel="2">Cerebral cortex</a>
                             
                         
                             
-                            <a href="/tags/#Development" title="Development" rel="1">Development</a>
+                            <a href="/tags/#Development" title="Development" rel="2">Development</a>
                             
                         
                             
@@ -594,7 +717,7 @@ RNA-......
                             
                         
                             
-                            <a href="/tags/#Data Structure" title="Data Structure" rel="1">Data Structure</a>
+                            <a href="/tags/#Optimization Methods" title="Optimization Methods" rel="1">Optimization Methods</a>
                             
                         
                     </div>
