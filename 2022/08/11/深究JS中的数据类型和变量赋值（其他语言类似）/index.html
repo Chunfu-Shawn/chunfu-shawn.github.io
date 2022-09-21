@@ -13,7 +13,7 @@
 
     <title>
         
-          深究JS中的数据类型和变量拷贝（其他语言类似) - Chunfu的博客 | Chunfu&#39;s Blog
+          深究JS中的数据类型和变量拷贝（R语言类似) - Chunfu的博客 | Chunfu&#39;s Blog
         
     </title>
 
@@ -192,13 +192,13 @@
                           <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
                         
                     </div>
-                    <h1>深究JS中的数据类型和变量拷贝（其他语言类似)</h1>
+                    <h1>深究JS中的数据类型和变量拷贝（R语言类似)</h1>
                     <h2 class="subheading">学习变量的存储结构</h2>
                     <span class="meta">
-                        Posted by Chunfu Shawn on
-                        2022-08-11<br/> 
-                        Last Updated by Chunfu Shawn on
-                        2022-08-11<br/>
+                        Posted by <b>Chunfu Shawn</b> on
+                        2022/08/11<br/> 
+                        Last Updated by <b>Chunfu Shawn</b> on
+                        2022/9/21<br/>
                         <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
                     </span>
                 </div>
@@ -286,6 +286,97 @@ target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/56741046">浅�
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aa = &#123;</span><br><span class="line">	<span class="attr">age</span>: <span class="number">18</span>,</span><br><span class="line">	<span class="attr">name</span>: <span class="string">&#x27;aaa&#x27;</span>,</span><br><span class="line">	<span class="attr">address</span>: &#123;</span><br><span class="line">			<span class="attr">city</span>: <span class="string">&#x27;shanghai&#x27;</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">let</span> bb = &#123;</span><br><span class="line">		...aa,</span><br><span class="line">		<span class="attr">address</span>: &#123;...aa.<span class="property">address</span>&#125;</span><br><span class="line">	&#125;;</span><br><span class="line">bb.<span class="property">address</span>.<span class="property">city</span> = <span class="string">&#x27;shenzhen&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(aa.<span class="property">address</span>.<span class="property">city</span>); <span class="comment">// shanghai</span></span><br></pre></td></tr></table></figure>
 <p><strong>2）利用JSON.parse(JSON.stringify(xxx))来实现深拷贝</strong></p>
 <p>注意：JSON.parse(JSON.stringify(xxx))的方法，如果变量中含有Promise对象，则不可以使用该方法</p>
+<h3
+id="七r语言的变量赋值与绑定">七、R语言的<strong>变量赋值与绑定</strong></h3>
+<p>在R中赋值本质上是把一个存储的对象与一个变量名“绑定”(bind)在一起，
+比如：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>并不是像C++、JAVA等语言那样， <code>x</code>代表某个存储位置，
+“<code>x &lt;- c(1,2,3)</code>”代表将1到3这些值存储到<code>x</code>所指向的存储位置。
+实际上，<code>&lt;-</code>右边的<code>c(1,2,3)</code>是一个表达式，
+其结果为一个R对象(object)， 而<code>x</code>只是一个变量名，
+并没有固定的类型、固定的存储位置，
+赋值的结果是将<code>x</code>绑定到值为<code>(1,2,3)</code>的R对象上。
+R对象有值，但不必有对应的变量名；
+变量名必须经过绑定才有对应的值和存储位置。</p>
+<p>这样，同一个R对象也可以被两个或多个变量名绑定。
+对于基本的数据类型如数值型向量，
+两个指向相同对象的变量当一个变量被修改时自动制作副本。 <code>tracemem(x)</code>可以显示变量名<code>x</code>绑定的地址并在其被制作副本时显示地址变化。
+如：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">cat<span class="punctuation">(</span><span class="built_in">tracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">## &lt;000000001C198D20&gt;</span></span><br><span class="line">y <span class="operator">&lt;-</span> x <span class="comment"># 这时y和x绑定到同一R对象</span></span><br><span class="line">cat<span class="punctuation">(</span><span class="built_in">tracemem</span><span class="punctuation">(</span>y<span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">## &lt;000000001C198D20&gt;</span></span><br><span class="line">y<span class="punctuation">[</span><span class="number">3</span><span class="punctuation">]</span> <span class="operator">&lt;-</span> <span class="number">0</span> <span class="comment"># 这时y制作了副本</span></span><br><span class="line"><span class="comment">## tracemem[0x000000001c198d20 -&gt; 0x0000000015ef67f8]: eval eval withVisible withCallingHandlers handle timing_fn evaluate_call &lt;Anonymous&gt; evaluate in_dir eng_r block_exec call_block process_group.block process_group withCallingHandlers process_file &lt;Anonymous&gt; &lt;Anonymous&gt; do.call eval eval eval eval eval.parent local</span></span><br><span class="line">x</span><br><span class="line"><span class="comment">## [1] 1 2 3</span></span><br><span class="line">y</span><br><span class="line"><span class="comment">## [1] 1 2 0</span></span><br><span class="line"><span class="built_in">untracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span>; <span class="built_in">untracemem</span><span class="punctuation">(</span>y<span class="punctuation">)</span></span><br><span class="line">rm<span class="punctuation">(</span>x<span class="punctuation">,</span> y<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>可见<code>y &lt;- x</code>并没有制作副本，
+但是修改<code>y[3]</code>值时就对<code>y</code>制作了副本。</p>
+<p>修改某个变量名所指向的对象可能会制作副本，如：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">cat<span class="punctuation">(</span><span class="built_in">tracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">## &lt;000000001654D0E8&gt;</span></span><br><span class="line">x<span class="punctuation">[</span><span class="number">3</span><span class="punctuation">]</span> <span class="operator">&lt;-</span> <span class="number">0</span></span><br><span class="line"><span class="comment">## tracemem[0x000000001654d0e8 -&gt; 0x000000001c2efa00]: eval eval withVisible withCallingHandlers handle timing_fn evaluate_call &lt;Anonymous&gt; evaluate in_dir eng_r block_exec call_block process_group.block process_group withCallingHandlers process_file &lt;Anonymous&gt; &lt;Anonymous&gt; do.call eval eval eval eval eval.parent local</span></span><br><span class="line">x</span><br><span class="line"><span class="comment">## [1] 1 2 0</span></span><br><span class="line"><span class="built_in">untracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>在调用函数时， 如果函数内部不修改自变量的元素值，
+输入的自变量并不制作副本， 而是直接被函数使用实参绑定的对象。 如：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">cat<span class="punctuation">(</span><span class="built_in">tracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">## &lt;000000001C3FEBF8&gt;</span></span><br><span class="line">f <span class="operator">&lt;-</span><span class="keyword">function</span><span class="punctuation">(</span>v<span class="punctuation">)</span><span class="punctuation">&#123;</span> <span class="built_in">return</span><span class="punctuation">(</span>v<span class="punctuation">)</span> <span class="punctuation">&#125;</span></span><br><span class="line">z <span class="operator">&lt;-</span> f<span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line">cat<span class="punctuation">(</span><span class="built_in">tracemem</span><span class="punctuation">(</span>z<span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">## &lt;000000001C3FEBF8&gt;</span></span><br><span class="line"><span class="built_in">untracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span>; <span class="built_in">untracemem</span><span class="punctuation">(</span>z<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>从上面的例子可以看出， 函数<code>f</code>以<code>x</code>为实参，
+但不修改<code>x</code>的元素， 不会生成<code>x</code>的副本，
+返回的值是<code>x</code>指向的对象本身， 再次赋值给<code>z</code>，
+也不制作副本， <code>z</code>和<code>x</code>绑定到同一对象。</p>
+<p>如果函数内部修改自变量的元素值， 则输入的自变量也会制作副本。
+如：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">cat<span class="punctuation">(</span><span class="built_in">tracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">## &lt;000000001511BDC0&gt;</span></span><br><span class="line">f2 <span class="operator">&lt;-</span><span class="keyword">function</span><span class="punctuation">(</span>v<span class="punctuation">)</span><span class="punctuation">&#123;</span> v<span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span> <span class="operator">&lt;-</span> <span class="operator">-</span><span class="number">999</span>; <span class="built_in">return</span><span class="punctuation">(</span>v<span class="punctuation">)</span> <span class="punctuation">&#125;</span></span><br><span class="line">z <span class="operator">&lt;-</span> f2<span class="punctuation">(</span>x<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## tracemem[0x000000001511bdc0 -&gt; 0x00000000160cb018]: f2 eval eval withVisible withCallingHandlers handle timing_fn evaluate_call &lt;Anonymous&gt; evaluate in_dir eng_r block_exec call_block process_group.block process_group withCallingHandlers process_file &lt;Anonymous&gt; &lt;Anonymous&gt; do.call eval eval eval eval eval.parent local</span></span><br><span class="line">cat<span class="punctuation">(</span><span class="built_in">tracemem</span><span class="punctuation">(</span>z<span class="punctuation">)</span><span class="punctuation">,</span> <span class="string">&quot;\n&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">## &lt;00000000160CB018&gt;</span></span><br><span class="line"><span class="built_in">untracemem</span><span class="punctuation">(</span>x<span class="punctuation">)</span>; <span class="built_in">untracemem</span><span class="punctuation">(</span>z<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>从程序输出看， 函数<code>f2()</code>以<code>x</code>为实参，
+并修改<code>x</code>的内部元素， 就制作了<code>x</code>的副本，
+返回的结果赋给变量<code>z</code>， 绑定的是修改后的副本。</p>
+<p>如果在函数中对自变量重新赋值， 这实际是重新绑定，
+也不会制作输入的实参的副本。</p>
+<p>如果修改<code>y</code>的元素值时还修改了其存储类型，
+比如整型改为浮点型， 则会先制作<code>y</code>的副本，
+然后制作类型改变后的副本， 然后再修改其中的元素值。</p>
+<p>在当前的R语言中， 一个对象的引用（如绑定的变量名）个数，
+只区分0个、1个或多个这三种情况。 在没有引用时，
+R的垃圾收集器会定期自动清除这些对象。 <code>rm(x)</code>只是删除绑定，
+并不会马上清除<code>x</code>绑定的对象。 如果已经有多个引用，
+即使是只有2个， 减少一个引用也还是“多个”状态， 不会变成1个。</p>
+<p>垃圾收集器是在R程序要求分配新的对象空间时自动运行的，
+R函数<code>gc()</code>可以要求马上运行垃圾收集器，
+并返回当前程序用到的存储量；
+lobstr包的<code>mem_used()</code>函数则报告当前会话内存字节数。</p>
+<p>在上面的示例中， 用了基本类型的向量讲解是否制作副本。
+考虑其它类型的复制。</p>
+<p>如果<code>x</code>是一个有5个元素的列表，
+则<code>y &lt;- x</code>使得<code>y</code>和<code>x</code>指向同一个列表对象。
+但是， 列表对象的每个元素实际上也相当于一个绑定，
+每个元素指向一个元素值对象。
+所以如果修改<code>y</code>：<code>y[[3]] &lt;- 0</code>，
+这时列表<code>y</code>首先被制作了副本，
+但是每个元素指向的元素值对象不变，
+仍与<code>x</code>的各个元素指向的对象相同；
+然后， <code>y[[3]]</code>指向的元素值进行了重新绑定，
+不再指向<code>x[[3]]</code>， 而是指向新的保存了值<code>0</code>的对象，
+但<code>y</code>的其它元素指向的对象仍与<code>x</code>公用。
+列表的这种复制方法称为浅拷贝， 列表对象及各个元素绑定被复制，
+但各个元素指向（保存）的对象不变。 这种做法节省空间也节省运行时间。
+在R的3.1.0之前则用的深拷贝方法，
+即复制列表时连各个元素保存的值也制作副本。</p>
+<p>如果<code>x</code>是一个数据框， 这类似于一个列表，
+每个变量相当于一个列表元素， 数据框的每一列实际绑定到一个对象上。
+如果<code>y &lt;- x</code>，
+则修改<code>y</code>的某一列会对<code>y</code>进行浅拷贝，
+然后仅该列被制作了副本并被修改，
+其它未修改的列仍与<code>x</code>共用值对象。</p>
+<p>但是如果修改数据框<code>y</code>的一行， 因为这涉及到所有列，
+所以整个数据框的所有列都会制作副本。</p>
+<p>对于字符型向量，
+实际上R程序的所有字符型常量都会建立一个全局字符串池，
+这样有许多重复值时可以节省空间。</p>
+<p>用lobstr包的<code>obj_size()</code>函数可以求变量的存储大小，
+如<code>obj_size(x)</code>， 也可以求若干个变量的总大小，
+如<code>obj_size(x,y)</code>。 因为各种绑定到同一对象的可能性，
+所以变量的存储大小可能会比想象要少， 比如， 共用若干列的两个数据框，
+字符型向量， 等等。
+基本R软件的<code>object.size()</code>则不去检查是否有共享对象，
+所以对列表等变量的存储大小估计可能会偏高。</p>
+<p>从R 3.5.0版开始，<code>1:n</code>这种对象仅保存其开始值和结束值。</p>
+<p>在自定义函数时， 自变量通常是按引用使用的，
+函数内部仅使用自变量的值而不对其进行修改时不会制作副本，
+但是如果函数内部修改了自变量的值， 就会制作副本，
+所以如果自变量的存储量很大而且被修改后返回，
+调用这个函数时就会造成运行速度缓慢。 在函数内应慎重修改自变量的值。</p>
+<p>在循环中修改数据框的列， 也会造成反复的复制。</p>
 <h3 id="参考">参考：</h3>
 <p><a
 target="_blank" rel="noopener" href="https://wangdoc.com/javascript/types/general.html">网道-数据类型概述</a></p>
@@ -297,6 +388,8 @@ target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44628533/artic
 target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/56741046">浅拷贝与深拷贝</a></p>
 <p><a
 target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43925630/article/details/111299038">对象的扩展运算符（...）深拷贝还是浅拷贝</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.math.pku.edu.cn/teachers/lidf/docs/Rbook/html/_Rbook/prog-type-ws.html#p-t-ws-asign">R语言教程|变量赋值和绑定</a></p>
 
 
                 <hr>
