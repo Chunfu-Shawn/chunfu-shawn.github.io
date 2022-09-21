@@ -318,6 +318,36 @@ mjx-container[display="true"] + br {
 
 <div class="post-preview">
 
+    <a href="/2022/09/21/R中离散坐标轴的排序、子集选择与合并/">
+        <h2 class="post-title">
+            R中离散坐标轴的排序、子集选择与合并
+        </h2>
+        <h3 class="post-subtitle">
+            对坐标轴映射的离散数据的排序、选择与合并
+        </h3>
+        <div class="post-content-preview">
+            一、离散坐标轴的排序
+ggplot2中，x轴的排序有一定规则：
+
+如果是factor类型，则使用factor的level属性作为排序依据
+如果是character类型，则按照字母顺序
+
+1、将数据类型变成factor
+我们想要自定义顺序，要设置为factor类型，使用levels来定义顺序；
+例如：
+123456data_percentage$time = factor(data_perce......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Chunfu Shawn on
+        2022-09-21
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2022/09/20/求解无约束最优化问题的方法总结/">
         <h2 class="post-title">
             求解无约束最优化问题的方法总结
@@ -362,9 +392,10 @@ mjx-container[display="true"] + br {
             学习变量的存储结构
         </h3>
         <div class="post-content-preview">
-            一、数据类型JS中的每一个值都属于一种数据类型，一共有六种：
+            一、数据类型
+JS中的每一个值都属于一种数据类型，一共有六种：
 
-（1）数值（number）：整数和小数；（2）字符串（string）：文本；（3）布尔值（boolen）：表示真伪的两个特殊值，true/false；（4）undefined：表示未定义或者不存在；（5）null：表示空值；（5）对象（object）：各种值的合成；（ES6又添加了两种数据类型，Symbol：独一无二的值；和Bi......
+（1）数值（number）：整数和小数；（2）字符串（string）：文本；（3）布尔值（boolen）：表示真伪的两个特殊值，true/false；（4）undefined：表示未定义或者不存在；（5）null：表示空值；（5）对象（object）：各种值的合成；（ES6又添加了两种数据类型，Symbol：独一无二的值；和B......
         </div>
     </a>
     <p class="post-meta">
@@ -459,9 +490,10 @@ ATACseq 建库
         </h3>
         <div class="post-content-preview">
             
-This document isn’t finished and will be updated anytime.
+This document isn't finished and will be updated anytime.
 
-在做分类时常常需要估算不同样本之间的相似性度量（Similarity Measurement），这时通常采用的方法就是计算样本间的”距离“（Distance）。采用什么样的方法计算距离是很讲究，甚至关系到分类的正确与否。
+在做分类时常常需要估算不同样本之间的相似性度量（Similarity
+Measurement），这时通常采用的方法就是计算样本间的”距离“（Distance）。采用什么样的方法计算距离是很讲究，甚至关系到分类的正确与否。
 本文的目的就是对常用的相似性度量作一个总结。
 一、距......
         </div>
@@ -485,10 +517,12 @@ This document isn’t finished and will be updated anytime.
         </h3>
         <div class="post-content-preview">
             
-三个相关性系数（pearson, spearman, kendall）反应的都是两个变量之间变化趋势的方向以及程度，其值范围为-1到+1，0表示两个变量不相关，正值表示正相关，负值表示负相关，值越大表示相关性越强。三者相关性检验都为非参数检验。
+三个相关性系数（pearson, spearman,
+kendall）反应的都是两个变量之间变化趋势的方向以及程度，其值范围为-1到+1，0表示两个变量不相关，正值表示正相关，负值表示负相关，值越大表示相关性越强。三者相关性检验都为非参数检验。
 
-一、协方差：可以通俗的理解为：两个变量在变化过程中是同方向变化？还是反方向变化？同向或反向程度如何？
-期望值分别为E[X]与E[Y]的两个实随机......
+一、协方差：
+可以通俗的理解为：两个变量在变化过程中是同方向变化？还是反方向变化？同向或反向程度如何？
+期望值分别为E[X]与E[Y]的两个实随......
         </div>
     </a>
     <p class="post-meta">
@@ -569,28 +603,6 @@ BCF
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2022/05/08/生信常见文件的格式以及查看方式/">
-        <h2 class="post-title">
-            生信常见文件的格式以及查看方式
-        </h2>
-        <h3 class="post-subtitle">
-            fasta、fastq、gff、gtf、bed、bed12、sam、bam、wig、bigwig、bedgraph等文件格式的介绍和处理
-        </h3>
-        <div class="post-content-preview">
-            生信分析过程中，会与很多不同格式的文件打交道，除了原始测序数据fastq之外，还需要准备基因组文件fasta格式和基因注释文件gtf格式。在分析的过程中还会有众多中间文件的生成，如bed、bed12、sam、bam、wig、bigwig、bedgraph等，生成后我们一般会查看下内容了解文件每一列的含义，以此来决定需要提取哪些有用信息列来进行下一步分析。
-一、测序数据FASTQ文件1）文件用......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chunfu Shawn on
-        2022-05-08
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -654,19 +666,19 @@ BCF
                             
                         
                             
-                            <a href="/tags/#Programming" title="Programming" rel="2">Programming</a>
+                            <a href="/tags/#Programming" title="Programming" rel="3">Programming</a>
                             
                         
                             
-                            <a href="/tags/#JavaScript" title="JavaScript" rel="2">JavaScript</a>
+                            <a href="/tags/#JavaScript" title="JavaScript" rel="3">JavaScript</a>
                             
                         
                             
-                            <a href="/tags/#R" title="R" rel="2">R</a>
+                            <a href="/tags/#R" title="R" rel="3">R</a>
                             
                         
                             
-                            <a href="/tags/#Math&amp;Statistics" title="Math&amp;Statistics" rel="3">Math&amp;Statistics</a>
+                            <a href="/tags/#Math&amp;Statistics" title="Math&amp;Statistics" rel="1">Math&amp;Statistics</a>
                             
                         
                             
@@ -718,19 +730,19 @@ BCF
                             
                         
                             
-                            <a href="/tags/#Optimization Methods" title="Optimization Methods" rel="1">Optimization Methods</a>
-                            
-                        
-                            
-                            <a href="/tags/#Statistical Models" title="Statistical Models" rel="1">Statistical Models</a>
-                            
-                        
-                            
                             <a href="/tags/#Computing Methods" title="Computing Methods" rel="1">Computing Methods</a>
                             
                         
                             
                             <a href="/tags/#Optimization" title="Optimization" rel="1">Optimization</a>
+                            
+                        
+                            
+                            <a href="/tags/#Statistics" title="Statistics" rel="3">Statistics</a>
+                            
+                        
+                            
+                            <a href="/tags/#Graphics" title="Graphics" rel="1">Graphics</a>
                             
                         
                     </div>

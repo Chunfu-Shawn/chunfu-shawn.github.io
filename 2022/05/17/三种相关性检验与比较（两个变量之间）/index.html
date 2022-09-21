@@ -187,11 +187,11 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/tags/#Math&amp;Statistics" title="Math&amp;Statistics">Math&amp;Statistics</a>
-                        
                           <a class="tag" href="/tags/#Non-parametric test" title="Non-parametric test">Non-parametric test</a>
                         
                           <a class="tag" href="/tags/#Correlation" title="Correlation">Correlation</a>
+                        
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
                         
                     </div>
                     <h1>三种相关性检验与比较（两个变量之间）</h1>
@@ -220,61 +220,118 @@
                 <br>
 
                 <blockquote>
-<p>三个相关性系数（pearson, spearman, kendall）反应的都是两个变量之间变化趋势的方向以及程度，其值范围为-1到+1，0表示两个变量不相关，正值表示正相关，负值表示负相关，值越大表示相关性越强。<strong>三者相关性检验都为非参数检验。</strong></p>
+<p>三个相关性系数（pearson, spearman,
+kendall）反应的都是两个变量之间变化趋势的方向以及程度，其值范围为-1到+1，0表示两个变量不相关，正值表示正相关，负值表示负相关，值越大表示相关性越强。<strong>三者相关性检验都为非参数检验。</strong></p>
 </blockquote>
-<h2 id="一、协方差："><a href="#一、协方差：" class="headerlink" title="一、协方差："></a><strong>一、协方差：</strong></h2><p>可以通俗的理解为：两个变量在变化过程中是同方向变化？还是反方向变化？同向或反向程度如何？</p>
-<p>期望值分别为<em>E</em>[<em>X</em>]与<em>E</em>[<em>Y</em>]的两个实随机变量<em>X</em>与<em>Y</em>之间的<strong>协方差</strong>*Cov(X,Y)*定义为：</p>
-<p><img src="figure1.svg" alt="figure1.svg"></p>
+<h2 id="一协方差"><strong>一、协方差：</strong></h2>
+<p>可以通俗的理解为：两个变量在变化过程中是同方向变化？还是反方向变化？同向或反向程度如何？</p>
+<p>期望值分别为<em>E</em>[<em>X</em>]与<em>E</em>[<em>Y</em>]的两个实随机变量<em>X</em>与<em>Y</em>之间的<strong>协方差</strong><em>Cov(X,Y)</em>定义为：</p>
+<figure>
+<img src="figure1.svg" alt="figure1.svg" />
+<figcaption aria-hidden="true">figure1.svg</figcaption>
+</figure>
 <p>如果两个变量的变化趋势一致，也就是说如果其中一个大于自身的期望值时另外一个也大于自身的期望值，那么两个变量之间的协方差就是正值；如果两个变量的变化趋势相反，即其中一个变量大于自身的期望值时另外一个却小于自身的期望值，那么两个变量之间的协方差就是负值。</p>
 <p>如果<em>X</em>与<em>Y</em>是统计独立的，那么二者之间的协方差就是0，因为两个独立的随机变量满足<em>E</em>[<em>XY</em>]=<em>E</em>[<em>X</em>]<em>E</em>[<em>Y</em>]。</p>
 <p>但是，反过来并不成立。即如果<em>X</em>与<em>Y</em>的协方差为0，二者并不一定是统计独立的。</p>
-<p>协方差与方差之间有如下关系：<br>D(X+Y)=D(X)+D(Y)+2Cov(X,Y)<br>D(X-Y)=D(X)+D(Y)-2Cov(X,Y)</p>
-<h2 id="二、Pearson-correlation-coefficient（皮尔森相关性系数）"><a href="#二、Pearson-correlation-coefficient（皮尔森相关性系数）" class="headerlink" title="二、Pearson correlation coefficient（皮尔森相关性系数）"></a>二、Pearson correlation coefficient（皮尔森相关性系数）</h2><p>协方差作为描述X和Y相关程度的量，在同一物理量纲之下有一定的作用，但同样的<strong>两个量采用不同的量纲</strong>使它们的协方差在数值上表现出很大的差异。为此引入如下概念：</p>
-<p><img src="figure2.png" alt="figure2"></p>
+<p>协方差与方差之间有如下关系： D(X+Y)=D(X)+D(Y)+2Cov(X,Y)
+D(X-Y)=D(X)+D(Y)-2Cov(X,Y)</p>
+<h2 id="二pearson-correlation-coefficient皮尔森相关性系数">二、Pearson
+correlation coefficient（皮尔森相关性系数）</h2>
+<p>协方差作为描述X和Y相关程度的量，在同一物理量纲之下有一定的作用，但同样的<strong>两个量采用不同的量纲</strong>使它们的协方差在数值上表现出很大的差异。为此引入如下概念：</p>
+<figure>
+<img src="figure2.png" alt="figure2" />
+<figcaption aria-hidden="true">figure2</figcaption>
+</figure>
 <p>称为随机变量X和Y的<strong>Pearson相关系数</strong>。就是用X、Y的协方差除以X的标准差和Y的标准差。</p>
 <p>公式的分母是变量的标准差，这就意味着计算皮尔森相关性系数时，<strong>变量的标准差不能为0（分母不能为0），也就是说你的两个变量中任何一个的值不能都是相同的。</strong>如果没有变化，用皮尔森相关系数是没办法算出这个变量与另一个变量之间是不是有相关性的。</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X<span class="operator">&lt;-</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">11</span><span class="punctuation">,</span><span class="number">490</span><span class="punctuation">,</span><span class="number">14</span><span class="punctuation">,</span><span class="number">43</span><span class="punctuation">,</span><span class="number">30</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">Y<span class="operator">&lt;-</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">2</span><span class="punctuation">,</span><span class="number">75</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">,</span><span class="number">44</span><span class="punctuation">,</span><span class="number">7</span><span class="punctuation">,</span><span class="number">42</span><span class="punctuation">)</span></span><br><span class="line">cor<span class="punctuation">(</span>X<span class="punctuation">,</span>Y<span class="punctuation">,</span>method<span class="operator">=</span><span class="string">&quot;pearson&quot;</span><span class="punctuation">)</span> <span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span> <span class="number">0.7713347</span></span><br></pre></td></tr></table></figure>
-
 <p>此外，它对数据是有比较高的要求的：</p>
-<p><strong>第一， 实验数据通常假设是成对的来自于正态分布的总体。</strong>为啥通常会假设为正态分布呢？因为我们在求皮尔森相关性系数以后，通常还会用t检验之类的方法来进行皮尔森相关性系数检验，而 t检验是基于数据呈正态分布的假设的。</p>
-<p><strong>第二， 实验数据之间的差距不能太大</strong>，或者说皮尔森相关性系数<strong>受异常值的影响比较大</strong>。比如刚才心跳与跑步的例子，万一这个人的心脏不太好，跑到一定速度后承受不了，突发心脏病，那这时候我们会测到一个偏离正常值的心跳（过快或者过慢，甚至为0），如果我们把这个值也放进去进行相关性分析，它的存在会大大干扰计算的结果的。</p>
-<h2 id="三、Spearman-correlation-coefficient（斯皮尔曼相关性系数）"><a href="#三、Spearman-correlation-coefficient（斯皮尔曼相关性系数）" class="headerlink" title="三、Spearman correlation coefficient（斯皮尔曼相关性系数）"></a>三、Spearman correlation coefficient（斯皮尔曼相关性系数）</h2><p>斯皮尔曼相关性系数，通常也叫斯皮尔曼秩相关系数。<strong>“秩”，可以理解成就是一种顺序或者排序</strong>，那么它就是<strong>根据原始数据的排序位置进行求解</strong>，这种表征形式就没有了求皮尔森相关性系数时那些限制。下面来看一下它的计算公式：</p>
-<p><img src="figure3.png" alt="Figure3.png"></p>
-<p>rs= Spearman rank correlation<br>D= the difference between the ranks of corresponding variables<br>n= number of observations</p>
-<p>计算过程就是：首先对两个变量（X, Y）的数据进行排序，然后记下排序以后的位置（X’, Y’），（X’, Y’）的值就称为秩次，秩次的差值就是上面公式中的，n就是变量中数据的个数，最后带入公式就可求解结果。举个例子吧，假设我们实验的数据如下：</p>
-<p><img src="figure4.png" alt="figure4.png"></p>
-<p>带入公式，求得斯皮尔曼相关性系数：rs= 1-6*(1+1+1+9)/6*35=0.657</p>
+<p><strong>第一，
+实验数据通常假设是成对的来自于正态分布的总体。</strong>为啥通常会假设为正态分布呢？因为我们在求皮尔森相关性系数以后，通常还会用t检验之类的方法来进行皮尔森相关性系数检验，而
+t检验是基于数据呈正态分布的假设的。</p>
+<p><strong>第二，
+实验数据之间的差距不能太大</strong>，或者说皮尔森相关性系数<strong>受异常值的影响比较大</strong>。比如刚才心跳与跑步的例子，万一这个人的心脏不太好，跑到一定速度后承受不了，突发心脏病，那这时候我们会测到一个偏离正常值的心跳（过快或者过慢，甚至为0），如果我们把这个值也放进去进行相关性分析，它的存在会大大干扰计算的结果的。</p>
+<h2
+id="三spearman-correlation-coefficient斯皮尔曼相关性系数">三、Spearman
+correlation coefficient（斯皮尔曼相关性系数）</h2>
+<p>斯皮尔曼相关性系数，通常也叫斯皮尔曼秩相关系数。<strong>“秩”，可以理解成就是一种顺序或者排序</strong>，那么它就是<strong>根据原始数据的排序位置进行求解</strong>，这种表征形式就没有了求皮尔森相关性系数时那些限制。下面来看一下它的计算公式：</p>
+<figure>
+<img src="figure3.png" alt="Figure3.png" />
+<figcaption aria-hidden="true">Figure3.png</figcaption>
+</figure>
+<p>rs= Spearman rank correlation D= the difference between the ranks of
+corresponding variables n= number of observations</p>
+<p>计算过程就是：首先对两个变量（X,
+Y）的数据进行排序，然后记下排序以后的位置（X’, Y’），（X’,
+Y’）的值就称为秩次，秩次的差值就是上面公式中的，n就是变量中数据的个数，最后带入公式就可求解结果。举个例子吧，假设我们实验的数据如下：</p>
+<figure>
+<img src="figure4.png" alt="figure4.png" />
+<figcaption aria-hidden="true">figure4.png</figcaption>
+</figure>
+<p>带入公式，求得斯皮尔曼相关性系数：rs=
+1-6<em>(1+1+1+9)/6</em>35=0.657</p>
 <p>也就是说，我们不用管X和Y这两个变量具体的值到底差了多少，<strong>只需要算一下它们每个值所处的排列位置的差值，就可以求出相关性系数了</strong>。这下理解起来是不是容易多了！下面写下代码实现：</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X<span class="operator">&lt;-</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">11</span><span class="punctuation">,</span><span class="number">490</span><span class="punctuation">,</span><span class="number">14</span><span class="punctuation">,</span><span class="number">43</span><span class="punctuation">,</span><span class="number">30</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">Y<span class="operator">&lt;-</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">2</span><span class="punctuation">,</span><span class="number">75</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">,</span><span class="number">44</span><span class="punctuation">,</span><span class="number">7</span><span class="punctuation">,</span><span class="number">42</span><span class="punctuation">)</span></span><br><span class="line">cor<span class="punctuation">(</span>X<span class="punctuation">,</span>Y<span class="punctuation">,</span>method<span class="operator">=</span><span class="string">&quot;spearman&quot;</span><span class="punctuation">)</span> <span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span> <span class="number">0.6571429</span></span><br></pre></td></tr></table></figure>
-
 <p>而且，即便在变量值没有变化的情况下，也不会出现像皮尔森系数那样分母为0而无法计算的情况。另外，即使出现异常值，由于异常值的秩次通常不会有明显的变化（比如过大或者过小，那要么排第一，要么排最后），所以对斯皮尔曼相关性系数的影响也非常小！</p>
 <p>由于斯皮尔曼相关性系数没有那些数据条件要求，适用的范围就广多了。在我们生物实验数据分析中，尤其是在<strong>分析多组学交叉的数据中说明不同组学数据之间的相关性时，使用的频率很高</strong>。</p>
-<h2 id="四、-Kendall-correlation-coefficient（肯德尔相关性系数）"><a href="#四、-Kendall-correlation-coefficient（肯德尔相关性系数）" class="headerlink" title="四、 Kendall correlation coefficient（肯德尔相关性系数）"></a>四、 Kendall correlation coefficient（肯德尔相关性系数）</h2><p>肯德尔相关性系数，又称肯德尔秩相关系数，它也是一种秩相关系数，不过它所计算的对象是<strong>分类变量</strong>。分类变量可以理解成有类别的变量，可以分为无序的，比如性别（男、女）、血型（A、B、O、AB）；有序的，比如肥胖等级（重度肥胖，中度肥胖、轻度肥胖、不肥胖）。通常需要求相关性系数的都是有序分类变量。</p>
+<h2 id="四-kendall-correlation-coefficient肯德尔相关性系数">四、 Kendall
+correlation coefficient（肯德尔相关性系数）</h2>
+<p>肯德尔相关性系数，又称肯德尔秩相关系数，它也是一种秩相关系数，不过它所计算的对象是<strong>分类变量</strong>。分类变量可以理解成有类别的变量，可以分为无序的，比如性别（男、女）、血型（A、B、O、AB）；有序的，比如肥胖等级（重度肥胖，中度肥胖、轻度肥胖、不肥胖）。通常需要求相关性系数的都是有序分类变量。</p>
 <p>举个例子。比如评委对选手的评分（优、中、差等），我们想看两个（或者多个）评委对几位选手的评价标准是否一致；或者医院的尿糖化验报告，想检验各个医院对尿糖的化验结果是否一致，这时候就可以使用肯德尔相关性系数进行衡量。</p>
 <p>由于数据情况不同，求得肯德尔相关性系数的计算公式不一样，一般有3种计算公式，在这里就不繁琐地列出计算公式了，直接给出R语言的计算函数：</p>
-<p>还是用cor函数求，这时候把method这个参数设成“kendall”，这时我们假设老师对选手的评价等级—3表示优，2表示中，1表示差：</p>
+<p>还是用cor函数求，这时候把method这个参数设成“kendall”，这时我们假设老师对选手的评价等级---3表示优，2表示中，1表示差：</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X<span class="operator">&lt;-</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">3</span><span class="punctuation">,</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">1</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">)</span></span><br><span class="line">Y<span class="operator">&lt;-</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">1</span><span class="punctuation">,</span><span class="number">1</span><span class="punctuation">)</span></span><br><span class="line">cor<span class="punctuation">(</span>X<span class="punctuation">,</span>Y<span class="punctuation">,</span>method<span class="operator">=</span><span class="string">&quot;kendall&quot;</span><span class="punctuation">)</span><span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span> <span class="operator">-</span><span class="number">0.2611165</span></span><br></pre></td></tr></table></figure>
-
 <p>这时候就可以理解为两位老师对选手们的看法是呈相反趋势的，不过这种相反的程度不很大。</p>
-<h2 id="五、对-Pearson-和-Spearman-系数进行比较"><a href="#五、对-Pearson-和-Spearman-系数进行比较" class="headerlink" title="五、对 Pearson 和 Spearman 系数进行比较"></a>五、<strong>对 Pearson 和 Spearman 系数进行比较</strong></h2><h3 id="1、直观图解"><a href="#1、直观图解" class="headerlink" title="1、直观图解"></a><strong>1、直观图解</strong></h3><p>Pearson 和 Spearman 相关系数的值介于 −1 和 +1 之间。</p>
-<ol>
-<li>当两个变量的上升量或下降量相同时，Pearson 相关系数为 +1或-1（行1）；</li>
-<li>如果关系是一个变量上升或下降，其他变量也上升或下降，但上升量或下降量不一致，则 Pearson 相关系数为小于 +1 的正数，Spearman 系数仍等于 +1或-1（行2）；</li>
+<h2 id="五对-pearson-和-spearman-系数进行比较">五、<strong>对 Pearson 和
+Spearman 系数进行比较</strong></h2>
+<h3 id="直观图解"><strong>1、直观图解</strong></h3>
+<p>Pearson 和 Spearman 相关系数的值介于 −1 和 +1 之间。</p>
+<ol type="1">
+<li>当两个变量的上升量或下降量相同时，Pearson 相关系数为
++1或-1（行1）；</li>
+<li>如果关系是一个变量上升或下降，其他变量也上升或下降，但上升量或下降量不一致，则
+Pearson 相关系数为小于 +1 的正数，Spearman 系数仍等于
++1或-1（行2）；</li>
 <li>当存在随机关系或者不存在关系时，这两个相关系数都接近零（行3左）；</li>
-<li>其他非线性关系：Pearson 相关系数只度量线性关系。Spearman 相关系数只度量单调关系。因此，即使相关系数为 0，也可能存在有意义的关系。检查散点图可确定关系的形式。（行3右）</li>
+<li>其他非线性关系：Pearson 相关系数只度量线性关系。Spearman
+相关系数只度量单调关系。因此，即使相关系数为
+0，也可能存在有意义的关系。检查散点图可确定关系的形式。（行3右）</li>
 </ol>
-<p><img src="figure5.png" alt="figure5.png"></p>
-<h3 id="2、两者的适用条件和特点："><a href="#2、两者的适用条件和特点：" class="headerlink" title="2、两者的适用条件和特点："></a>2、<strong>两者的适用条件和特点：</strong></h3><p><strong>Pearson相关系数要求统计资料要是连续型变量，并且符合正态分布，而Spearman相关系数没有这个要求；Pearson相关系数在出现奇异值，或者长尾分布的时候稳定性差，不太靠，而Spearman要相对稳健很多。</strong><br>下面给个简单的例子：</p>
-<p><img src="figure6.png" alt="figure6.png"></p>
+<figure>
+<img src="figure5.png" alt="figure5.png" />
+<figcaption aria-hidden="true">figure5.png</figcaption>
+</figure>
+<h3
+id="两者的适用条件和特点">2、<strong>两者的适用条件和特点：</strong></h3>
+<p><strong>Pearson相关系数要求统计资料要是连续型变量，并且符合正态分布，而Spearman相关系数没有这个要求；Pearson相关系数在出现奇异值，或者长尾分布的时候稳定性差，不太靠，而Spearman要相对稳健很多。</strong>
+下面给个简单的例子：</p>
+<figure>
+<img src="figure6.png" alt="figure6.png" />
+<figcaption aria-hidden="true">figure6.png</figcaption>
+</figure>
 <p><strong>只需要增加一个离群的点，就可以让Pearson相关系数从“不相关”变为“强相关”，</strong>而Spearman相关系数表现就要稳健得多。</p>
-<h3 id="3、总结："><a href="#3、总结：" class="headerlink" title="3、总结："></a>3、总结：</h3><p>如果对数据进行线性变换（y = ax + b; a ≠ 0），两者相关系数的绝对值都不会发生变化（要考虑下正负）；如果对数据进行单调但不线性的变换（比如最常见的log scale），Spearman相关系数的绝对值也不会发生变化。两者的前提假设就不同，Pearson相关假设数据集在<strong>同一条直线</strong>上，而Spearman只要求<strong>单调递增或者递减</strong>，所以Pearson的统计效力比Spearman要高。</p>
-<h3 id="4、根据实际情况选择正确的假设："><a href="#4、根据实际情况选择正确的假设：" class="headerlink" title="4、根据实际情况选择正确的假设："></a>4、<strong>根据实际情况选择正确的假设：</strong></h3><p>比如，某个实验做了两次技术或者生物学重复，那有理由假设这两次重复线性相关。而如果是一个基因和另一个受到调控的基因的表达水平，或者某个基因顺式作用元件的染色质开放程度，和这个基因表达水平之间的关系就可能只需要假设单调相关。</p>
-<p>而在实际生信分析中容易出问题的地方就是<strong>转录组样品重复相关性分析</strong>。目前一般文章中或者公司给的结题报告中用得比较多的还是Pearson相关系数。但其实<strong>转录组测序的表达量不符合正态分布</strong>，并且通常都有个很长的“尾巴”（一些极高表达的基因），会导致Pearson相关系数分析的结果可靠性不佳；另外也很重要的一点，<strong>重复的假设应该不仅仅是线性相关</strong>，理想情况下应该是y = x，所以最终线性拟合得到的斜率和截距也应该有所体现。</p>
+<h3 id="总结">3、总结：</h3>
+<p>如果对数据进行线性变换（y = ax + b; a ≠
+0），两者相关系数的绝对值都不会发生变化（要考虑下正负）；如果对数据进行单调但不线性的变换（比如最常见的log
+scale），Spearman相关系数的绝对值也不会发生变化。两者的前提假设就不同，Pearson相关假设数据集在<strong>同一条直线</strong>上，而Spearman只要求<strong>单调递增或者递减</strong>，所以Pearson的统计效力比Spearman要高。</p>
+<h3
+id="根据实际情况选择正确的假设">4、<strong>根据实际情况选择正确的假设：</strong></h3>
+<p>比如，某个实验做了两次技术或者生物学重复，那有理由假设这两次重复线性相关。而如果是一个基因和另一个受到调控的基因的表达水平，或者某个基因顺式作用元件的染色质开放程度，和这个基因表达水平之间的关系就可能只需要假设单调相关。</p>
+<p>而在实际生信分析中容易出问题的地方就是<strong>转录组样品重复相关性分析</strong>。目前一般文章中或者公司给的结题报告中用得比较多的还是Pearson相关系数。但其实<strong>转录组测序的表达量不符合正态分布</strong>，并且通常都有个很长的“尾巴”（一些极高表达的基因），会导致Pearson相关系数分析的结果可靠性不佳；另外也很重要的一点，<strong>重复的假设应该不仅仅是线性相关</strong>，理想情况下应该是y
+= x，所以最终线性拟合得到的斜率和截距也应该有所体现。</p>
 <p>对于第一个问题，当然你不可能因为转录组不符合正态分布就换用Spearman，因为那样统计效力更差了。Pearson作为大家最常用的方法，用一用问题也不大。如果追求更可靠的结果可以在做Pearson相关性分析之前先对数据做做变换。<strong>但除此之外请务必加上其他方法进行验证，比如聚类，不要仅仅使用Pearson相关系数。</strong></p>
-<p>对于第二个问题，我觉得可以在图中给出线性拟合的公式，另外也有一个专门为此类问题而生的相关性分析算法：<strong>Lin’s concordance correlation coefficient</strong>，简称ccc。在谷歌学术中用关键词”concordance correlation”和RNA-seq搜一搜，也不少文章开始用这个方法了，但也通常同时搭配上Pearson相关系数。</p>
-<h2 id="六、参考"><a href="#六、参考" class="headerlink" title="六、参考"></a>六、参考</h2><p><a target="_blank" rel="noopener" href="https://www.dataanalytics.org.uk/spearman-rank-correlation-in-excel/">https://www.dataanalytics.org.uk/spearman-rank-correlation-in-excel/</a></p>
-<p><strong><a target="_blank" rel="noopener" href="https://support.minitab.com/zh-cn/minitab/18/help-and-how-to/statistics/basic-statistics/supporting-topics/correlation-and-covariance/a-comparison-of-the-pearson-and-spearman-correlation-methods/">Pearson 相关方法和 Spearman 相关方法的比较</a></strong></p>
-<p><strong><a target="_blank" rel="noopener" href="https://byteofbio.com/archives/16.html">救救孩子！Spearman、Pearson相关系数傻傻分不清？</a></strong></p>
+<p>对于第二个问题，我觉得可以在图中给出线性拟合的公式，另外也有一个专门为此类问题而生的相关性分析算法：<strong>Lin's
+concordance correlation
+coefficient</strong>，简称ccc。在谷歌学术中用关键词"concordance
+correlation"和RNA-seq搜一搜，也不少文章开始用这个方法了，但也通常同时搭配上Pearson相关系数。</p>
+<h2 id="六参考">六、参考</h2>
+<p><a
+target="_blank" rel="noopener" href="https://www.dataanalytics.org.uk/spearman-rank-correlation-in-excel/">https://www.dataanalytics.org.uk/spearman-rank-correlation-in-excel/</a></p>
+<p><strong><a
+target="_blank" rel="noopener" href="https://support.minitab.com/zh-cn/minitab/18/help-and-how-to/statistics/basic-statistics/supporting-topics/correlation-and-covariance/a-comparison-of-the-pearson-and-spearman-correlation-methods/">Pearson
+相关方法和 Spearman 相关方法的比较</a></strong></p>
+<p><strong><a
+target="_blank" rel="noopener" href="https://byteofbio.com/archives/16.html">救救孩子！Spearman、Pearson相关系数傻傻分不清？</a></strong></p>
 
 
                 <hr>
@@ -336,11 +393,11 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Math&amp;Statistics" title="Math&amp;Statistics">Math&amp;Statistics</a>
-                        
                           <a class="tag" href="/tags/#Non-parametric test" title="Non-parametric test">Non-parametric test</a>
                         
                           <a class="tag" href="/tags/#Correlation" title="Correlation">Correlation</a>
+                        
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
                         
                     </div>
                 </section>

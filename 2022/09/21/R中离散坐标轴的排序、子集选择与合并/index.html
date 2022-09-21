@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          R中离散坐标轴的排序、子集选择与合并 - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/09/21/R中离散坐标轴的排序、子集选择与合并/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-graphics.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#R" title="R">R</a>
+                        
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
+                        
+                          <a class="tag" href="/tags/#Graphics" title="Graphics">Graphics</a>
+                        
+                    </div>
+                    <h1>R中离散坐标轴的排序、子集选择与合并</h1>
+                    <h2 class="subheading">对坐标轴映射的离散数据的排序、选择与合并</h2>
+                    <span class="meta">
+                        Posted by Chunfu Shawn on
+                        2022-09-21 | 
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <h2 id="一离散坐标轴的排序">一、离散坐标轴的排序</h2>
+<p>ggplot2中，x轴的排序有一定规则：</p>
+<blockquote>
+<p>如果是factor类型，则使用factor的level属性作为排序依据
+如果是character类型，则按照字母顺序</p>
+</blockquote>
+<h3
+id="将数据类型变成factor">1、<strong>将数据类型变成factor</strong></h3>
+<p>我们想要自定义顺序，要设置为factor类型，使用levels来定义顺序；</p>
+<p>例如：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data_percentage<span class="operator">$</span>time <span class="operator">=</span> factor<span class="punctuation">(</span>data_percentage<span class="operator">$</span>time<span class="punctuation">,</span>levels <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;D5&quot;</span><span class="punctuation">,</span><span class="string">&quot;D10&quot;</span><span class="punctuation">,</span><span class="string">&quot;D15&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">data_percentage<span class="punctuation">[</span><span class="punctuation">,</span><span class="operator">-</span><span class="number">7</span><span class="operator">:</span><span class="operator">-</span><span class="number">8</span><span class="punctuation">]</span> <span class="operator">%&gt;%</span> gather<span class="punctuation">(</span>type<span class="punctuation">,</span>percentage<span class="punctuation">,</span>type2_div_type1<span class="operator">:</span>type4_div_type1<span class="punctuation">)</span> <span class="operator">%&gt;%</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x<span class="operator">=</span>time<span class="punctuation">,</span>y<span class="operator">=</span>percentage<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>color <span class="operator">=</span> type<span class="punctuation">,</span>shape<span class="operator">=</span> group<span class="punctuation">)</span><span class="punctuation">,</span>fun<span class="operator">=</span>mean<span class="punctuation">,</span>size<span class="operator">=</span><span class="number">3</span><span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">&#x27;point&#x27;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>color <span class="operator">=</span> type<span class="punctuation">,</span>group <span class="operator">=</span> interaction<span class="punctuation">(</span>type<span class="punctuation">,</span>group<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">,</span>fun<span class="operator">=</span>mean<span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">&#x27;line&#x27;</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>group <span class="operator">=</span> interaction<span class="punctuation">(</span>type<span class="punctuation">,</span>group<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">,</span>fun.data <span class="operator">=</span> mean_se<span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">&#x27;errorbar&#x27;</span><span class="punctuation">,</span> color<span class="operator">=</span><span class="string">&#x27;black&#x27;</span><span class="punctuation">,</span>width<span class="operator">=</span><span class="number">.05</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  scale_x_discrete<span class="punctuation">(</span>name<span class="operator">=</span><span class="string">&quot;Time&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> ...</span><br></pre></td></tr></table></figure>
+<p><img src='figure1.png' width="600px"/></p>
+<h3
+id="按其他数值变量统计量值排序"><strong>2、按（其他数值变量）统计量值排序</strong></h3>
+<p>除了手动设置levels，可以根据不同因子水平分成的组中另一数值型变量的统计量值排序</p>
+<p>例如使用<code>forcats::fct_reorder()</code></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">set.seed<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">)</span></span><br><span class="line">fac <span class="operator">&lt;-</span> sample<span class="punctuation">(</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;red&quot;</span><span class="punctuation">,</span> <span class="string">&quot;green&quot;</span><span class="punctuation">,</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> <span class="number">30</span><span class="punctuation">,</span> replace<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line">fac <span class="operator">&lt;-</span> factor<span class="punctuation">(</span>fac<span class="punctuation">,</span> levels<span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;red&quot;</span><span class="punctuation">,</span> <span class="string">&quot;green&quot;</span><span class="punctuation">,</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">round</span><span class="punctuation">(</span><span class="number">100</span><span class="operator">*</span><span class="punctuation">(</span><span class="number">10</span><span class="operator">+</span>rt<span class="punctuation">(</span><span class="number">30</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">res1 <span class="operator">&lt;-</span> tapply<span class="punctuation">(</span>x<span class="punctuation">,</span> fac<span class="punctuation">,</span> sd<span class="punctuation">)</span>; res1</span><br><span class="line"><span class="comment">##       red     green      blue </span></span><br><span class="line"><span class="comment">##  370.9222  138.3185 1129.2587</span></span><br><span class="line"><span class="comment"># 希望按照变量x的统计量sd的次序对因子fac进行排序</span></span><br><span class="line">fac2 <span class="operator">&lt;-</span> fct_reorder<span class="punctuation">(</span>fac<span class="punctuation">,</span> x<span class="punctuation">,</span> sd<span class="punctuation">)</span></span><br><span class="line">res2 <span class="operator">&lt;-</span> tapply<span class="punctuation">(</span>x<span class="punctuation">,</span> fac2<span class="punctuation">,</span> sd<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##     green        red       blue </span></span><br><span class="line"><span class="comment">##  138.3185   370.9222  1129.2587</span></span><br><span class="line"><span class="comment">#新的因子fac2的因子水平次序已经按照变量x的标准差从小到大排列</span></span><br><span class="line">barplot<span class="punctuation">(</span>res2<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><img src='figure2.png' width="600px"/></p>
+<h3 id="特定几个水平置于最前">3、特定几个水平置于最前</h3>
+<p>如果又想将特定的一个或几个水平次序放到因子水平最前面，使用<code>forcats::fct_relevel()</code></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">levels<span class="punctuation">(</span>fac<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## [1] &quot;red&quot;   &quot;green&quot; &quot;blue&quot;</span></span><br><span class="line">fac3 <span class="operator">&lt;-</span> fct_relevel<span class="punctuation">(</span>fac<span class="punctuation">,</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span>; levels<span class="punctuation">(</span>fac3<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## [1] &quot;blue&quot;  &quot;red&quot;   &quot;green&quot;</span></span><br></pre></td></tr></table></figure>
+<p><code>fct_relevel()</code>第一个参数是要修改次序的因子，
+后续可以有多个字符型参数表示要提前的水平。</p>
+<h3
+id="不转换成factor直接进行排序可以根据其他数值变量"><strong>4、不转换成factor，直接进行排序（可以根据其他数值变量）</strong></h3>
+<p>需要按照频率、数量大小进行排序，实现方式为<code>reorder( , )</code></p>
+<p>如下：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pic <span class="operator">+</span> geom_col<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> reorder<span class="punctuation">(</span>motif<span class="punctuation">,</span><span class="operator">-</span>number<span class="punctuation">)</span><span class="punctuation">,</span>y<span class="operator">=</span>number<span class="punctuation">,</span>fill<span class="operator">=</span>m6A_site<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 在aes中对x使用reorder(motif,-number)，可以快速设置x轴的顺序</span></span><br><span class="line"><span class="operator">+</span> ...</span><br></pre></td></tr></table></figure>
+<h2
+id="三离散坐标轴的子集选择与合并">三、离散坐标轴的子集选择与合并</h2>
+<h3 id="子集选择">1、<strong>子集选择</strong></h3>
+<p>在ggplot2中使用<code>scale_x_discrete(limits= c[,])</code>可以快速取子集</p>
+<h3 id="因子合并"><strong>2、因子合并</strong></h3>
+<p>如果坐标轴映射的变量为因子型，<code>forcats::fct_recode()</code>可以修改每个水平的名称，允许多个旧水平对应到一个新水平，
+从而合并原来的水平。 如：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fac4 <span class="operator">&lt;-</span> fct_recode<span class="punctuation">(</span></span><br><span class="line">  fac<span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;红&quot;</span><span class="operator">=</span><span class="string">&quot;red&quot;</span><span class="punctuation">,</span> <span class="string">&quot;绿&quot;</span><span class="operator">=</span><span class="string">&quot;green&quot;</span><span class="punctuation">,</span> <span class="string">&quot;蓝&quot;</span><span class="operator">=</span><span class="string">&quot;blue&quot;</span><span class="punctuation">)</span></span><br><span class="line">table<span class="punctuation">(</span>fac4<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## fac4</span></span><br><span class="line"><span class="comment">## 红 绿 蓝</span></span><br><span class="line"><span class="comment">## 13 10  7</span></span><br></pre></td></tr></table></figure>
+<p>如果合并很多， 可以用<code>fct_collapse()</code>函数， 如</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">compf <span class="operator">&lt;-</span> fct_collapse<span class="punctuation">(</span></span><br><span class="line">  comp<span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;其它&quot;</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;无名&quot;</span><span class="punctuation">,</span> <span class="string">&quot;无应答&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;联想&quot;</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;联想&quot;</span><span class="punctuation">,</span> <span class="string">&quot;联想集团&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;百度&quot;</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;百度&quot;</span><span class="punctuation">,</span> <span class="string">&quot;百度集团&quot;</span><span class="punctuation">)</span></span><br><span class="line">  <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><strong>forcats::fct_lump(f)：</strong></p>
+<p>如果某个因子频数少的水平很多， 在统计时有过多水平不易展示主要的类别，
+可以用<code>forcats::fct_lump(f)</code>合并，
+缺省地从最少的类合并一直到“其它”类超过其它最小的类之前，
+可以用<code>n=</code>参数指定要保留多少个类。</p>
+<h3 id="参考">参考</h3>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="https://www.math.pku.edu.cn/teachers/lidf/docs/Rbook/html/_Rbook/prog-type-fact.html">R因子类型</a></li>
+</ol>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/09/20/求解无约束最优化问题的方法总结/" data-toggle="tooltip" data-placement="top" title="求解无约束最优化问题的方法总结">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#R" title="R">R</a>
+                        
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
+                        
+                          <a class="tag" href="/tags/#Graphics" title="Graphics">Graphics</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/09/21/R%E4%B8%AD%E7%A6%BB%E6%95%A3%E5%9D%90%E6%A0%87%E8%BD%B4%E7%9A%84%E6%8E%92%E5%BA%8F%E3%80%81%E5%AD%90%E9%9B%86%E9%80%89%E6%8B%A9%E4%B8%8E%E5%90%88%E5%B9%B6/";
+    var disqus_url = "https://www.chunfu.site/2022/09/21/R%E4%B8%AD%E7%A6%BB%E6%95%A3%E5%9D%90%E6%A0%87%E8%BD%B4%E7%9A%84%E6%8E%92%E5%BA%8F%E3%80%81%E5%AD%90%E9%9B%86%E9%80%89%E6%8B%A9%E4%B8%8E%E5%90%88%E5%B9%B6/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Chunfu-Shawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
