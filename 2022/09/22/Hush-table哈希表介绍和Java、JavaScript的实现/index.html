@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          Hush table哈希表介绍和Java、JavaScript的实现 - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/09/22/Hush-table哈希表介绍和Java、JavaScript的实现/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-statistics.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Data Structure" title="Data Structure">Data Structure</a>
+                        
+                          <a class="tag" href="/tags/#Algorithm" title="Algorithm">Algorithm</a>
+                        
+                          <a class="tag" href="/tags/#Hush Table" title="Hush Table">Hush Table</a>
+                        
+                    </div>
+                    <h1>Hush table哈希表介绍和Java、JavaScript的实现</h1>
+                    <h2 class="subheading">哈希表的详细介绍，并利用Java、JavaScript两种语言实现Hush table</h2>
+                    <span class="meta">
+                        Posted by <b>Chunfu Shawn</b> on
+                        2022/09/22<br/> 
+                        Last Updated by <b>Chunfu Shawn</b> on
+                        2022/09/22<br/>
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <p><strong>什么是哈希表：</strong>数组和向量都可以存储对象，但对象的存储位置是随机的，也就是说对象本身与其存储位置之间没有必然的联系。当要查找一个对象时，只能以某种顺序（如顺序查找或二分查找）与各个元素进行比较，当数组或向量中的元素数量很多时，查找的效率会明显的降低。<strong>一种有效的存储方式，是不与其他元素进行比较，一次存取便能得到所需要的记录。这就需要在对象的存储位置和对象的关键属性（设为 k）之间建立一个特定的对应关系（设为 f），使每个对象与一个唯一的存储位置相对应。</strong>在查找时，只要根据待查对象的关键属性 k 计算f(k)的值即可。如果此对象在集合中，则必定在存储位置 f(k)上，因此不需要与集合中的其他元素进行比较。称这种对应关系 f 为哈希（hash）方法，按照这种思想建立的表为哈希表。</p>
+<ul>
+<li>哈希<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/datastructure">算法</a>，是一类算法；</li>
+<li>哈希表（Hash Table）是一种**<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/datastructure">数据结构</a>**；</li>
+<li>哈希函数，是支撑哈希表的一类函数；</li>
+<li><code>Map</code>是映射、地图的意思，在**<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/java">Java</a>**中<code>Map</code>表示一种把<code>K</code>映射到<code>V</code>的数据类型；</li>
+<li><code>HashMap</code>是Java中用哈希数据结构实现的<code>Map</code>；</li>
+</ul>
+<h2 id="一、数据结构、数据类型"><a href="#一、数据结构、数据类型" class="headerlink" title="一、数据结构、数据类型"></a>一、数据结构、数据类型</h2><p>在看<code>Java和JavaScript</code>的<code>HashMap</code>之前，插播一点重要的数据结构要点。</p>
+<h3 id="1-数据结构（data-structure）"><a href="#1-数据结构（data-structure）" class="headerlink" title="1. 数据结构（data structure）"></a>1. 数据结构（data structure）</h3><ol>
+<li>数据结构表达的是：用什么样的结构，组织一类数据。</li>
+<li>分为逻辑结构和物理结构：<ul>
+<li>基本的逻辑结构有：集合、线性结构、树形结构、图；</li>
+<li>物理结构：顺序存储、链式存储；</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-数据类型（data-type）"><a href="#2-数据类型（data-type）" class="headerlink" title="2. 数据类型（data type）"></a>2. 数据类型（data type）</h3><ol>
+<li>数据类型是和数据结构密切相关的，它是：值的集合和定义在这个值集上的一组操作的总称。 例如：**<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/c">c语言</a>**中的一种数据类型：整型变量，其值集为某个区间上的整数，定义在这些整数上的操作为加、减、乘、除和取模等算数运算。</li>
+<li>高级语言中数据类型分为两类：<ul>
+<li>原子类型：值不可分解，是什么就是什么。如整型、字符型等；</li>
+<li>结构类型：其值是由若干成分按某种结构组成的，因此可分解，并且它的成分可以是原子类型也可以是结构类型。比如数组，其值是由若干分量组成的，每个分量可以是整数，或者也可以是数组。<ul>
+<li>所以，结构类型可以看成由一种数据结构和定义在其上的一组操作组成。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>所以你看，数据结构仅仅代表着一种结构，而我们在编程语言中是使用数据类型，如果编程语言想要实现某种数据结构，那么必须将其封装为一种数据类型，更狭义的说是数据类型中的结构类型。</li>
+</ol>
+<h3 id="3-深入理解"><a href="#3-深入理解" class="headerlink" title="3. 深入理解"></a>3. 深入理解</h3><ol>
+<li>实际上，在计算机中，数据类型的概念并非局限于高级语言中，每个处理器[a]都提供了一组原子类型或结构类型。<ul>
+<li>例如，一个计算机硬件系统通常含有“位”、“字节”、“字”等原子类型，他们的操作通过计算机设计的一套指令系统直接由电路系统完成；</li>
+<li>而高级程序语言提供的数据类型，其操作需要通过编译器或解释器转化为底层，即汇编语言或机器语言的数据类型来实现。</li>
+</ul>
+</li>
+<li>引入“数据类型”的目的，<ul>
+<li>从硬件角度看，是作为解释计算机内存中信息含义的一种手段，</li>
+<li>而对使用数据类型的用户来说，实现了信息的隐蔽，即将一切用户不必了解的细节都封装在类型中。<ul>
+<li>例如，用户在使用“整数”类型时，既不需要了解“整数”在计算机内部是如何表示的，也不需要知道其操作是如何实现的。</li>
+<li>如“两个整数求和”，程序员注重的仅仅是其“数学上求和”的抽象特性，而不是其硬件的“位”操作如何进行。</li>
+</ul>
+</li>
+</ul>
+ （[a]：处理数据的单元，不局限于CPU，包括硬件系统、**<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/operatingsystem">操作系统</a><strong>、高级语言、</strong><a target="_blank" rel="noopener" href="http://lib.csdn.net/base/mysql">数据库</a>**等）</li>
+</ol>
+<p>所以， 在编程语言中运用“数据结构”就是在使用被一层一层封装起来的某种数据类型 在编程语言中运用“数据结构”就是在使用被一层一层封装起来的某种数据类型 在编程语言中运用“数据结构”就是在使用被一层一层封装起来的某种数据类型</p>
+<h2 id="二、Hash算法"><a href="#二、Hash算法" class="headerlink" title="二、Hash算法"></a>二、Hash算法</h2><h3 id="1-是什么？"><a href="#1-是什么？" class="headerlink" title="1. 是什么？"></a>1. 是什么？</h3><ol>
+<li>查词典 先来看英语翻译： <figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hash</span><br><span class="line">    英 <span class="selector-attr">[hæʃ]</span>   美 <span class="selector-attr">[hæʃ]</span></span><br><span class="line">n. 剁碎的食物；混杂，拼凑；重新表述</span><br><span class="line">vt. 搞糟，把…弄乱；切碎；推敲</span><br><span class="line">n. (Hash)人名；(阿拉伯、保、英)哈什；(西)阿什</span><br></pre></td></tr></table></figure>
+ 我觉得 切碎 最适合，但正式上会被称为“散列 ”。有时候也叫“哈希 ”，据说是因为最早翻译的人以为这是某个叫Hash 的人发明的算法，所以音译了其名字； （下面我可能会根据情况混合使用这些词，所以要记得他们是同义词）</li>
+<li>所以 Hash算法 是这样一类算法：所以，MD5 可能是最著名的一种Hash算法 了。<blockquote>
+<p>这类算法接受任意长度的二进制输入值，对输入值做换算（切碎），最终给出固定长度的二进制输出值；</p>
+</blockquote>
+ 所以注意：Hash算法 不是某个固定的算法，它代表的是一类算法。 以更好理解的方式来说，Hash算法 是摘要算法 ：也就是说，从不同的输入中，通过一些计算摘取出来一段输出数据，值可以用以区分输入数据。</li>
+</ol>
+<h3 id="2-有什么用？"><a href="#2-有什么用？" class="headerlink" title="2. 有什么用？"></a>2. 有什么用？</h3><p>那么，具体来说Hash/摘要/散列/切碎算法 有哪些用处呢？</p>
+<ol>
+<li>信息安全领域： Hash算法 可用作加密算法。 如文件校验：通过对文件摘要，可以得到文件的“数字指纹”，你下载的任何副本的“数字指纹”只要和官方给出的“数字指纹”一致，那么就可以知道这是未经篡改的。例如著名的MD5 ；</li>
+<li>数据结构领域： Hash算法 通常还可用作快速查找。 这是今天我想说的部分。根据Hash函数 我们可以实现一种叫做哈希表（Hash Table）的数据结构。这种结构可以实现对数据进行快速的存取。</li>
+</ol>
+<blockquote>
+<p>接下来我们就来看看Hash算法 的一个重要的应用领域：数据结构 - 哈希表；</p>
+</blockquote>
+<h2 id="二、哈希表"><a href="#二、哈希表" class="headerlink" title="二、哈希表"></a>二、哈希表</h2><h3 id="1-什么是哈希表"><a href="#1-什么是哈希表" class="headerlink" title="1. 什么是哈希表"></a>1. 什么是哈希表</h3><p>首先想一个问题：我们是如何在数据结构中做查找的呢？</p>
+<ul>
+<li>线性表、树  线性表、树 这些结构中，记录 在结构 中的相对位置是随机的，和记录的关键字之间不存在确定关系，因此，在结构中查找时需要进行一系列和关键字的比较。这一类查找方法建立在“比较”的基础上。在顺序查找时，比较的结果为“=”与“≠”2种可能；在折半查找、二叉排序树查找和B-树查找时，比较的结果为“&lt;”“=”“&gt;”3种可能。查找的效率依赖于查找过程中所进行的比较次数。</li>
+<li>哈希表  理想的情况是希望不经过任何比较，一次存取便能得到所查记录，那就必须在记录的存储位置和它的关键字之间建立一个确定的关系，使每个关键字和结构中一个唯一的存储位置相对应。因而在查找时，只要根据这个对应关系找到给定值的像。若结构中存在关键字和相等的记录，则必定在的存储位置上，反之在这个位置上没有记录。由此，不需要比较便可直接取得所查记录。在此，我们称这个对应关系为哈希(Hash)函数 ，按这个思想建立的表为哈希表 。  （插播：注意“理想情况”这几个字~~ 这会在后文给出解释）</li>
+</ul>
+<p>这是《数据结构（**<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/c">C语言</a>**版）》[1]中引出哈希表的一段描述，通俗易懂。所以，我们知道了什么是哈希函数 和哈希表 。</p>
+<ul>
+<li>哈希函数<ol>
+<li>灵活：哈希函数是一个映像，因此哈希函数的设定很灵活，只要使得任何关键字由此所得的哈希函数值都落在表长允许的范围之内即可。</li>
+<li>冲突：对不同的关键字可能得到同一哈希地址，即$key_1\ne key_2$而 $f(key_1)=f(key_2)$，这种现象称为冲突（collision）； 冲突只能尽量地少，而不能完全避免。因为，哈希函数是从关键字集合到地址集合的映像。而通常关键字集合比较大，它的元素包括所有可能的关键字，而地址集合的元素仅为哈希表中的地址值。因此，在实现哈希表这种数据结构的时候不仅要设定一个“好”的哈希函数，而且要设定一种处理冲突的方法。</li>
+</ol>
+</li>
+</ul>
+<p>综上所述，我们可以给出哈希表的定义如下：</p>
+<blockquote>
+<p>根据设定的Hash函数 - $H(key)$和处理冲突的方法，将一组关键字映象 到一个有限的连续的地址集（区间）上，并以关键字在地址集中的象 作为记录在表中的存储位置，这样的表便称为Hash表 ；</p>
+</blockquote>
+<h3 id="2-哈希函数"><a href="#2-哈希函数" class="headerlink" title="2. 哈希函数"></a>2. 哈希函数</h3><p>上面我们已经引出了并解释了Hash函数 。实际工作中，需要视不同的情况采用不同的Hash函数 ，通常要考虑的因素有：</p>
+<ul>
+<li>Hash函数 执行的时间；</li>
+<li>关键字 的长度；</li>
+<li>Hash表 的大小；</li>
+<li>关键字 的分布情况；</li>
+<li>记录 的查找频率；</li>
+</ul>
+<p>有如下一些常用的Hash函数 构造方法：</p>
+<ol>
+<li><strong>直接寻址法：</strong> $f(k)=k$ 或者 $f(k)=a*k+b$  取 k 或 k 的某个线性函数为Hash地址 。 特点：由于直接地址法相当于有多少个关键字就必须有多少个相应地址去对应，所以不会产生冲突，也正因为此实际中很少使用这种构造方法。</li>
+<li><strong>数字分析法：</strong> 首先分析待存的一组关键字 ，比如是一个班级学生的出生年月日 ，我们发现他们的出生年 大体相同，那么我们肯定不能用他们的年 来作为存储地址 ，这样出现冲突 的几率很大；但是，我们发现月日 的具体数字差别很大，如果我们用月日 来作为Hash地址 ，则会明显降低冲突几率。因此，数字分析法就是找出关键字 的规律，尽可能用差异数据来构造Hash地址 ； 特点：需要提前知道所有可能的关键字，才能分析运用此种方法，所以不太常用。</li>
+<li><strong>平方取中法：</strong> 先求出关键字的平方值，然后按需要取平方值的中间几位作为哈希地址。这是因为：平方后中间几位和关键字中每一位都相关，故不同关键字会以较高的概率产生不同的哈希地址。 例：我们把英文字母在字母表中的位置序号作为该英文字母的内部编码。例如K的内部编码为11，E的内部编码为05，Y的内部编码为25，A的内部编码为01, B的内部编码为02。由此组成关键字“KEYA”的内部代码为11052501，同理我们可以得到关键字“KYAB”、“AKEY”、“BKEY”的内部编码。之后对关键字进行平方运算后，取出第7到第9位作为该关键字哈希地址，如下图所示：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>内部编码</th>
+<th>内部编码的平方值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>KEYA</td>
+<td>11050201</td>
+<td>122157778355001</td>
+</tr>
+<tr>
+<td>KYAB</td>
+<td>11250102</td>
+<td>126564795010404</td>
+</tr>
+<tr>
+<td>AKEY</td>
+<td>1110525</td>
+<td>1233265775625</td>
+</tr>
+<tr>
+<td>BKEY</td>
+<td>2110525</td>
+<td>4454315775625</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<pre><code>特点：较常用。
+</code></pre>
+<ol start="4">
+<li>折叠法： 将关键字分割成位数相同的几部分（最后一部分位数可以不同），然后取这几部分的叠加和（去除进位）作为散列地址。数位叠加可以有移位叠加和间界叠加两种方法。移位叠加是将分割后的每一部分的最低位对齐，然后相加；间界叠加是从一端向另一端沿分割界来回折叠，然后对齐相加。</li>
+<li>随机数法： 选择一个随机函数，取关键字的随机函数值作为Hash地址 ，通常用于关键字长度不同的场合。即 特点：通常，关键字长度不相等时，采用此法构建Hash函数 较为合适。</li>
+<li>除留取余法： 取关键字被某个不大于Hash表 长m 的数p 除后所得的余数为Hash地址 。 特点：这是最简单也是最常用的Hash函数构造方法。可以直接取模，也可以在平法法、折叠法之后再取模。 值得注意的是，在使用除留取余法 时，对p 的选择很重要，如果p 选的不好会容易产生同义词 。由经验得知：p 最好选择不大于表长m的一个质数 、或者不包含小于20的质因数的合数。</li>
+</ol>
+<h3 id="3-处理冲突"><a href="#3-处理冲突" class="headerlink" title="3. 处理冲突"></a>3. 处理冲突</h3><p>如何处理冲突是哈希造表不可缺少的一个方面。现在完整的描述一下处理冲突：</p>
+<blockquote>
+<p>假设哈希表的地址集为，冲突是指由关键字得到的哈希地址为的位置上已存有记录，则“处理冲突”就是为该关键字的记录找到另一个“空”的哈希地址。 在处理冲突的过程中可能得到一个地址序列。即在处理哈希地址的冲突时，若得到的另一个哈希地址仍然发生冲突，则再求下一个地址，若仍然冲突，再求，依次类推，直至不发生冲突为止，则为记录在表中的地址。 （需要注意此定义不太适合链地址法）</p>
+</blockquote>
+<p>那么，通常有以下4种方法：</p>
+<ol>
+<li>开放定址法：$Hi=(H(key)+d_i)  \mod\ m，i=1,2,…,k(k≤m−1)$ $H(key)$为哈希函数； $m$ 为哈希表表长；$d_i$为增量序列，有3种取法：<ol>
+<li>$d_i=1,2,3,…,m-1$，称为线性探测再散列；</li>
+<li>$d_i = 1^2,-1^2,2^2,…,\pm k^2$，称为二次探测再散列；</li>
+<li>$d_i=$伪随机数序列，称为伪随机探测再散列；</li>
+</ol>
+</li>
+<li>再哈希法： $H_i=RH_i(key),i=1,2,…,k$ $RH_i$均是不同的哈希函数，即在同义词产生地址冲突时计算另一个哈希函数地址，直到冲突不再发生，这种方法不易产生聚集 ，但增加了计算时间；</li>
+<li>链地址法： 将所有关键字为同义词的记录存储在同一线性表中。即在Hash 出来的哈希地址中不直接存Key ，而是存储一个Key 的链表 ，当发生冲突 时，将同义的Key 加入链表 ； <img src="figure1.png" width="400px"/>
+ </li>
+<li>公共溢出区： 可以建立一个公共溢出区，用来存放有冲突的Key 。比如设立另一个哈希表，专门用来存放出现冲突的同义词。</li>
+</ol>
+<h3 id="4-查找及分析"><a href="#4-查找及分析" class="headerlink" title="4. 查找及分析"></a>4. 查找及分析</h3><p>在哈希表上进行查找的过程和哈希造表的过程基本是一致的，过程就不累述了。我们需要看一看其查找的长度。</p>
+<ol>
+<li>平均查找长度<ol>
+<li>虽然哈希表在关键字与记录的存储位置之间建立了直接映像，但由于“冲突”的存在，使得哈希表的查找过程仍然是一个“给定值和关键字进行比较”的过程。因此，仍需以平均查找长度作为衡量哈希表的查找效率的量度； （还记得上面我们说的“理想情况下”吗？~~ 现实告诉我们，一般情况下，还是不得不需要“比较”！）</li>
+<li>查找过程中需要和给定值进行比较的关键字的个数取决于下列三个因素：<ul>
+<li>哈希函数；</li>
+<li>处理冲突的方法；</li>
+<li>哈希表的装填因子；</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>装填因子 在一般情况下，我们设计的哈希函数肯定是尽量均匀的，所以可以不考虑它对平均查找长度的影响。那么，处理冲突方法相同的哈希表，其平均查找长度就依赖于哈希表的装填因子了。其定义如下：<ul>
+<li>装填因子$\alpha$（Load Factor）：装填因子表示为哈希表的装满程度，其值等于元素数比上哈希表的长度。</li>
+</ul>
+ 直观的看：<ul>
+<li>$\alpha$越小，发生冲突的可能性就越小；</li>
+<li>$\alpha$越大，代表着表中已填入的元素越多，再填入元素时发生冲突的可能性就越大。那么在查找时，给定值需要比较的关键字的个数就越多；</li>
+</ul>
+</li>
+</ol>
+<p>结论如下：</p>
+<blockquote>
+<p>哈希表的平均查找长度是装填因子$\alpha$的函数，而不是n的函数。因此，不管n多大，我们总是可以选择一个合适的装填因子以便将平均查找长度限定在一个范围内。（Java中HashMap的默认装填因子是0.75）</p>
+</blockquote>
+<h2 id="四、Java的HashMap"><a href="#四、Java的HashMap" class="headerlink" title="四、Java的HashMap"></a>四、Java的HashMap</h2><p>FAQ：</p>
+<ol>
+<li>Hash表 和<code>HashMap</code>的关系？ 答：Hash表 是一种逻辑数据结构，<code>HashMap</code>是Java中的一种数据类型（结构类型），它通过代码实现了Hash表 这种数据结构，并在此结构上定义了一系列操作。</li>
+<li>这一章节我们要干嘛？ 答：我们是在讨论一种高级程序设计语言中某个数据类型的实现，它实现了哈希表这种数据结构，但它绝不是哈希表本身，它就是它自己 - <code>HashMap</code>类型。 不明白的话我再说一句：记不记得你学<code>Map</code>(<code>HashMap</code>父接口)时见到的第一句描述“An object that maps keys to values. ”简单翻译就是：Map是一个键值对对象。但是，可没人告诉过你哈希表是键值对结构。</li>
+<li>Java中的数据类型 答：有些话不明白的说出来，其实容易让人想不明白。所以我想说：<ul>
+<li>实际上，编程语言中数据类型都是层层封装的结果；</li>
+<li>实际上，Java 中只有3类数据类型：原生类型（primitive8个）、数组、Object；</li>
+<li>实际上，无论官方的集合框架也好，你自己创建的类也好，都只能是源自于Object并依赖于原有的这3类数据类型；</li>
+<li>最终，到现在你可能才会发现，“数组”这种类型竟是如此的重要，在Java 中，如果没有数组作为基础结构，你是不可能构造出任何想实现某种数据结构的Object类型的。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>其实有了以上内容，你应该可以轻松的看懂<code>HashMap</code>的源码了，不过我们还是一起来看一下↓</p>
+<hr>
+<ol>
+<li>上帝视角的<code>HashMap</code><ul>
+<li><code>HashMap</code>是基于数组来实现哈希表的，数组就好比内存储空间，数组的<code>index</code>就好比内存的地址；</li>
+<li><code>HashMap</code>的每个记录就是一个<code>Entry&lt;K, V&gt;</code>对象，数组中存储的就是这些对象；</li>
+<li><code>HashMap</code>的哈希函数 = 计算出<code>hashCode</code> + 计算出数组的<code>index</code>；</li>
+<li><code>HashMap</code>解决冲突：使用链地址法，每个<code>Entry</code>对象都有一个引用<code>next</code>来指向链表的下一个<code>Entry</code>；</li>
+<li><code>HashMap</code>的装填因子：默认为0.75；</li>
+<li>基本上<code>HashMap</code>就像这样：  <img src="figure1.png" width="400px"/>
+  </li>
+</ul>
+</li>
+<li><code>new HashMap</code> <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*** 1. 构造方法：最终使用的是这个构造方法 ***/</span></span><br><span class="line"><span class="comment">// 初始容量initialCapacity为16，装填因子loadFactor为0.75</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">HashMap</span><span class="params">(<span class="type">int</span> initialCapacity, <span class="type">float</span> loadFactor)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Illegal initial capacity: &quot;</span> +</span><br><span class="line">                                           initialCapacity);</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &gt; MAXIMUM_CAPACITY)</span><br><span class="line">        initialCapacity = MAXIMUM_CAPACITY;</span><br><span class="line">    <span class="keyword">if</span> (loadFactor &lt;= <span class="number">0</span> || Float.isNaN(loadFactor))</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Illegal load factor: &quot;</span> +</span><br><span class="line">                                           loadFactor);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.loadFactor = loadFactor;</span><br><span class="line">    threshold = initialCapacity;</span><br><span class="line">    init();<span class="comment">//init可以忽略，方法默认为空&#123;&#125;，当你需要集成HashMap实现自己的类型时可以重写此方法做一些事</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*** 2. (静态/实例)成员变量 ***/</span></span><br><span class="line"><span class="comment">/** 默认的容量，容量必须是2的幂 */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_INITIAL_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">4</span>;<span class="comment">// aka 16</span></span><br><span class="line"><span class="comment">/** 最大容量2的30次方 */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">MAXIMUM_CAPACITY</span> <span class="operator">=</span> <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line"><span class="comment">/** 默认装填因子0.75 */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="type">float</span> <span class="variable">DEFAULT_LOAD_FACTOR</span> <span class="operator">=</span> <span class="number">0.75f</span>;</span><br><span class="line"><span class="comment">/** 默认Entry数组 */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> Entry&lt;?,?&gt;[] EMPTY_TABLE = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Entry数组：table */</span></span><br><span class="line"><span class="keyword">transient</span> Entry&lt;K,V&gt;[] table = (Entry&lt;K,V&gt;[]) EMPTY_TABLE;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** table中实际的Entry数量 */</span></span><br><span class="line"><span class="keyword">transient</span> <span class="type">int</span> size;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * size到达此门槛后，必须扩容table；</span></span><br><span class="line"><span class="comment"> * 值为capacity * load factor，默认为16 * 0.75 也就是12。</span></span><br><span class="line"><span class="comment"> * 意味着默认情况构造情况下，当你存够12个时，table会第一次扩容</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> threshold;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 装填因子，值从一开构造HashMap时就被确定了，默认为0.75 */</span></span><br><span class="line"><span class="keyword">final</span> <span class="type">float</span> loadFactor;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 哈希种子，实例化HashMap后在将要使用前设置的随机值，可以使得key的hashCode冲突更难出现</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> <span class="type">int</span> <span class="variable">hashSeed</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The number of times this HashMap has been structurally modified</span></span><br><span class="line"><span class="comment"> * Structural modifications are those that change the number of mappings in</span></span><br><span class="line"><span class="comment"> * the HashMap or otherwise modify its internal structure (e.g.,</span></span><br><span class="line"><span class="comment"> * rehash).  This field is used to make iterators on Collection-views of</span></span><br><span class="line"><span class="comment"> * the HashMap fail-fast.  (See ConcurrentModificationException).</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">transient</span> <span class="type">int</span> modCount;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*** 3. Map.Entry&lt;K,V&gt;：数组table中实际存储的类型 ***/</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Entry</span>&lt;K,V&gt; <span class="keyword">implements</span> <span class="title class_">Map</span>.Entry&lt;K,V&gt; &#123;</span><br><span class="line">    <span class="keyword">final</span> K key;<span class="comment">// &quot;Key-Value对&quot;的Key</span></span><br><span class="line">    V value;<span class="comment">// &quot;Key-Value对&quot;的Key</span></span><br><span class="line">    Entry&lt;K,V&gt; next;</span><br><span class="line">    <span class="type">int</span> hash;</span><br><span class="line"></span><br><span class="line">    Entry(<span class="type">int</span> h, K k, V v, Entry&lt;K,V&gt; n) &#123;</span><br><span class="line">        value = v;</span><br><span class="line">        next = n;<span class="comment">//链表的下一个Entry</span></span><br><span class="line">        key = k;</span><br><span class="line">        hash = h;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Objects.hashCode(getKey()) ^ Objects.hashCode(getValue());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757612345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>存 - put(key, value)、解决冲突 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 存放 **/</span></span><br><span class="line"><span class="keyword">public</span> V <span class="title function_">put</span><span class="params">(K key, V value)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (table == EMPTY_TABLE) &#123;</span><br><span class="line">        inflateTable(threshold);<span class="comment">//table会被初始化为长度16，且hashSeed会被赋值；</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="literal">null</span>)</span><br><span class="line"><span class="comment">//HashMap允许key为null：在table中找到null key，然后设置Value，同时其hash为0；</span></span><br><span class="line">        <span class="keyword">return</span> putForNullKey(value);</span><br><span class="line"></span><br><span class="line"><span class="comment">// a). 计算key的hashCode，下面详细说</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">hash</span> <span class="operator">=</span> hash(key);</span><br><span class="line"></span><br><span class="line"><span class="comment">// b). 根据hashCode计算index</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> indexFor(hash, table.length);</span><br><span class="line"></span><br><span class="line"><span class="comment">// c). 做覆盖，遍历index位置的Entry链表，*不是解决*冲突</span></span><br><span class="line">    <span class="keyword">for</span> (Entry&lt;K,V&gt; e = table[i]; e != <span class="literal">null</span>; e = e.next) &#123;</span><br><span class="line">        Object k;</span><br><span class="line">        <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) &#123;</span><br><span class="line"><span class="comment">// hashCode和equals都相等则表明：本次put是覆盖操作，下面return了被覆盖的老value</span></span><br><span class="line">            <span class="type">V</span> <span class="variable">oldValue</span> <span class="operator">=</span> e.value;</span><br><span class="line">            e.value = value;</span><br><span class="line">            e.recordAccess(<span class="built_in">this</span>);</span><br><span class="line">            <span class="keyword">return</span> oldValue;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    modCount++;</span><br><span class="line"><span class="comment">// d). 添加Entry，并解决冲突</span></span><br><span class="line"><span class="comment">// 如果需要增加table长度（size&gt;threshold）就乘2增加，并重新计算每个元素在新table中的位置和转移</span></span><br><span class="line">    addEntry(hash, key, value, i);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;<span class="comment">//增加成功最后返回null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//详细说说上面的a). b). d).</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/** a). 为了防止低质量的hash函数，HashMap在这里会重新计算一遍key的hashCode **/</span></span><br><span class="line"><span class="keyword">final</span> <span class="type">int</span> <span class="title function_">hash</span><span class="params">(Object k)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> hashSeed;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> != h &amp;&amp; k <span class="keyword">instanceof</span> String) &#123;<span class="comment">//字符串会被特殊处理，返回32bit的整数（就是int）</span></span><br><span class="line">        <span class="keyword">return</span> sun.misc.Hashing.stringHash32((String) k);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    h ^= k.hashCode();<span class="comment">//将key的hashCode与h按位异或，最后赋值给h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// This function ensures that hashCodes that differ only by</span></span><br><span class="line"><span class="comment">// constant multiples at each bit position have a bounded</span></span><br><span class="line"><span class="comment">// number of collisions (approximately 8 at default load factor).</span></span><br><span class="line">    h ^= (h &gt;&gt;&gt; <span class="number">20</span>) ^ (h &gt;&gt;&gt; <span class="number">12</span>);</span><br><span class="line">    <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">7</span>) ^ (h &gt;&gt;&gt; <span class="number">4</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * b). 计算此hashCode该被放入table的哪个index</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="type">int</span> <span class="title function_">indexFor</span><span class="params">(<span class="type">int</span> h, <span class="type">int</span> length)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> h &amp; (length-<span class="number">1</span>);<span class="comment">//与table的length - 1按位与，就能保证返回结果在0-length-1内</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 解决冲突：链地址法</span></span><br><span class="line"><span class="comment"> * d).  addEntry(hash, key, value, i)最终是调用了此函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">createEntry</span><span class="params">(<span class="type">int</span> hash, K key, V value, <span class="type">int</span> bucketIndex)</span> &#123;</span><br><span class="line">    Entry&lt;K,V&gt; e = table[bucketIndex];<span class="comment">// index的Entry拿出来</span></span><br><span class="line"><span class="comment">// put添加新元素是直接new Entry放在链头，如果有老的（有冲突）则将next设置为老的，如果没有正好设置next为null</span></span><br><span class="line">    table[bucketIndex] = <span class="keyword">new</span> <span class="title class_">Entry</span>&lt;&gt;(hash, key, value, e);<span class="comment">// 在构造函数中，e代表next</span></span><br><span class="line">    size++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="number">1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697012345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>取 - get(key) <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//其实看完了最精髓的存，取的话就比较简单，就不放代码在这里了，仅说下思路。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 根据k使用hash(k)重新计算出hashCode</span></span><br><span class="line"><span class="comment">// 2. 根据indexFor(int h, int length)计算出该k的index</span></span><br><span class="line"><span class="comment">// 3. 如果该index处Entry的key与此k相等，就返回value，否则继续查看该Entry的next</span></span><br><span class="line"><span class="number">1234512345</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="五、JavaScript的Hushmap"><a href="#五、JavaScript的Hushmap" class="headerlink" title="五、JavaScript的Hushmap"></a>五、JavaScript的Hushmap</h2><p>Java中的HashMap是以<strong>链表散列</strong>的形式存储的，也就是数组+链表：HashMap中有一个Entry数组，默认的数组长度是16。这个值必须是2的整数次幂，以保证在通过key的hash值来计算entry应该放置的数组下标时可以尽量做到平均分配。而Entry数组中的每一个非空Entry都是一个Entry链表的头结点。这样做的好处就是HashMap结合了数组在寻址（查找）上的优势和链表在放置和删除上的优势。当一个链表的长度过长，查询所耗费的时间也在增加，当达到一定阈值的时候，Entry数组就会自动扩容至原来的两倍。这个时候就需要把原数组的所有元素都拷贝至新数组中，这也是HashMap操作过程中一个消耗相对大一些的操作。</p>
+<p>不过在JavaScript中，并没有为我们提供一个类似于HashMap的结构用于存储数据。JavaScript中的数组其实可以被用来当做一个映射集，比如如下语句</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="title class_">Array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line">    a[-<span class="number">10</span>]=<span class="string">&quot;a[-10]&quot;</span>;</span><br><span class="line">    a[<span class="string">&quot;sss&quot;</span>]=<span class="string">&quot;sss&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>都是可以正常运行的，不过有一点需要注意的是，当[]里不是非负整数的时候，该属性并没有被存放到数组中，而是作为这个数组对象的一个属性被存储进来。所以这样的赋值显然也不会改变数组的长度。当上面的语句被执行之后，如果你输出这个数组的长度，则依然会得到3。这显然不是我们想要的结果，所以我们可以参考Java中的HashMap源码来写一个在JavaScript中适用的HashMap。</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a><strong>正文</strong></h3><p>在Javascript中，我们仍然以”数组+链表“的链表散列形式来存储HashMap中的数据。这里我们规定key的值必须为字符串，可以为空字符串，但是不能为null或undefined。这样做的原因一是大部分的时间我们都会以字符串作为key，而我们的HashMap计算hash值的方法就是通过计算key值字符串每个字符的ASCII码并拼接获得的；还有一个原因就是Javascript中并不会像Java语言中会为每个不同的对象生成不同的hash值，所以Javascript中对象之间的比较也非常复杂。如果实现了这一功能，在put操作比较key的时候就会非常耗时，违背了HashMap设计的初衷。而对于value的类型并没有限制，可以是<strong>任何类型</strong>的变量。还有一点值得一提的是，由于Javascript数组本身就<strong>不是定容</strong>的，即可以通过赋值语句动态的增减数组的长度，所以相对于Java中的HashMap来说，我们将要实现的HashMap在扩容的时候还省去了把原数组中的entry拷贝至新数组的步骤。下面上代码：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">HashMap</span>(<span class="params"></span>)&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">//初始大小var size = 0;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//数组var table = [];</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//初始数组长度为16var length = 2 &lt;&lt; 3;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//数组扩容临界值为12var threshold = 0.75 * length;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//hash值计算this.hash = function(h) &#123;</span></span><br><span class="line">        h ^= (h &gt;&gt;&gt; <span class="number">20</span>) ^ (h &gt;&gt;&gt; <span class="number">12</span>);</span><br><span class="line">        <span class="keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="number">7</span>) ^ (h &gt;&gt;&gt; <span class="number">4</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回HashMap的sizethis.size = function()&#123;</span></span><br><span class="line">        <span class="keyword">return</span> size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//是否包含某个keythis.containsKey = function(key) &#123;</span></span><br><span class="line">        <span class="keyword">if</span>(key == <span class="literal">null</span> || key == <span class="literal">undefined</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">var</span> hashCode = <span class="variable language_">this</span>.<span class="title function_">hashCode</span>(key);</span><br><span class="line">            <span class="keyword">var</span> hash = <span class="variable language_">this</span>.<span class="title function_">hash</span>(hashCode);</span><br><span class="line">            <span class="keyword">var</span> index = <span class="variable language_">this</span>.<span class="title function_">indexFor</span>(hash, length)</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> e = table[index]; e != <span class="literal">null</span> &amp;&amp; e != <span class="literal">undefined</span>; e = e.<span class="property">next</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(e.<span class="property">key</span> === key)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//是否包含某个valuethis.containsValue = function(value) &#123;</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; table.<span class="property">length</span>; index++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> e = table[index]; e != <span class="literal">null</span> &amp;&amp; e != <span class="literal">undefined</span>; e = e.<span class="property">next</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(e.<span class="property">value</span>) === <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(value)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//HashMap是否为空this.isEmpty = function()&#123;</span></span><br><span class="line">        <span class="keyword">return</span> size === <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//计算HashCode值，不同的key有不同的HashCode，这里使用字符串转ASCII码并拼接的方式this.hashCode = function(key)&#123;</span></span><br><span class="line">        <span class="keyword">var</span> hashcode = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span> ;i&lt; key.<span class="property">length</span>; i++)&#123;</span><br><span class="line">            hashcode += key.<span class="title function_">charCodeAt</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> hashcode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//向HashMap中存放值this.put = function(key, value)&#123;</span></span><br><span class="line">        <span class="keyword">if</span>(key == <span class="literal">null</span> || key == <span class="literal">undefined</span>)</span><br><span class="line">            returnvar hashCode = <span class="variable language_">this</span>.<span class="title function_">hashCode</span>(key);</span><br><span class="line">        <span class="keyword">var</span> hash = <span class="variable language_">this</span>.<span class="title function_">hash</span>(hashCode);</span><br><span class="line">        <span class="keyword">var</span> index = <span class="variable language_">this</span>.<span class="title function_">indexFor</span>(hash, length)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> e = table[index]; e != <span class="literal">null</span> &amp;&amp; e != <span class="literal">undefined</span>; e = e.<span class="property">next</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(e.<span class="property">key</span> === key)&#123;</span><br><span class="line">                <span class="keyword">var</span> oldValue = e.<span class="property">value</span>;</span><br><span class="line">                e.<span class="property">value</span> = value;</span><br><span class="line">                <span class="keyword">return</span> oldValue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">addEntry</span>(key, value, index)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//从HashMap中获取值this.get = function(key)&#123;</span></span><br><span class="line">        <span class="keyword">if</span>(key == <span class="literal">null</span> || key == <span class="literal">undefined</span>)</span><br><span class="line">            <span class="keyword">return</span> undefinedvar hashCode = <span class="variable language_">this</span>.<span class="title function_">hashCode</span>(key);</span><br><span class="line">        <span class="keyword">var</span> hash = <span class="variable language_">this</span>.<span class="title function_">hash</span>(hashCode);</span><br><span class="line">        <span class="keyword">var</span> index = <span class="variable language_">this</span>.<span class="title function_">indexFor</span>(hash, length)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> e = table[index]; e != <span class="literal">null</span> &amp;&amp; e != <span class="literal">undefined</span>; e = e.<span class="property">next</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(e.<span class="property">key</span> === key)&#123;</span><br><span class="line">                <span class="keyword">return</span> e.<span class="property">value</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//从HashMap中删除值this.remove = function(key)&#123;</span></span><br><span class="line">        <span class="keyword">if</span>(key == <span class="literal">null</span> || key == <span class="literal">undefined</span>)</span><br><span class="line">            <span class="keyword">return</span> undefinedvar hashCode = <span class="variable language_">this</span>.<span class="title function_">hashCode</span>(key);</span><br><span class="line">        <span class="keyword">var</span> hash = <span class="variable language_">this</span>.<span class="title function_">hash</span>(hashCode);</span><br><span class="line">        <span class="keyword">var</span> index = <span class="variable language_">this</span>.<span class="title function_">indexFor</span>(hash, length)</span><br><span class="line">        <span class="keyword">var</span> prev = table[index];</span><br><span class="line">        <span class="keyword">var</span> e = prev;</span><br><span class="line">        <span class="keyword">while</span>(e != <span class="literal">null</span> &amp;&amp; e!= <span class="literal">undefined</span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> next = e.<span class="property">next</span>;</span><br><span class="line">            <span class="keyword">if</span>(e.<span class="property">key</span> === key)&#123;</span><br><span class="line">                size--;</span><br><span class="line">                <span class="keyword">if</span>(prev == e)&#123;</span><br><span class="line">                    table[index] = next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    prev.<span class="property">next</span> = next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> e;</span><br><span class="line">            &#125;</span><br><span class="line">            prev = e;</span><br><span class="line">            e = next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> e == <span class="literal">null</span>||e == <span class="literal">undefined</span>? <span class="attr">undefined</span>: e.<span class="property">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//清空HashMapthis.clear = function() &#123;</span></span><br><span class="line">        table = [];</span><br><span class="line"><span class="comment">// 设置size为0</span></span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">        length = <span class="number">2</span> &lt;&lt; <span class="number">3</span>;</span><br><span class="line">        threshold = <span class="number">0.75</span> * length;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据hash值获取数据应该存放到数组的哪个桶(下标)中this.indexFor = function(h, length) &#123;</span></span><br><span class="line">        <span class="keyword">return</span> h &amp; (length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加一个新的桶来保存key和valuethis.addEntry = function(key, value, bucketIndex) &#123;</span></span><br><span class="line"><span class="comment">// 保存对应table的值var e = table[bucketIndex];</span></span><br><span class="line"><span class="comment">// 然后用新的桶套住旧的桶，链表</span></span><br><span class="line">        table[bucketIndex] = &#123; <span class="attr">key</span>: key, <span class="attr">value</span>: value, <span class="attr">next</span>: e&#125;</span><br><span class="line"><span class="comment">// 如果当前size大于等于阈值if (size++ &gt;= threshold)</span></span><br><span class="line"><span class="comment">// 调整容量</span></span><br><span class="line">        &#123;</span><br><span class="line">            length = length &lt;&lt; <span class="number">1</span>;</span><br><span class="line">            threshold = <span class="number">0.75</span> * length;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取HashMap中所有的键值对this.getEntries = function()&#123;</span></span><br><span class="line">        <span class="keyword">var</span> entries = [];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; table.<span class="property">length</span>; index++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> e = table[index]; e != <span class="literal">null</span> &amp;&amp; e != <span class="literal">undefined</span>; e = e.<span class="property">next</span>) &#123;</span><br><span class="line">                entries.<span class="title function_">push</span>(&#123;<span class="attr">key</span>: e.<span class="property">key</span>, <span class="attr">value</span>: e.<span class="property">value</span>&#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> entries;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中hashcode这个函数，就是把key值的每个字符转换成ASCII码并且拼接的过程。这样可以保证当key值不同的时候，生成的字符串肯定也不相同。</p>
+<p>而hash这个函数则与Java中的HashMap源码中的hash方法完全相同。通过得到的这个hash值与数组的当前长度进行与运算，获取到我们要put的键值对应该放置在数组的哪个下标之中。</p>
+<p>我们可以观察containsValue这个函数，这个函数的作用是判断HashMap中是否有某个value。在这个函数的实现里，有一个对象之间的比较：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(e.<span class="property">value</span>) === <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(value)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用了JSON对象转字符串并进行比较，对嵌套的对象结构依然有效，不过比较的效率相对来说很低。不过相对于key的比较，value的比较并不会经常被调用，这也解释了之前所说的key只能为字符串，而value可以使任何形式的对象的说法。</p>
+<p>getEntries函数可以获得HashMap中所有的键值对，这个函数返回一个包含所有键值对的数组，如果想对HashMap进行遍历，那么可以调用这个函数，并且遍历返回的数组就可以了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li>严蔚敏，吴伟民．数据结构（C语言版）．北京：清华大学出版社，2007</li>
+<li><a target="_blank" rel="noopener" href="http://blog.sina.com.cn/s/blog_6fd335bb0100v1ks.html">哈希表及处理冲突的方法．新浪微博．2011-10-10</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010297957/article/details/51974340">哈希表、Java中HashMap</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/245764">Javascript实现Java的HashMap(链表散列)</a></li>
+</ol>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2022/09/22/稀疏矩阵的高效存储和读取/" data-toggle="tooltip" data-placement="top" title="稀疏矩阵（Sparse Matrix）的高效存储和读取">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/09/21/R中离散坐标轴的排序、子集选择与合并/" data-toggle="tooltip" data-placement="top" title="R中离散坐标轴的排序、子集选择与合并">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Data Structure" title="Data Structure">Data Structure</a>
+                        
+                          <a class="tag" href="/tags/#Algorithm" title="Algorithm">Algorithm</a>
+                        
+                          <a class="tag" href="/tags/#Hush Table" title="Hush Table">Hush Table</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/09/22/Hush-table%E5%93%88%E5%B8%8C%E8%A1%A8%E4%BB%8B%E7%BB%8D%E5%92%8CJava%E3%80%81JavaScript%E7%9A%84%E5%AE%9E%E7%8E%B0/";
+    var disqus_url = "https://www.chunfu.site/2022/09/22/Hush-table%E5%93%88%E5%B8%8C%E8%A1%A8%E4%BB%8B%E7%BB%8D%E5%92%8CJava%E3%80%81JavaScript%E7%9A%84%E5%AE%9E%E7%8E%B0/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Chunfu-Shawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
