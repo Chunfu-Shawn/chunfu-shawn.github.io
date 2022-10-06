@@ -63,7 +63,119 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+<!-- hexo injector head_end end --><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
 
 
 <!-- hack iOS CSS :active style -->
@@ -227,38 +339,34 @@
 <p>如果是factor类型，则使用factor的level属性作为排序依据
 如果是character类型，则按照字母顺序</p>
 </blockquote>
-<h3
-id="将数据类型变成factor">1、<strong>将数据类型变成factor</strong></h3>
+<h3 id="将数据类型变成factor">1、<strong>将数据类型变成factor</strong></h3>
 <p>我们想要自定义顺序，要设置为factor类型，使用levels来定义顺序；</p>
 <p>例如：</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data_percentage<span class="operator">$</span>time <span class="operator">=</span> factor<span class="punctuation">(</span>data_percentage<span class="operator">$</span>time<span class="punctuation">,</span>levels <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;D5&quot;</span><span class="punctuation">,</span><span class="string">&quot;D10&quot;</span><span class="punctuation">,</span><span class="string">&quot;D15&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">data_percentage<span class="punctuation">[</span><span class="punctuation">,</span><span class="operator">-</span><span class="number">7</span><span class="operator">:</span><span class="operator">-</span><span class="number">8</span><span class="punctuation">]</span> <span class="operator">%&gt;%</span> gather<span class="punctuation">(</span>type<span class="punctuation">,</span>percentage<span class="punctuation">,</span>type2_div_type1<span class="operator">:</span>type4_div_type1<span class="punctuation">)</span> <span class="operator">%&gt;%</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x<span class="operator">=</span>time<span class="punctuation">,</span>y<span class="operator">=</span>percentage<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>color <span class="operator">=</span> type<span class="punctuation">,</span>shape<span class="operator">=</span> group<span class="punctuation">)</span><span class="punctuation">,</span>fun<span class="operator">=</span>mean<span class="punctuation">,</span>size<span class="operator">=</span><span class="number">3</span><span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">&#x27;point&#x27;</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>color <span class="operator">=</span> type<span class="punctuation">,</span>group <span class="operator">=</span> interaction<span class="punctuation">(</span>type<span class="punctuation">,</span>group<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">,</span>fun<span class="operator">=</span>mean<span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">&#x27;line&#x27;</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>group <span class="operator">=</span> interaction<span class="punctuation">(</span>type<span class="punctuation">,</span>group<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">,</span>fun.data <span class="operator">=</span> mean_se<span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">&#x27;errorbar&#x27;</span><span class="punctuation">,</span> color<span class="operator">=</span><span class="string">&#x27;black&#x27;</span><span class="punctuation">,</span>width<span class="operator">=</span><span class="number">.05</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  scale_x_discrete<span class="punctuation">(</span>name<span class="operator">=</span><span class="string">&quot;Time&quot;</span><span class="punctuation">)</span> <span class="operator">+</span> ...</span><br></pre></td></tr></table></figure>
-<p><img src='figure1.png' width="600px"/></p>
-<h3
-id="按其他数值变量统计量值排序"><strong>2、按（其他数值变量）统计量值排序</strong></h3>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data_percentage<span class="operator">$</span>time <span class="operator">=</span> factor<span class="punctuation">(</span>data_percentage<span class="operator">$</span>time<span class="punctuation">,</span>levels <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">"D5"</span><span class="punctuation">,</span><span class="string">"D10"</span><span class="punctuation">,</span><span class="string">"D15"</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">data_percentage<span class="punctuation">[</span><span class="punctuation">,</span><span class="operator">-</span><span class="number">7</span><span class="operator">:</span><span class="operator">-</span><span class="number">8</span><span class="punctuation">]</span> <span class="operator">%&gt;%</span> gather<span class="punctuation">(</span>type<span class="punctuation">,</span>percentage<span class="punctuation">,</span>type2_div_type1<span class="operator">:</span>type4_div_type1<span class="punctuation">)</span> <span class="operator">%&gt;%</span> ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x<span class="operator">=</span>time<span class="punctuation">,</span>y<span class="operator">=</span>percentage<span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>color <span class="operator">=</span> type<span class="punctuation">,</span>shape<span class="operator">=</span> group<span class="punctuation">)</span><span class="punctuation">,</span>fun<span class="operator">=</span>mean<span class="punctuation">,</span>size<span class="operator">=</span><span class="number">3</span><span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">'point'</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>color <span class="operator">=</span> type<span class="punctuation">,</span>group <span class="operator">=</span> interaction<span class="punctuation">(</span>type<span class="punctuation">,</span>group<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">,</span>fun<span class="operator">=</span>mean<span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">'line'</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  stat_summary<span class="punctuation">(</span>aes<span class="punctuation">(</span>group <span class="operator">=</span> interaction<span class="punctuation">(</span>type<span class="punctuation">,</span>group<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">,</span>fun.data <span class="operator">=</span> mean_se<span class="punctuation">,</span> geom<span class="operator">=</span><span class="string">'errorbar'</span><span class="punctuation">,</span> color<span class="operator">=</span><span class="string">'black'</span><span class="punctuation">,</span>width<span class="operator">=</span><span class="number">.05</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  scale_x_discrete<span class="punctuation">(</span>name<span class="operator">=</span><span class="string">"Time"</span><span class="punctuation">)</span> <span class="operator">+</span> ...</span><br></pre></td></tr></table></figure>
+<p><img src="figure1.png" width="600px"></p>
+<h3 id="按其他数值变量统计量值排序"><strong>2、按（其他数值变量）统计量值排序</strong></h3>
 <p>除了手动设置levels，可以根据不同因子水平分成的组中另一数值型变量的统计量值排序</p>
 <p>例如使用<code>forcats::fct_reorder()</code></p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">set.seed<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">)</span></span><br><span class="line">fac <span class="operator">&lt;-</span> sample<span class="punctuation">(</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;red&quot;</span><span class="punctuation">,</span> <span class="string">&quot;green&quot;</span><span class="punctuation">,</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span> <span class="number">30</span><span class="punctuation">,</span> replace<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line">fac <span class="operator">&lt;-</span> factor<span class="punctuation">(</span>fac<span class="punctuation">,</span> levels<span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;red&quot;</span><span class="punctuation">,</span> <span class="string">&quot;green&quot;</span><span class="punctuation">,</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">round</span><span class="punctuation">(</span><span class="number">100</span><span class="operator">*</span><span class="punctuation">(</span><span class="number">10</span><span class="operator">+</span>rt<span class="punctuation">(</span><span class="number">30</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">res1 <span class="operator">&lt;-</span> tapply<span class="punctuation">(</span>x<span class="punctuation">,</span> fac<span class="punctuation">,</span> sd<span class="punctuation">)</span>; res1</span><br><span class="line"><span class="comment">##       red     green      blue </span></span><br><span class="line"><span class="comment">##  370.9222  138.3185 1129.2587</span></span><br><span class="line"><span class="comment"># 希望按照变量x的统计量sd的次序对因子fac进行排序</span></span><br><span class="line">fac2 <span class="operator">&lt;-</span> fct_reorder<span class="punctuation">(</span>fac<span class="punctuation">,</span> x<span class="punctuation">,</span> sd<span class="punctuation">)</span></span><br><span class="line">res2 <span class="operator">&lt;-</span> tapply<span class="punctuation">(</span>x<span class="punctuation">,</span> fac2<span class="punctuation">,</span> sd<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##     green        red       blue </span></span><br><span class="line"><span class="comment">##  138.3185   370.9222  1129.2587</span></span><br><span class="line"><span class="comment">#新的因子fac2的因子水平次序已经按照变量x的标准差从小到大排列</span></span><br><span class="line">barplot<span class="punctuation">(</span>res2<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<p><img src='figure2.png' width="600px"/></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">set.seed<span class="punctuation">(</span><span class="number">1</span><span class="punctuation">)</span></span><br><span class="line">fac <span class="operator">&lt;-</span> sample<span class="punctuation">(</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">"red"</span><span class="punctuation">,</span> <span class="string">"green"</span><span class="punctuation">,</span> <span class="string">"blue"</span><span class="punctuation">)</span><span class="punctuation">,</span> <span class="number">30</span><span class="punctuation">,</span> replace<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line">fac <span class="operator">&lt;-</span> factor<span class="punctuation">(</span>fac<span class="punctuation">,</span> levels<span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">"red"</span><span class="punctuation">,</span> <span class="string">"green"</span><span class="punctuation">,</span> <span class="string">"blue"</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">x <span class="operator">&lt;-</span> <span class="built_in">round</span><span class="punctuation">(</span><span class="number">100</span><span class="operator">*</span><span class="punctuation">(</span><span class="number">10</span><span class="operator">+</span>rt<span class="punctuation">(</span><span class="number">30</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">res1 <span class="operator">&lt;-</span> tapply<span class="punctuation">(</span>x<span class="punctuation">,</span> fac<span class="punctuation">,</span> sd<span class="punctuation">)</span>; res1</span><br><span class="line"><span class="comment">##       red     green      blue </span></span><br><span class="line"><span class="comment">##  370.9222  138.3185 1129.2587</span></span><br><span class="line"><span class="comment"># 希望按照变量x的统计量sd的次序对因子fac进行排序</span></span><br><span class="line">fac2 <span class="operator">&lt;-</span> fct_reorder<span class="punctuation">(</span>fac<span class="punctuation">,</span> x<span class="punctuation">,</span> sd<span class="punctuation">)</span></span><br><span class="line">res2 <span class="operator">&lt;-</span> tapply<span class="punctuation">(</span>x<span class="punctuation">,</span> fac2<span class="punctuation">,</span> sd<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##     green        red       blue </span></span><br><span class="line"><span class="comment">##  138.3185   370.9222  1129.2587</span></span><br><span class="line"><span class="comment">#新的因子fac2的因子水平次序已经按照变量x的标准差从小到大排列</span></span><br><span class="line">barplot<span class="punctuation">(</span>res2<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><img src="figure2.png" width="600px"></p>
 <h3 id="特定几个水平置于最前">3、特定几个水平置于最前</h3>
 <p>如果又想将特定的一个或几个水平次序放到因子水平最前面，使用<code>forcats::fct_relevel()</code></p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">levels<span class="punctuation">(</span>fac<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## [1] &quot;red&quot;   &quot;green&quot; &quot;blue&quot;</span></span><br><span class="line">fac3 <span class="operator">&lt;-</span> fct_relevel<span class="punctuation">(</span>fac<span class="punctuation">,</span> <span class="string">&quot;blue&quot;</span><span class="punctuation">)</span>; levels<span class="punctuation">(</span>fac3<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## [1] &quot;blue&quot;  &quot;red&quot;   &quot;green&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">levels<span class="punctuation">(</span>fac<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## [1] "red"   "green" "blue"</span></span><br><span class="line">fac3 <span class="operator">&lt;-</span> fct_relevel<span class="punctuation">(</span>fac<span class="punctuation">,</span> <span class="string">"blue"</span><span class="punctuation">)</span>; levels<span class="punctuation">(</span>fac3<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## [1] "blue"  "red"   "green"</span></span><br></pre></td></tr></table></figure>
 <p><code>fct_relevel()</code>第一个参数是要修改次序的因子，
 后续可以有多个字符型参数表示要提前的水平。</p>
-<h3
-id="不转换成factor直接进行排序可以根据其他数值变量"><strong>4、不转换成factor，直接进行排序（可以根据其他数值变量）</strong></h3>
+<h3 id="不转换成factor直接进行排序可以根据其他数值变量"><strong>4、不转换成factor，直接进行排序（可以根据其他数值变量）</strong></h3>
 <p>需要按照频率、数量大小进行排序，实现方式为<code>reorder( , )</code></p>
 <p>如下：</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pic <span class="operator">+</span> geom_col<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> reorder<span class="punctuation">(</span>motif<span class="punctuation">,</span><span class="operator">-</span>number<span class="punctuation">)</span><span class="punctuation">,</span>y<span class="operator">=</span>number<span class="punctuation">,</span>fill<span class="operator">=</span>m6A_site<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 在aes中对x使用reorder(motif,-number)，可以快速设置x轴的顺序</span></span><br><span class="line"><span class="operator">+</span> ...</span><br></pre></td></tr></table></figure>
-<h2
-id="三离散坐标轴的子集选择与合并">三、离散坐标轴的子集选择与合并</h2>
+<h2 id="三离散坐标轴的子集选择与合并">三、离散坐标轴的子集选择与合并</h2>
 <h3 id="子集选择">1、<strong>子集选择</strong></h3>
 <p>在ggplot2中使用<code>scale_x_discrete(limits= c[,])</code>可以快速取子集</p>
 <h3 id="因子合并"><strong>2、因子合并</strong></h3>
 <p>如果坐标轴映射的变量为因子型，<code>forcats::fct_recode()</code>可以修改每个水平的名称，允许多个旧水平对应到一个新水平，
 从而合并原来的水平。 如：</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fac4 <span class="operator">&lt;-</span> fct_recode<span class="punctuation">(</span></span><br><span class="line">  fac<span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;红&quot;</span><span class="operator">=</span><span class="string">&quot;red&quot;</span><span class="punctuation">,</span> <span class="string">&quot;绿&quot;</span><span class="operator">=</span><span class="string">&quot;green&quot;</span><span class="punctuation">,</span> <span class="string">&quot;蓝&quot;</span><span class="operator">=</span><span class="string">&quot;blue&quot;</span><span class="punctuation">)</span></span><br><span class="line">table<span class="punctuation">(</span>fac4<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## fac4</span></span><br><span class="line"><span class="comment">## 红 绿 蓝</span></span><br><span class="line"><span class="comment">## 13 10  7</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fac4 <span class="operator">&lt;-</span> fct_recode<span class="punctuation">(</span></span><br><span class="line">  fac<span class="punctuation">,</span></span><br><span class="line">  <span class="string">"红"</span><span class="operator">=</span><span class="string">"red"</span><span class="punctuation">,</span> <span class="string">"绿"</span><span class="operator">=</span><span class="string">"green"</span><span class="punctuation">,</span> <span class="string">"蓝"</span><span class="operator">=</span><span class="string">"blue"</span><span class="punctuation">)</span></span><br><span class="line">table<span class="punctuation">(</span>fac4<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## fac4</span></span><br><span class="line"><span class="comment">## 红 绿 蓝</span></span><br><span class="line"><span class="comment">## 13 10  7</span></span><br></pre></td></tr></table></figure>
 <p>如果合并很多， 可以用<code>fct_collapse()</code>函数， 如</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">compf <span class="operator">&lt;-</span> fct_collapse<span class="punctuation">(</span></span><br><span class="line">  comp<span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;其它&quot;</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;无名&quot;</span><span class="punctuation">,</span> <span class="string">&quot;无应答&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;联想&quot;</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;联想&quot;</span><span class="punctuation">,</span> <span class="string">&quot;联想集团&quot;</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">  <span class="string">&quot;百度&quot;</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;百度&quot;</span><span class="punctuation">,</span> <span class="string">&quot;百度集团&quot;</span><span class="punctuation">)</span></span><br><span class="line">  <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">compf <span class="operator">&lt;-</span> fct_collapse<span class="punctuation">(</span></span><br><span class="line">  comp<span class="punctuation">,</span></span><br><span class="line">  <span class="string">"其它"</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">""</span><span class="punctuation">,</span> <span class="string">"无名"</span><span class="punctuation">,</span> <span class="string">"无应答"</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">  <span class="string">"联想"</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">"联想"</span><span class="punctuation">,</span> <span class="string">"联想集团"</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">  <span class="string">"百度"</span><span class="operator">=</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">"百度"</span><span class="punctuation">,</span> <span class="string">"百度集团"</span><span class="punctuation">)</span></span><br><span class="line">  <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
 <p><strong>forcats::fct_lump(f)：</strong></p>
 <p>如果某个因子频数少的水平很多， 在统计时有过多水平不易展示主要的类别，
 可以用<code>forcats::fct_lump(f)</code>合并，
@@ -266,8 +374,7 @@ id="三离散坐标轴的子集选择与合并">三、离散坐标轴的子集�
 可以用<code>n=</code>参数指定要保留多少个类。</p>
 <h3 id="参考">参考</h3>
 <ol type="1">
-<li><a
-target="_blank" rel="noopener" href="https://www.math.pku.edu.cn/teachers/lidf/docs/Rbook/html/_Rbook/prog-type-fact.html">R因子类型</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.math.pku.edu.cn/teachers/lidf/docs/Rbook/html/_Rbook/prog-type-fact.html">R因子类型</a></li>
 </ol>
 
 

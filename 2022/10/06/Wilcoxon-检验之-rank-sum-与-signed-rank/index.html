@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          Wilcoxon 检验之 rank-sum 与 signed-rank - Chunfu的博客 | Chunfu&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2022/10/06/Wilcoxon-检验之-rank-sum-与-signed-rank/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-statistics.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Non-parametric test" title="Non-parametric test">Non-parametric test</a>
+                        
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
+                        
+                          <a class="tag" href="/tags/#Hypothesis test" title="Hypothesis test">Hypothesis test</a>
+                        
+                    </div>
+                    <h1>Wilcoxon 检验之 rank-sum 与 signed-rank</h1>
+                    <h2 class="subheading">Wilcoxon检验的原理与代码实现</h2>
+                    <span class="meta">
+                        Posted by <b>Chunfu Shawn</b> on
+                        2022/10/06<br/> 
+                        Last Updated by <b>Chunfu Shawn</b> on
+                        2022/10/06<br/>
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <p>Frank Wilcoxon (1892—1965) 是美国的统计学家，发表了 70
+篇左右论文，但其最大的贡献就是这 2
+个以他名字命名的非参假设检验方法：秩和检验 和 符号秩检验。他在 1945
+年发表的论文中将二者分别称为 非成对检验 （unpaired experiment）和
+成对检验（paired comparison）。
+正是因为其巨大影响力使得这两个检验方法都以他的名字命名，并流传下来。在<strong>不需要假设样本空间为正态分布</strong>的情况下，测试分布是否完全相同。</p>
+<h2 id="一wilcoxon-rank-sum-test">一、Wilcoxon rank-sum test</h2>
+<h3 id="基本概念">1、<strong>基本概念</strong></h3>
+<p>在统计学中，Wilcoxon rank-sum test（威尔科克森秩和检验）也叫
+<strong>Mann-Whitney U test（曼-惠特尼 U 检验），或者
+Wilcoxon-Mann-Whitney
+test。</strong>秩和检验是一个非参的假设检验方法，一般用来检测 <strong>2
+个数据集是否来自于相同分布的总体</strong>。秩和” 当然就是指
+“将排名进行求和” 的操作。在秩和检验中，我们不要求被检验的 2
+组数据包含相同个数的元素。</p>
+<p><strong>只能检测两个样本，只有两个样本才可以”和 sum“</strong></p>
+<h3 id="两独立样本wilcoxon检验的公式">2、<strong>两独立样本Wilcoxon检验的公式</strong></h3>
+<p><strong>（1）两个样本的容量均小于10的检验方法</strong></p>
+<p>检验的具体步骤：</p>
+<p>第一步：将两组数据混合，并按照大小顺序编排等级。最小的数据等级为1，第二小的数据等级为2，以此类推（若有数据相等的情形，则取这几个数据排序的平均值作为其等级）。</p>
+<p>第二步：分别求出两个样本的等级和<em>W</em>1、<em>W</em>2。</p>
+<p>第三步：假设n1=一号样本观察值的项数；n2二号样本观察值的项数；R1=一号样本各项秩和；R2=二号样本中各项秩和。</p>
+<p><span class="math display"><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -1.552ex;" xmlns="http://www.w3.org/2000/svg" width="30.153ex" height="4.855ex" role="img" focusable="false" viewBox="0 -1460 13327.7 2146"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mn" transform="translate(767,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(1544.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="msub" transform="translate(2600.6,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><g data-mml-node="msub" transform="translate(3637.1,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g><g data-mml-node="mo" transform="translate(4895.9,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mfrac" transform="translate(5896.1,0)"><g data-mml-node="mrow" transform="translate(220,710)"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><g data-mml-node="mo" transform="translate(1036.6,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="msub" transform="translate(1425.6,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><g data-mml-node="mo" transform="translate(2684.3,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mn" transform="translate(3684.6,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(4184.6,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mn" transform="translate(2256.8,-686)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><rect width="4773.6" height="60" x="120" y="220"></rect></g><g data-mml-node="mo" transform="translate(11131.9,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="msub" transform="translate(12132.1,0)"><g data-mml-node="mi"><path data-c="1D445" d="M230 637Q203 637 198 638T193 649Q193 676 204 682Q206 683 378 683Q550 682 564 680Q620 672 658 652T712 606T733 563T739 529Q739 484 710 445T643 385T576 351T538 338L545 333Q612 295 612 223Q612 212 607 162T602 80V71Q602 53 603 43T614 25T640 16Q668 16 686 38T712 85Q717 99 720 102T735 105Q755 105 755 93Q755 75 731 36Q693 -21 641 -21H632Q571 -21 531 4T487 82Q487 109 502 166T517 239Q517 290 474 313Q459 320 449 321T378 323H309L277 193Q244 61 244 59Q244 55 245 54T252 50T269 48T302 46H333Q339 38 339 37T336 19Q332 6 326 0H311Q275 2 180 2Q146 2 117 2T71 2T50 1Q33 1 33 10Q33 12 36 24Q41 43 46 45Q50 46 61 46H67Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628Q287 635 230 637ZM630 554Q630 586 609 608T523 636Q521 636 500 636T462 637H440Q393 637 386 627Q385 624 352 494T319 361Q319 360 388 360Q466 361 492 367Q556 377 592 426Q608 449 619 486T630 554Z"></path></g><g data-mml-node="mn" transform="translate(792,-150) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g></g></g></svg></mjx-container></span></p>
+<p><span class="math display"><mjx-container class="MathJax" jax="SVG" display="true"><svg style="vertical-align: -1.552ex;" xmlns="http://www.w3.org/2000/svg" width="30.153ex" height="4.855ex" role="img" focusable="false" viewBox="0 -1460 13327.7 2146"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mn" transform="translate(767,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(1544.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="msub" transform="translate(2600.6,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><g data-mml-node="msub" transform="translate(3637.1,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g><g data-mml-node="mo" transform="translate(4895.9,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mfrac" transform="translate(5896.1,0)"><g data-mml-node="mrow" transform="translate(220,710)"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g><g data-mml-node="mo" transform="translate(1036.6,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="msub" transform="translate(1425.6,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mn" transform="translate(633,-150) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g><g data-mml-node="mo" transform="translate(2684.3,0)"><path data-c="2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path></g><g data-mml-node="mn" transform="translate(3684.6,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(4184.6,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mn" transform="translate(2256.8,-686)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><rect width="4773.6" height="60" x="120" y="220"></rect></g><g data-mml-node="mo" transform="translate(11131.9,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="msub" transform="translate(12132.1,0)"><g data-mml-node="mi"><path data-c="1D445" d="M230 637Q203 637 198 638T193 649Q193 676 204 682Q206 683 378 683Q550 682 564 680Q620 672 658 652T712 606T733 563T739 529Q739 484 710 445T643 385T576 351T538 338L545 333Q612 295 612 223Q612 212 607 162T602 80V71Q602 53 603 43T614 25T640 16Q668 16 686 38T712 85Q717 99 720 102T735 105Q755 105 755 93Q755 75 731 36Q693 -21 641 -21H632Q571 -21 531 4T487 82Q487 109 502 166T517 239Q517 290 474 313Q459 320 449 321T378 323H309L277 193Q244 61 244 59Q244 55 245 54T252 50T269 48T302 46H333Q339 38 339 37T336 19Q332 6 326 0H311Q275 2 180 2Q146 2 117 2T71 2T50 1Q33 1 33 10Q33 12 36 24Q41 43 46 45Q50 46 61 46H67Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628Q287 635 230 637ZM630 554Q630 586 609 608T523 636Q521 636 500 636T462 637H440Q393 637 386 627Q385 624 352 494T319 361Q319 360 388 360Q466 361 492 367Q556 377 592 426Q608 449 619 486T630 554Z"></path></g><g data-mml-node="mn" transform="translate(792,-150) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g></g></g></svg></mjx-container></span></p>
+<p>第四步：通过表根据两个样本的数量来查询临界值<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="5.019ex" height="1.902ex" role="img" focusable="false" viewBox="0 -683 2218.5 840.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g><g data-mml-node="msub" transform="translate(500,0)"><g data-mml-node="mi"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mi" transform="translate(716,-150) scale(0.707)"><path data-c="1D6FC" d="M34 156Q34 270 120 356T309 442Q379 442 421 402T478 304Q484 275 485 237V208Q534 282 560 374Q564 388 566 390T582 393Q603 393 603 385Q603 376 594 346T558 261T497 161L486 147L487 123Q489 67 495 47T514 26Q528 28 540 37T557 60Q559 67 562 68T577 70Q597 70 597 62Q597 56 591 43Q579 19 556 5T512 -10H505Q438 -10 414 62L411 69L400 61Q390 53 370 41T325 18T267 -2T203 -11Q124 -11 79 39T34 156ZM208 26Q257 26 306 47T379 90L403 112Q401 255 396 290Q382 405 304 405Q235 405 183 332Q156 292 139 224T121 120Q121 71 146 49T208 26Z"></path></g></g><g data-mml-node="mo" transform="translate(1718.5,0)"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g></g></g></svg></mjx-container></span>，因为临界表只给出了较小的临界值，所以选择<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.339ex;" xmlns="http://www.w3.org/2000/svg" width="4.795ex" height="1.885ex" role="img" focusable="false" viewBox="0 -683 2119.6 833"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g><g data-mml-node="msub" transform="translate(500,0)"><g data-mml-node="mi"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mn" transform="translate(716,-150) scale(0.707)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g></g><g data-mml-node="mo" transform="translate(1619.6,0)"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g></g></g></svg></mjx-container></span>和<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.339ex;" xmlns="http://www.w3.org/2000/svg" width="4.795ex" height="1.885ex" role="img" focusable="false" viewBox="0 -683 2119.6 833"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g><g data-mml-node="msub" transform="translate(500,0)"><g data-mml-node="mi"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mn" transform="translate(716,-150) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g><g data-mml-node="mo" transform="translate(1619.6,0)"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g></g></g></svg></mjx-container></span>中最小者与临界值<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="5.019ex" height="1.902ex" role="img" focusable="false" viewBox="0 -683 2218.5 840.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g><g data-mml-node="msub" transform="translate(500,0)"><g data-mml-node="mi"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mi" transform="translate(716,-150) scale(0.707)"><path data-c="1D6FC" d="M34 156Q34 270 120 356T309 442Q379 442 421 402T478 304Q484 275 485 237V208Q534 282 560 374Q564 388 566 390T582 393Q603 393 603 385Q603 376 594 346T558 261T497 161L486 147L487 123Q489 67 495 47T514 26Q528 28 540 37T557 60Q559 67 562 68T577 70Q597 70 597 62Q597 56 591 43Q579 19 556 5T512 -10H505Q438 -10 414 62L411 69L400 61Q390 53 370 41T325 18T267 -2T203 -11Q124 -11 79 39T34 156ZM208 26Q257 26 306 47T379 90L403 112Q401 255 396 290Q382 405 304 405Q235 405 183 332Q156 292 139 224T121 120Q121 71 146 49T208 26Z"></path></g></g><g data-mml-node="mo" transform="translate(1718.5,0)"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g></g></g></svg></mjx-container></span>比较，当<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.05ex;" xmlns="http://www.w3.org/2000/svg" width="3.998ex" height="1.595ex" role="img" focusable="false" viewBox="0 -683 1767 705"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mo"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g><g data-mml-node="mi" transform="translate(500,0)"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mo" transform="translate(1267,0)"><path data-c="2217" d="M229 286Q216 420 216 436Q216 454 240 464Q241 464 245 464T251 465Q263 464 273 456T283 436Q283 419 277 356T270 286L328 328Q384 369 389 372T399 375Q412 375 423 365T435 338Q435 325 425 315Q420 312 357 282T289 250L355 219L425 184Q434 175 434 161Q434 146 425 136T401 125Q393 125 383 131T328 171L270 213Q283 79 283 63Q283 53 276 44T250 35Q231 35 224 44T216 63Q216 80 222 143T229 213L171 171Q115 130 110 127Q106 124 100 124Q87 124 76 134T64 161Q64 166 64 169T67 175T72 181T81 188T94 195T113 204T138 215T170 230T210 250L74 315Q65 324 65 338Q65 353 74 363T98 374Q106 374 116 368T171 328L229 286Z"></path></g></g></g></svg></mjx-container></span> &lt; <span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.357ex;" xmlns="http://www.w3.org/2000/svg" width="2.757ex" height="1.902ex" role="img" focusable="false" viewBox="0 -683 1218.5 840.8"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msub"><g data-mml-node="mi"><path data-c="1D448" d="M107 637Q73 637 71 641Q70 643 70 649Q70 673 81 682Q83 683 98 683Q139 681 234 681Q268 681 297 681T342 682T362 682Q378 682 378 672Q378 670 376 658Q371 641 366 638H364Q362 638 359 638T352 638T343 637T334 637Q295 636 284 634T266 623Q265 621 238 518T184 302T154 169Q152 155 152 140Q152 86 183 55T269 24Q336 24 403 69T501 205L552 406Q599 598 599 606Q599 633 535 637Q511 637 511 648Q511 650 513 660Q517 676 519 679T529 683Q532 683 561 682T645 680Q696 680 723 681T752 682Q767 682 767 672Q767 650 759 642Q756 637 737 637Q666 633 648 597Q646 592 598 404Q557 235 548 205Q515 105 433 42T263 -22Q171 -22 116 34T60 167V183Q60 201 115 421Q164 622 164 628Q164 635 107 637Z"></path></g><g data-mml-node="mi" transform="translate(716,-150) scale(0.707)"><path data-c="1D6FC" d="M34 156Q34 270 120 356T309 442Q379 442 421 402T478 304Q484 275 485 237V208Q534 282 560 374Q564 388 566 390T582 393Q603 393 603 385Q603 376 594 346T558 261T497 161L486 147L487 123Q489 67 495 47T514 26Q528 28 540 37T557 60Q559 67 562 68T577 70Q597 70 597 62Q597 56 591 43Q579 19 556 5T512 -10H505Q438 -10 414 62L411 69L400 61Q390 53 370 41T325 18T267 -2T203 -11Q124 -11 79 39T34 156ZM208 26Q257 26 306 47T379 90L403 112Q401 255 396 290Q382 405 304 405Q235 405 183 332Q156 292 139 224T121 120Q121 71 146 49T208 26Z"></path></g></g></g></g></svg></mjx-container></span>时，拒绝<em>H</em>0，接受<em>H</em>1。</p>
+<p>附表：</p>
+<p><img src="figure1.jpeg"></p>
+<p><strong>（2）两个样本的容量均大于10的检验方法</strong></p>
+<p>当两个样本容量都大于10时，秩和T的分布接近于正态分布，因此可以用<strong>Z检验</strong>，其基本公式为：</p>
+<p><img src="figure2.png"></p>
+<p>T为较小的样本的秩和。</p>
+<p>我们可以通过<strong>自由度</strong>（df）与<strong>检验统计量</strong>（|Z|），通过查询其相对性的Z界值表，对比其在df=n1+n2-1处的p值。</p>
+<p>如果p值低于或等于显着性水平0.05，我们可以拒绝无效假设并接受备择假设。换句话说，我们得出结论，两组样本代表的总体间存在有显着差异。</p>
+<h3 id="应用实例">3、<strong>应用实例：</strong></h3>
+<p>假设我们有 2 组数据，<em>x</em>1 中有 7 个元素，<em>x</em>2 中有 8
+个元素，使用秩和检验判断这 2 组数据是否存在显著性差异。</p>
+<p>所以这是<strong>两个样本的容量均小于10的检验方法</strong></p>
+<p><img src="figure3.png"></p>
+<p>步骤 1：我们首先将 x 1  和 x 2
+整合成一个序列，并按升序重新排序，序号记在表中的 r a n k
+列当中。我们分别计算 2 组数据的排名之和R1和R2有，</p>
+<p>R1 = ( 14 + 5.5 + 13 + 11 + 15 + 8 + 11 ) = 77.5</p>
+<p>R2 = ( 11 + 3 + 5.5 + 8 + 1 + 8 + 3 + 3 ) = 42.5</p>
+<p>注意，当我们计算若干等值元素的排名时，会用这些元素排名的平均值作为它们在整个序列中的排名。例如，x
+1中的第 2 个元素与 x 2中第3 个元素的值都等于 5，且这 2 个 5
+在整个序列中的排名分别是第 5 和第 6，因此这两个元素的排名为 (5 + 6)/2 =
+5.5 。其余等值元素的排名计算也与之类似。</p>
+<p>步骤 2：令 n 1 和 n 2 分别表示 2 组数据的个数，即 n 1 = 7 , n 2 = 8
+。<strong>再令 T 表示小样本的排名和，即 T = R1 = 77.5</strong>
+。根据计算公式可得 U1 和 U2 的值如下，</p>
+<p><img src="figure4.png"></p>
+<p>步骤 3：由于 U1更小，我们依此来查 Wilcoxon 双尾临界表，当 α = 0.05 ,
+n1 = 7 , n2 = 8时的临界值是 10。因为 U1 &lt; 10
+，故应该拒绝原假设。最终结论是：x1 和 x2
+存在统计意义上的显著性差异，它们可能来自分布不同的总体。</p>
+<p>Python代码：</p>
+<p>得到的结果如下，可知我们的 U 1值 = statistic = 6.5，即我们的 p-value
+值 =0.0069</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wilcoxon_rank_sum_test</span>(<span class="params">x, y</span>):</span><br><span class="line">	res = stats.mannwhitneyu(x ,y)</span><br><span class="line">	<span class="built_in">print</span>(res)</span><br><span class="line"></span><br><span class="line">&gt; MannwhitneyuResult(statistic=<span class="number">6.5</span>, pvalue=<span class="number">0.006966479792405637</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="用r完成两独立样本wilcoxon检验">4<strong>、用R完成两独立样本Wilcoxon检验</strong></h3>
+<p>可以使用R函数<strong>wilcox.test</strong>()计算两独立样本Wilcoxon检验：</p>
+<p>wilcox.test(x, y, alternative = "two.sided")</p>
+<ul>
+<li><strong>x，y</strong>：数值向量</li>
+<li><strong>alternative</strong>：备择假设。允许值为“two.sided”（默认），也可以根据需要设置为“greater”或“less”之一。</li>
+</ul>
+<p>（<strong>1）将数据导入R</strong></p>
+<p>在这里，我们将使用一个示例数据集，其中包含18个人（9名女性和9名男性）的体重：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">women_weight <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">88.9</span><span class="punctuation">,</span> <span class="number">81.2</span><span class="punctuation">,</span> <span class="number">73.3</span><span class="punctuation">,</span> <span class="number">21.8</span><span class="punctuation">,</span> <span class="number">63.4</span><span class="punctuation">,</span> <span class="number">84.6</span><span class="punctuation">,</span> <span class="number">28.4</span><span class="punctuation">,</span> <span class="number">28.8</span><span class="punctuation">,</span> <span class="number">28.5</span><span class="punctuation">)</span></span><br><span class="line">men_weight <span class="operator">&lt;-</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="number">37.8</span><span class="punctuation">,</span> <span class="number">80</span><span class="punctuation">,</span> <span class="number">33.4</span><span class="punctuation">,</span> <span class="number">36</span><span class="punctuation">,</span> <span class="number">89.4</span><span class="punctuation">,</span> <span class="number">83.3</span><span class="punctuation">,</span> <span class="number">97.3</span><span class="punctuation">,</span> <span class="number">81.3</span><span class="punctuation">,</span> <span class="number">92.4</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 建立一个数据框</span></span><br><span class="line">my_data <span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span> </span><br><span class="line">                group <span class="operator">=</span> <span class="built_in">rep</span><span class="punctuation">(</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">"Woman"</span><span class="punctuation">,</span> <span class="string">"Man"</span><span class="punctuation">)</span><span class="punctuation">,</span> each <span class="operator">=</span> <span class="number">9</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">                weight <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span>women_weight<span class="punctuation">,</span>  men_weight<span class="punctuation">)</span></span><br><span class="line">                <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>我们想知道，女性体重是否与男性体重不同？</p>
+<p>（2）<strong>检查数据</strong></p>
+<p>按性别计算统计信息（中位数和四分位数范围（IQR））。可以使用dplyr软件包。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装及导入**dplyr**软件包</span></span><br><span class="line">install.packages<span class="punctuation">(</span><span class="string">"dplyr"</span><span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>dplyr<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#按性别group计算统计信息：</span></span><br><span class="line">group_by<span class="punctuation">(</span>my_data<span class="punctuation">,</span> group<span class="punctuation">)</span> <span class="operator">%&gt;%</span></span><br><span class="line">  summarise<span class="punctuation">(</span></span><br><span class="line">    count <span class="operator">=</span> n<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">    mean <span class="operator">=</span> mean<span class="punctuation">(</span>weight<span class="punctuation">,</span> na.rm <span class="operator">=</span> <span class="literal">TRUE</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">    sd <span class="operator">=</span> sd<span class="punctuation">(</span>weight<span class="punctuation">,</span> na.rm <span class="operator">=</span> <span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line">  <span class="punctuation">)</span></span><br><span class="line"><span class="comment"># A tibble: 2 x 4</span></span><br><span class="line">  group count  mean    sd</span><br><span class="line">  <span class="operator">&lt;</span>fct<span class="operator">&gt;</span> <span class="operator">&lt;</span>int<span class="operator">&gt;</span> <span class="operator">&lt;</span>dbl<span class="operator">&gt;</span> <span class="operator">&lt;</span>dbl<span class="operator">&gt;</span></span><br><span class="line"><span class="number">1</span> Man       <span class="number">9</span>  <span class="number">70.1</span>  <span class="number">26.4</span></span><br><span class="line"><span class="number">2</span> Woman     <span class="number">9</span>  <span class="number">55.4</span>  <span class="number">28.1</span></span><br></pre></td></tr></table></figure>
+<p>（3）<strong>初步检验两独立样本是否满足正态分布</strong></p>
+<p><strong>假设1</strong>：两个样本是否独立？</p>
+<p>是的，因为来自男性和女性的样本无关。</p>
+<p><strong>假设2</strong>：两组中每组的数据是否服从正态分布？</p>
+<p>我们将使用<strong>with</strong>()和<strong>shapiro.test</strong>()的函数来为每组样本计算Shapiro-Wilk测试。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Shapiro-Wilk normality test for Men's weights</span></span><br><span class="line">with<span class="punctuation">(</span>my_data<span class="punctuation">,</span> shapiro.test<span class="punctuation">(</span>weight<span class="punctuation">[</span>group <span class="operator">==</span> <span class="string">"Man"</span><span class="punctuation">]</span><span class="punctuation">)</span><span class="punctuation">)</span><span class="comment"># p = 0.017</span></span><br><span class="line"><span class="comment"># Shapiro-Wilk normality test for Women's weights</span></span><br><span class="line">with<span class="punctuation">(</span>my_data<span class="punctuation">,</span> shapiro.test<span class="punctuation">(</span>weight<span class="punctuation">[</span>group <span class="operator">==</span> <span class="string">"Woman"</span><span class="punctuation">]</span><span class="punctuation">)</span><span class="punctuation">)</span> <span class="comment"># p = 0.045</span></span><br></pre></td></tr></table></figure>
+<p>输出结果中，两个p值小于显着性水平0.05，说明两组数据的分布与正态分布有显着差异。数据分布不符合正态分布的假设检验成立。</p>
+<p>请注意，如果两组数据中只有一组不是正态分布，也要使用非参数两样本Wilcoxon秩检验。</p>
+<p><strong>假设3</strong>：这两个总体是否符合方差齐性？</p>
+<p>我们将使用<strong>F检验</strong>来检验方差齐性。可以使用<strong>var.test</strong>()函数执行以下操作：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">res.ftest <span class="operator">&lt;-</span> var.test<span class="punctuation">(</span>weight <span class="operator">~</span> group<span class="punctuation">,</span> data <span class="operator">=</span> my_data<span class="punctuation">)</span></span><br><span class="line">res.ftest</span><br><span class="line"></span><br><span class="line">	<span class="built_in">F</span> test to compare two variances</span><br><span class="line">data<span class="operator">:</span>  weight by group</span><br><span class="line"><span class="built_in">F</span> <span class="operator">=</span> <span class="number">0.88062</span><span class="punctuation">,</span> num df <span class="operator">=</span> <span class="number">8</span><span class="punctuation">,</span> denom df <span class="operator">=</span> <span class="number">8</span><span class="punctuation">,</span> p<span class="operator">-</span>value <span class="operator">=</span> <span class="number">0.8617</span></span><br><span class="line">alternative hypothesis<span class="operator">:</span> true ratio of variances is not equal to <span class="number">1</span></span><br><span class="line"><span class="number">95</span> percent confidence interval<span class="operator">:</span></span><br><span class="line"> <span class="number">0.1986398</span> <span class="number">3.9040261</span></span><br><span class="line">sample estimates<span class="operator">:</span></span><br><span class="line">ratio of variances </span><br><span class="line">          <span class="number">0.880622</span></span><br></pre></td></tr></table></figure>
+<p><strong>F检验</strong>为p = 0.8617。它大于显着性水平alpha =
+0.05。因此，两组数据的方差之间没有显著差异。因此我们认为男女两组方差相等（方差齐性）。</p>
+<p>由于以上3个假设综合，由于数据不符合正态分布，因此，我们不可以使用student-<strong>t检验</strong>。需要使用两独立样本Wilcoxon检验。</p>
+<p>（4）<strong>计算两独立样本Wilcoxon检验</strong></p>
+<p>问题：男女体重之间有显着差异吗？</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">res <span class="operator">&lt;-</span> wilcox.test<span class="punctuation">(</span>weight <span class="operator">~</span> group<span class="punctuation">,</span> data <span class="operator">=</span> my_data<span class="punctuation">,</span> var.equal <span class="operator">=</span> <span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line">res</span><br><span class="line"></span><br><span class="line"> Wilcoxon rank <span class="built_in">sum</span> test</span><br><span class="line">data<span class="operator">:</span>  weight by group</span><br><span class="line">W <span class="operator">=</span> <span class="number">59</span><span class="punctuation">,</span> p<span class="operator">-</span>value <span class="operator">=</span> <span class="number">0.1135</span></span><br><span class="line">alternative hypothesis<span class="operator">:</span> true location shift is not equal to <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>在上面的结果中：</p>
+<ul>
+<li><strong>p值</strong>是<strong>wilcoxon检验</strong>的显着性水平（p值=
+0.1135）。</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>如果要检验男性的体重是否小于女性的体重，请输入以下内容：</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wilcoxon.test<span class="punctuation">(</span>weight <span class="operator">~</span> group<span class="punctuation">,</span> data <span class="operator">=</span> my_data<span class="punctuation">,</span></span><br><span class="line">        var.equal <span class="operator">=</span> <span class="literal">TRUE</span><span class="punctuation">,</span> alternative <span class="operator">=</span> <span class="string">"less"</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>或者，如果您想测试男性的体重是否大于女性的体重，请输入</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wilcoxon.test<span class="punctuation">(</span>weight <span class="operator">~</span> group<span class="punctuation">,</span> data <span class="operator">=</span> my_data<span class="punctuation">,</span></span><br><span class="line">        var.equal <span class="operator">=</span> <span class="literal">TRUE</span><span class="punctuation">,</span> alternative <span class="operator">=</span> <span class="string">"greater"</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>（5） <strong>结果解释</strong></p>
+<p>检验的<strong>p值为</strong> 0.1135，大于显着性水平alpha =
+0.05。我们可以得出结论，男性的体重与女性的体重没有显著不同。</p>
+<h2 id="二wilcoxon-signed-rank-test">二、Wilcoxon signed-rank test</h2>
+<p><strong>基本概念：</strong>Wilcoxon signed-rank
+test（威尔科克森符号秩检验）也是一种非参的假设检验方法</p>
+<h3 id="单样本-wilcoxon符号秩检验">1、单样本 Wilcoxon符号秩检验</h3>
+<p><strong>原理：</strong></p>
+<p>单样本Wilcoxon符号秩统计量的思想是：首先把样本与<strong>总体中位数（理论值）</strong>的差值的绝对值|X1|、|X2|、|X3|……|Xn|进行排序，其顺序统计量为|X|(1)、|X|(2)、|X|(3)……|X|(n)。如果数据与总体中位数相同，则其差值会关于零点对称，对称中心两侧数据的疏密和取负值的数据交错出现，取正值数据在样本绝对值样本中的秩和与取负值数据在绝对值样本中的<strong>秩和</strong>应近似相等，概率均为0.5。</p>
+<p>在求得<strong>正值秩</strong>和和<strong>负值秩和</strong>后，通过<strong>较小秩和和自由度（n-1）查询相应T界值表</strong>，获得相应P值。</p>
+<p>解释结果：如果p值低于或等于显着性水平0.05，我们可以拒绝无效假设并接受备择假设。换句话说，我们得出结论，样本代表的总体中位数与理论中位数有显着差异。</p>
+<h3 id="使用r函数wilcox.test计算单样本wilcoxon检验">2、使用R函数<strong>wilcox.test</strong>()计算单样本Wilcoxon检验</h3>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wilcox.test<span class="punctuation">(</span>x<span class="punctuation">,</span> mu <span class="operator">=</span> <span class="number">0</span><span class="punctuation">,</span> alternative <span class="operator">=</span> <span class="string">"two.sided"</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>x</strong>：包含数据值的一个数字向量</li>
+<li><strong>mu</strong>：理论值。默认值为0，但可以更改。</li>
+<li><strong>alternative</strong>：备择假设。允许值为“two.sided”（默认），也可以根据需要设置为“greater”或“less”之一。</li>
+</ul>
+<p><strong>（1）将数据导入R</strong></p>
+<p>在这里，我们将使用名为DNase的内置R数据集。我们之后会检验DNase数据中conc（蛋白浓度）与理论值3.0之间是否有统计学差异。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入R内自带的DNase数据集</span></span><br><span class="line">library<span class="punctuation">(</span>datasets<span class="punctuation">)</span></span><br><span class="line">data<span class="punctuation">(</span>DNase<span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 将数据存储在变量my_data中</span></span><br><span class="line">my_data <span class="operator">&lt;-</span> DNase</span><br></pre></td></tr></table></figure>
+<p><strong>（2）检查数据</strong></p>
+<p>你可以使用<strong>head</strong>()和<strong>tails</strong>()函数检查数据，这将分别显示数据的第一部分和最后一部分。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示前六行内容</span></span><br><span class="line">head<span class="punctuation">(</span>my_data<span class="punctuation">)</span></span><br><span class="line">Grouped Data<span class="operator">:</span> density <span class="operator">~</span> conc <span class="operator">|</span> Run</span><br><span class="line">  Run       conc density</span><br><span class="line"><span class="number">1</span>   <span class="number">1</span> <span class="number">0.04882812</span>   <span class="number">0.017</span></span><br><span class="line"><span class="number">2</span>   <span class="number">1</span> <span class="number">0.04882812</span>   <span class="number">0.018</span> ......</span><br></pre></td></tr></table></figure>
+<p>我们想知道，实验中的conc变量（蛋白浓度）是否不同于理论值3.0？</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># conc的统计学概况 （更多详情请参看第四讲 R-描述性统计分析）</span></span><br><span class="line">summary<span class="punctuation">(</span>my_data<span class="operator">$</span>conc<span class="punctuation">)</span></span><br><span class="line">    Min.  <span class="number">1</span>st Qu.   Median     Mean  <span class="number">3</span>rd Qu.     Max. </span><br><span class="line"> <span class="number">0.04883</span>  <span class="number">0.34180</span>  <span class="number">1.17188</span>  <span class="number">3.10669</span>  <span class="number">3.90625</span> <span class="number">12.50000</span></span><br></pre></td></tr></table></figure>
+<p><strong>（3） 初步检验单样本t检验的假设条件（正态性检验）</strong>
+<strong>正态性检验（shapiro-Wilk检验）</strong></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shapiro.test<span class="punctuation">(</span>my_data<span class="operator">$</span>conc<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line">	Shapiro<span class="operator">-</span>Wilk normality test</span><br><span class="line">data<span class="operator">:</span>  my_data<span class="operator">$</span>conc</span><br><span class="line">W <span class="operator">=</span> <span class="number">0.71508</span><span class="punctuation">,</span> p<span class="operator">-</span>value <span class="operator">&lt;</span> <span class="number">2.2e-16</span></span><br></pre></td></tr></table></figure>
+<p>由上视觉分析及正态性检验显示，conc不符合正态性分布，远无法满足单样本t检验的假设条件（P&lt;&lt;0.05）,需要考虑Wilcoxon检验.</p>
+<p><strong>（4）计算单样本Wilcoxon检验</strong></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 单样本Wilcoxon检验</span></span><br><span class="line">test <span class="operator">&lt;-</span> wilcox.test<span class="punctuation">(</span>my_data<span class="operator">$</span>conc<span class="punctuation">,</span> mu <span class="operator">=</span> <span class="number">3</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 显示结果</span></span><br><span class="line">test </span><br><span class="line"></span><br><span class="line">	Wilcoxon signed rank test with continuity correction</span><br><span class="line"></span><br><span class="line">data<span class="operator">:</span>  my_data<span class="operator">$</span>conc</span><br><span class="line">V <span class="operator">=</span> <span class="number">7051</span><span class="punctuation">,</span> p<span class="operator">-</span>value <span class="operator">=</span> <span class="number">0.2756</span></span><br><span class="line">alternative hypothesis<span class="operator">:</span> true location is not equal to <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>在上面的结果中：</p>
+<ul>
+<li><strong>p值</strong>是<strong>t检验</strong>的显着性水平（p值=8.4e-05）。</li>
+<li>如果要检验蛋白浓度是否小于3（单向测试），请输入以下内容：</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wilcoxon.test<span class="punctuation">(</span>my_data<span class="operator">$</span>conc<span class="punctuation">,</span> mu <span class="operator">=</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">              alternative <span class="operator">=</span> <span class="string">"less"</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>或者，如果要检验蛋白浓度是否大于3（单向测试），请输入以下命令：</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wilcoxon.test<span class="punctuation">(</span>my_data<span class="operator">$</span>conc<span class="punctuation">,</span> mu <span class="operator">=</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">              alternative <span class="operator">=</span> <span class="string">"greater"</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p><strong>（5）结果解释</strong></p>
+<p>检验的<strong>p值为</strong>0.28，大于显着性水平alpha =
+0.05。我们可以得出结论，蛋白浓度与3无显著性差异，<strong>p值</strong> =
+0.28。</p>
+<p><strong>（6） 获得wilcoxon.test()函数的p值返回值</strong></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印p值</span></span><br><span class="line">test<span class="operator">$</span>p.value</span><br><span class="line"><span class="punctuation">[</span><span class="number">1</span><span class="punctuation">]</span> <span class="number">0.2756</span></span><br></pre></td></tr></table></figure>
+<h3 id="matched-pair-两独立样本wilcoxon符号秩检验">3、Matched-pair
+两独立样本Wilcoxon符号秩检验</h3>
+<p>假设我们有 2 组数据 y1 和 y2，如下表所示。我们按照如下 3 步来计算
+wilcoxon signed-rank test 的结果</p>
+<p><img src="figure5.png"></p>
+<p>步骤 1：首先对 y1 和 y2两两成对配对形成 10 个数据对（即 ID = 0, . . .
+,9 ），然后将这 10
+个数据对两两求差，得到符号位sign列。具体的做法是：当 y1 元素比 y2
+对应元素大时，符号位为正，即 +1；当 y1 元素比 y2
+对应元素小时，符号位为负，即 -1。例如，在 ID = 1 的数据对中，125 &gt;
+110，故其符号位为 +1.</p>
+<p>步骤 2： 首先对 y1 和 y2 两两成对求差得到绝对值 abs 列，然后根据 abs
+列排序得到rank列。当某一对 y1 和 y2 的元素相等时，即 abs = 0
+时，我们不计算其 rank 值。例如，在 ID = 4 的数据对中，y1和 y2 的值都是
+140，因此这对数组没有排名值。</p>
+<p>步骤 3： 有了这个 sign 和 rank
+列的结果后，我们就可以来计算秩和了，其中大于 0 的秩和 |W+| 和 对于小于 0
+的秩和 |W−|，以及最终的符号秩和 |W| 如下所示，</p>
+<p><img src="figure6.png" width="300px"></p>
+<p>步骤 4：最后我们根据 |W| 来查表，我们得到当 Wilcoxon 在 α = 0.05， n
+= 9 的时候的临界值是 5，而我们计算出来的 |W| = 9 &gt;
+5，因此我们不能拒绝原假设。最终结论是：y 1 和 y 2
+不存在统计意义上的显著性差异，它们可能来自于同一分布的总体。</p>
+<p><img src="figure7.png"></p>
+<p>R代码：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wilcox.test<span class="punctuation">(</span>data<span class="operator">$</span>Y1<span class="punctuation">,</span> ata<span class="operator">$</span>Y2<span class="punctuation">,</span> paired<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#其中其它参数如 exact, correct选择不同的话，可能p值结果不同，根据实际情况选择</span></span><br></pre></td></tr></table></figure>
+<p>Python代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wilcoxon_signed_rank_test</span>(<span class="params">y1, y2</span>):</span><br><span class="line">	res = stats.wilcoxon(y1, y2)</span><br><span class="line">	<span class="built_in">print</span>(res)</span><br><span class="line"></span><br><span class="line">&gt; E:\Software\Anaconda2\lib\site-packages\scipy\stats\morestats.py:<span class="number">2397</span>: UserWarning: </span><br><span class="line">&gt;   Warning: sample size too small <span class="keyword">for</span> normal approximation.</span><br><span class="line">&gt;   warnings.warn(<span class="string">"Warning: sample size too small for normal approximation."</span>)</span><br><span class="line">&gt; WilcoxonResult(statistic=<span class="number">18.0</span>, pvalue=<span class="number">0.5936305914425295</span>)</span><br></pre></td></tr></table></figure>
+<p>得到的结果如上，其中statistic= 18.0，表示 2
+类符号秩和较小的一个（|W+| 和|W-|最小的是18，pvalue=0.5936…
+就是我们需要的 p-value 值。之所以出现 Warning
+信息是因为我们的数据量太少，一般来讲大于 20 是比较合适做假设检验的。</p>
+<h2 id="三r中的wilcox.test函数如何选择上述两种方法">三、R中的<strong>wilcox.test()函数如何选择上述两种方法？</strong></h2>
+<p>在R中只有<strong>wilcox.test()，</strong>那么系统怎么选择上述两种方法呢？使用help(”wilcoxon.test“)进行查看：</p>
+<blockquote>
+<p>Details： The formula interface is only applicable for the 2-sample
+tests. If only x is given, or if both x and y are given
+and <strong>paired is TRUE</strong>, a Wilcoxon signed rank test of the
+null that the distribution of x (in the one sample case) or of x - y (in
+the paired two sample case) is symmetric about muis performed.
+Otherwise, if both x and y are given
+and <strong>paired is FALSE</strong>, a Wilcoxon rank sum test
+(equivalent to the Mann-Whitney test: see the Note) is carried out. In
+this case, the null hypothesis is that the distributions
+of x and ydiffer by a location shift of mu and the alternative is that
+they differ by some other location shift (and the one-sided
+alternative "greater" is that x is shifted to the right of y).</p>
+</blockquote>
+<p>1、如果只有<strong>一个样本</strong>，就默认使用Wilcoxon signed-rank
+test；</p>
+<p>2、如果有两个样本，<strong>两个样本数量一样且当参数paired=TRUE，就使用Wilcoxon
+signed-rank test，当参数paired=FALSE使用Wilcoxon rank sum
+test！！！</strong></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/09/22/稀疏矩阵的高效存储和读取/" data-toggle="tooltip" data-placement="top" title="稀疏矩阵（Sparse Matrix）的高效存储和读取">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Non-parametric test" title="Non-parametric test">Non-parametric test</a>
+                        
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
+                        
+                          <a class="tag" href="/tags/#Hypothesis test" title="Hypothesis test">Hypothesis test</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2022/10/06/Wilcoxon-%E6%A3%80%E9%AA%8C%E4%B9%8B-rank-sum-%E4%B8%8E-signed-rank/";
+    var disqus_url = "https://www.chunfu.site/2022/10/06/Wilcoxon-%E6%A3%80%E9%AA%8C%E4%B9%8B-rank-sum-%E4%B8%8E-signed-rank/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Chunfu-Shawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2022
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
