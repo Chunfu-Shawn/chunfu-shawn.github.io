@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.chunfu.site/2022/05/24/%E7%9B%B8%E4%BC%BC%E6%80%A7%E9%87%8F%E5%BA%A6%EF%BC%88Similarity-Measurement%EF%BC%89%E5%A4%A7%E6%80%BB%E7%BB%93/</loc>
+    
+    <lastmod>2022-10-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.chunfu.site/2022/10/21/T-test-Z-test-or-MWU-test-Wilcoxon-rank-sum-tes/</loc>
     
     <lastmod>2022-10-21</lastmod>
@@ -66,15 +75,6 @@
   
   <url>
     <loc>https://www.chunfu.site/2022/05/17/%E4%B8%89%E7%A7%8D%E7%9B%B8%E5%85%B3%E6%80%A7%E6%A3%80%E9%AA%8C%E4%B8%8E%E6%AF%94%E8%BE%83%EF%BC%88%E4%B8%A4%E4%B8%AA%E5%8F%98%E9%87%8F%E4%B9%8B%E9%97%B4%EF%BC%89/</loc>
-    
-    <lastmod>2022-09-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/2022/05/24/%E7%9B%B8%E4%BC%BC%E6%80%A7%E9%87%8F%E5%BA%A6%EF%BC%88Similarity-Measurement%EF%BC%89%E5%A4%A7%E6%80%BB%E7%BB%93/</loc>
     
     <lastmod>2022-09-20</lastmod>
     
@@ -265,7 +265,7 @@
 
   <url>
     <loc>https://www.chunfu.site/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -273,231 +273,224 @@
   
   <url>
     <loc>https://www.chunfu.site/tags/Bioinformatics/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Next-Generation-Sequencing/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Data-format/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/ATAC-seq/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Biology/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Epigenomics/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/6mA/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Programming/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/JavaScript/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/R/</loc>
-    <lastmod>2022-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/tags/Math-Statistics/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Non-parametric-test/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Correlation/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Brain-science/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Neuron/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Cerebral-cortex/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Development/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Similarity-Measurement/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Bash/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Python/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Blog/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Github-Pages/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Hexo/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Data-Structure/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Computing-Methods/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Optimization/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Statistics/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Graphics/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Algorithm/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Hush-Table/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Sparse-Matrix/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Hypothesis-test/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Parametric-test/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -506,105 +499,91 @@
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Biology/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Programming/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Data-format/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Biology/Epigenetics/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/Data-format/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/ATAC-seq/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Biology/Epigenetics/6mA/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/Github-Pages/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/Hexo/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/Github-Pages/Hexo/</loc>
-    <lastmod>2022-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Statistics/</loc>
-    <lastmod>2022-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/categories/Statistics/Similarity-Measurement/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
