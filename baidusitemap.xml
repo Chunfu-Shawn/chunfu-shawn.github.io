@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.chunfu.site/2022/05/24/%E7%9B%B8%E4%BC%BC%E6%80%A7%E9%87%8F%E5%BA%A6%EF%BC%88Similarity-Measurement%EF%BC%89%E5%A4%A7%E6%80%BB%E7%BB%93/</loc>
-    <lastmod>2022-10-24</lastmod>
+    <loc>https://www.chunfu.site/2022/10/25/%E7%BB%9F%E8%AE%A1%E4%B8%AD%E8%AF%A5%E7%94%A8Fisher%E7%B2%BE%E7%A1%AE%E6%A3%80%E9%AA%8C%E8%BF%98%E6%98%AF%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C/</loc>
+    <lastmod>2022-10-25</lastmod>
   </url>
   <url>
     <loc>https://www.chunfu.site/2022/10/21/T-test-Z-test-or-MWU-test-Wilcoxon-rank-sum-tes/</loc>
-    <lastmod>2022-10-21</lastmod>
+    <lastmod>2022-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://www.chunfu.site/2022/05/24/%E7%9B%B8%E4%BC%BC%E6%80%A7%E9%87%8F%E5%BA%A6%EF%BC%88Similarity-Measurement%EF%BC%89%E5%A4%A7%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2022-10-24</lastmod>
   </url>
   <url>
     <loc>https://www.chunfu.site/2022/10/06/Wilcoxon-%E6%A3%80%E9%AA%8C%E4%B9%8B-rank-sum-%E4%B8%8E-signed-rank/</loc>
