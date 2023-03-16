@@ -2,9 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.chunfu.site/2023/03/16/EM%E7%AE%97%E6%B3%95%E7%9A%84%E7%90%86%E8%A7%A3%E5%92%8C%E6%95%B0%E5%AD%A6%E6%8E%A8%E5%AF%BC/</loc>
+    
+    <lastmod>2023-03-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.chunfu.site/2023/01/30/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1-Maximum-likelihood-estimation-MLE/</loc>
     
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/2022/09/22/%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%88Hush-table%EF%BC%89%E4%BB%8B%E7%BB%8D%E5%92%8CJava%E3%80%81JavaScript%E7%9A%84%E5%AE%9E%E7%8E%B0/</loc>
+    
+    <lastmod>2023-02-17</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -66,15 +84,6 @@
   
   <url>
     <loc>https://www.chunfu.site/2022/09/21/R%E4%B8%AD%E7%A6%BB%E6%95%A3%E5%9D%90%E6%A0%87%E8%BD%B4%E7%9A%84%E6%8E%92%E5%BA%8F%E3%80%81%E5%AD%90%E9%9B%86%E9%80%89%E6%8B%A9%E4%B8%8E%E5%90%88%E5%B9%B6/</loc>
-    
-    <lastmod>2022-10-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.chunfu.site/2022/09/22/%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%88Hush-table%EF%BC%89%E4%BB%8B%E7%BB%8D%E5%92%8CJava%E3%80%81JavaScript%E7%9A%84%E5%AE%9E%E7%8E%B0/</loc>
     
     <lastmod>2022-10-06</lastmod>
     
@@ -292,7 +301,7 @@
 
   <url>
     <loc>https://www.chunfu.site/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -300,238 +309,252 @@
   
   <url>
     <loc>https://www.chunfu.site/tags/Bioinformatics/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Next-Generation-Sequencing/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Data-format/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/ATAC-seq/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Biology/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Epigenomics/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/6mA/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Programming/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/JavaScript/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/R/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Non-parametric-test/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Correlation/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Brain-science/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Neuron/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Cerebral-cortex/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Development/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Similarity-Measurement/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Bash/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Python/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Blog/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Github-Pages/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Hexo/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Data-Structure/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Computing-Methods/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Optimization/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Statistics/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Graphics/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Algorithm/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Hush-Table/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Sparse-Matrix/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Hypothesis-test/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Parametric-test/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/tags/Non-parametric-estimation/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.chunfu.site/tags/Parametric-estimation/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <loc>https://www.chunfu.site/tags/Mixture-model/</loc>
+    <lastmod>2023-03-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/Partial-Observations/</loc>
+    <lastmod>2023-03-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.chunfu.site/tags/Expectation-Maximization/</loc>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -540,91 +563,91 @@
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Biology/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Programming/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Data-format/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Biology/Epigenetics/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/Data-format/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Bioinformatics/Next-Generation-Sequencing/ATAC-seq/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Biology/Epigenetics/6mA/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/Github-Pages/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/Hexo/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://www.chunfu.site/categories/Blog/Github-Pages/Hexo/</loc>
-    <lastmod>2023-01-30</lastmod>
+    <lastmod>2023-03-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
