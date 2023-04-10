@@ -13,11 +13,11 @@
 
     <title>
         
-          生信常见文件的格式以及查看方式 - Chunfu的博客 | Chunfu的生信、统计知识笔记
+          生信常见文件的格式以及查看与处理方式 - Chunfu的博客 | Chunfu的生信、统计知识笔记
         
     </title>
 
-    <link rel="canonical" href="https://www.chunfu.site/2022/05/08/生信常见文件的格式以及查看方式/">
+    <link rel="canonical" href="https://www.chunfu.site/2022/05/08/生信常见文件的格式以及查看与处理方法/">
 
     <!-- Bootstrap Core CSS -->
     
@@ -192,13 +192,13 @@
                           <a class="tag" href="/tags/#Data format" title="Data format">Data format</a>
                         
                     </div>
-                    <h1>生信常见文件的格式以及查看方式</h1>
-                    <h2 class="subheading">fasta、fastq、gff、gtf、bed、bed12、sam、bam、wig、bigwig、bedgraph等文件格式的介绍和处理</h2>
+                    <h1>生信常见文件的格式以及查看与处理方式</h1>
+                    <h2 class="subheading">fasta、fastq、gff、gtf、bed、bed12、sam、bam、wig、bigwig、bedgraph、vcf等文件格式的介绍和处理</h2>
                     <span class="meta">
                         Posted by <b>Chunfu Shawn</b> on
                         2022/05/08<br/> 
                         Last Updated by <b>Chunfu Shawn</b> on
-                        2022/05/08<br/>
+                        4/10/2023<br/>
                         <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
                     </span>
                 </div>
@@ -219,24 +219,25 @@
                 post-container">
                 <br>
 
-                <p>生信分析过程中，会与很多不同格式的文件打交道，除了原始测序数据fastq之外，还需要准备基因组文件fasta格式和基因注释文件gtf格式。在分析的过程中还会有众多中间文件的生成，如bed、bed12、sam、bam、wig、bigwig、bedgraph等，生成后我们一般会查看下内容了解文件每一列的含义，以此来决定需要提取哪些有用信息列来进行下一步分析。</p>
-<h2 id="一、测序数据FASTQ文件"><a href="#一、测序数据FASTQ文件" class="headerlink" title="一、测序数据FASTQ文件"></a>一、测序数据FASTQ文件</h2><p>1）文件用途：样品测序返回的数据一般存储为fastq文件，通常是压缩文件filename.fq.gz的格式，节省存储空间和传输时间。NGS基础 - FASTQ格式解释和质量评估</p>
+                <h1 id="生信常见文件的格式以及查看与处理方法">生信常见文件的格式以及查看与处理方法</h1>
+<p>生信分析过程中，会与很多不同格式的文件打交道，除了原始测序数据fastq之外，还需要准备基因组文件fasta格式和基因注释文件gtf格式。在分析的过程中还会有众多中间文件的生成，如bed、bed12、sam、bam、wig、bigwig、bedgraph、vcf等，生成后我们一般会查看下内容了解文件每一列的含义，以此来决定需要提取哪些有用信息列来进行下一步分析。</p>
+<h1 id="一测序数据fastq文件">一、测序数据FASTQ文件</h1>
+<p>1）文件用途：样品测序返回的数据一般存储为fastq文件，通常是压缩文件filename.fq.gz的格式，节省存储空间和传输时间。NGS基础 - FASTQ格式解释和质量评估</p>
 <p>2）查看方式</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># zcat查看gzip压缩的文件</span></span><br><span class="line"><span class="comment"># head -n 8 显示前8行文件内容（前8行代表2条序列）</span></span><br><span class="line"> </span><br><span class="line">zcat filename.fq.gz | <span class="built_in">head</span> -n 8</span><br><span class="line"> </span><br><span class="line"><span class="comment"># @SRR1039521.13952745/1</span></span><br><span class="line"><span class="comment"># TTCCTTCCTCCTCTCCCTCCCTCCCTCCTTTCTTTCTTCCTGTGGTTTTTTCCTCTCTTCTTC</span></span><br><span class="line"><span class="comment"># +</span></span><br><span class="line"><span class="comment"># HIJIIJHGHHIJIIIJJJJJJJJJJJJJJJJJJJJJIIJJFIDHIBGHJIHHHHHHFFFFFFE</span></span><br></pre></td></tr></table></figure>
-
-<p>3）格式说明：fastq文件每4行代表一条序列<br>第一行：记录序列测序时所用仪器以及在测序通道中坐标信息，以@开头；<br>第二行：测序的序列信息，以ATCGN表示，由于荧光信号干扰无法判断是什么碱基时就用N表示；<br>第三行：通常一个+;<br>第四行：与第二行碱基信息一一对应，存储测序碱基的质量值。</p>
+<p>3）格式说明：fastq文件每4行代表一条序列 第一行：记录序列测序时所用仪器以及在测序通道中坐标信息，以@开头； 第二行：测序的序列信息，以ATCGN表示，由于荧光信号干扰无法判断是什么碱基时就用N表示； 第三行：通常一个+; 第四行：与第二行碱基信息一一对应，存储测序碱基的质量值。</p>
 <p>4）其他常用命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算read数</span></span><br><span class="line"><span class="comment"># wc -l: 计算行数</span></span><br><span class="line"><span class="comment"># bc -l: 计算器 (-l：浮点运算)</span></span><br><span class="line"><span class="comment"># 为什么除以4，又除以1000000，计算的是million值</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;`zcat trt_N061011_1.fq.gz | wc-l` / (4*1000000)&quot;</span> | bc -l</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 测序碱基数计算</span></span><br><span class="line">zcat trt_N061011_1.fq.gz | awk<span class="string">&#x27;&#123;if(FNR%4==0) base+=length&#125;END&#123;print base/10^9,&quot;G&quot;;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>awk的介绍见：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ==&idx=1&mid=2247484502&scene=21&sn=dfe60fc225a6cf82d59e953eda32b184#wechat_redirect">常用和不太常用的awk命令</a></p>
-<h2 id="二、基因组FASTA文件"><a href="#二、基因组FASTA文件" class="headerlink" title="二、基因组FASTA文件"></a>二、基因组FASTA文件</h2><p>此文件可以从ensemble数据库下载的（<a target="_blank" rel="noopener" href="https://www.ensembl.org/info/data/ftp/index.html%EF%BC%89%EF%BC%8C">https://www.ensembl.org/info/data/ftp/index.html），</a> 一般选择下载primary assemblyfasta（<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ==&idx=1&mid=2247484148&scene=21&sn=525233898721a9c3ebdf275babf14944#wechat_redirect">想知道为什么，点这里</a>）。fasta文件用于序列存储，可以是DNA或蛋白序列，在此FASTA文件存储了基因组序列的信息。</p>
+<p>awk的介绍见：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ%3D%3D&amp;idx=1&amp;mid=2247484502&amp;scene=21&amp;sn=dfe60fc225a6cf82d59e953eda32b184#wechat_redirect">常用和不太常用的awk命令</a></p>
+<h1 id="二基因组fasta文件">二、基因组FASTA文件</h1>
+<p>此文件可以从ensemble数据库下载的（<a target="_blank" rel="noopener" href="https://www.ensembl.org/info/data/ftp/index.html%EF%BC%89%EF%BC%8C">https://www.ensembl.org/info/data/ftp/index.html），</a> 一般选择下载primary assemblyfasta（<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ%3D%3D&amp;idx=1&amp;mid=2247484148&amp;scene=21&amp;sn=525233898721a9c3ebdf275babf14944#wechat_redirect">想知道为什么，点这里</a>）。fasta文件用于序列存储，可以是DNA或蛋白序列，在此FASTA文件存储了基因组序列的信息。</p>
 <p><strong>序列名字行：</strong>以&gt;符号开头，记录了该序列类型和所在基因组位置信息；</p>
 <p><strong>序列行（一行或多行）：</strong>序列信息，soft-masked基因组会把所有重复区和低复杂区的序列用小写字母标出的基因组，小写字母n表示未知碱基。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;1 dna_sm:chromosomechromosome:GRCh38:1:1:248956422:1 REF</span><br><span class="line">nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</span><br><span class="line">nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</span><br><span class="line">.....</span><br><span class="line">ttgggctggggcctggccatgtgtatttttttaaatttccactgatgattttgctgcatg</span><br><span class="line">gccggtgttgagaatgactgCGCAAATTTGCCGGATTTCCTTTGCTGTTCCTGCATGTAG</span><br><span class="line">TTTAAACGAGATTGCCAGCACCGGGTATCATTCACCATTTTTCTTTTCGTTAACTTGCCG</span><br><span class="line">.....</span><br><span class="line">nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</span><br><span class="line"><span class="comment"># 通常要求序列名字行简单为好，而且一般加chr作为开头</span></span><br><span class="line"><span class="comment"># 给第一行添加chr标签，并去掉其他多余信息</span></span><br><span class="line"><span class="comment"># 下面的写法复杂了些，是为了避免给已经有chr信息的名字再加一次</span></span><br><span class="line"><span class="comment"># 帮助无脑操作</span></span><br><span class="line">sed <span class="string">&#x27;s/^&gt;\([^chr]\)/&gt;chr\1/&#x27;</span>  Homo_sapiens.GRCh38.dna.primary_assembly.fa |<span class="built_in">cut</span> -f 1 -d <span class="string">&#x27; &#x27;</span> &gt; GRCh38.fa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="三、基因组注释文件gff和gtf"><a href="#三、基因组注释文件gff和gtf" class="headerlink" title="三、基因组注释文件gff和gtf"></a>三、基因组注释文件gff和gtf</h2><p>gff全称General featureformat，主要是用来注释基因组。gtf全称Gene transfer format，主要是用来对基因进行注释。两者均是一个9列的基因信息注释文件，前8列的信息几乎一样，区别在于第9列。具体可见历史推文NGS基础 - <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ==&idx=1&mid=2247484166&scene=21&sn=417e155672bd718def86003b16bf0078#wechat_redirect">NGS基础 - GTF/GFF文件格式解读和转换</a> </p>
+<h1 id="三基因组注释文件gff和gtf">三、基因组注释文件gff和gtf</h1>
+<p>gff全称General featureformat，主要是用来注释基因组。gtf全称Gene transfer format，主要是用来对基因进行注释。两者均是一个9列的基因信息注释文件，前8列的信息几乎一样，区别在于第9列。具体可见历史推文NGS基础 - <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ%3D%3D&amp;idx=1&amp;mid=2247484166&amp;scene=21&amp;sn=417e155672bd718def86003b16bf0078#wechat_redirect">NGS基础 - GTF/GFF文件格式解读和转换</a></p>
 <p>GFF文件是以<code>tab</code>键分割的9列组成，以下为每一列的对应信息：</p>
-<ol>
+<ol type="1">
 <li>seq_id：序列的编号，一般为chr或者scanfold编号；</li>
 <li>source: 注释的来源，一般为数据库或者注释的机构，如果未知，则用点“.”代替</li>
 <li>type: 注释信息的类型，比如Gene、cDNA、mRNA、CDS等;</li>
@@ -249,72 +250,77 @@
 </ol>
 <p>从ensemble下载的gtf文件前5行一般是以#开头的注释信息，后续分析中用不上需要去除，同时需要给第一列添加chr标签（与基因组序列一致），可通过下面的命令对文件进行加工：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep 匹配查询 -v 输出不匹配的行</span></span><br><span class="line">gunzip Homo_sapiens.GRCh38.94.gtf.gz -c |grep -v <span class="string">&#x27;^#&#x27;</span> | sed <span class="string">&#x27;/^[^chr]/ s/^/chr/&#x27;</span> &gt;GRCh38.gtf</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、bed文件"><a href="#四、bed文件" class="headerlink" title="四、bed文件"></a>四、bed文件</h2><h3 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>分析过程中的bed文件一般代表区域信息，如表示Peak位置的bed文件，表示基因注释的bed12文件。</p>
+<h1 id="四bed文件">四、bed文件</h1>
+<h2 id="介绍">1、介绍</h2>
+<p>分析过程中的bed文件一般代表区域信息，如表示Peak位置的bed文件，表示基因注释的bed12文件。</p>
 <p>表示基因注释时，gtf/gff和bed文件的区别：</p>
-<p>1）gtf/gff文件一行表示一个exon/CDS等子区域，多行联合表示一个gene；bed文件一行表示一个gene；<br>2）<strong>gtf文件中碱基位置定位方式是1-based，而bed中碱基定位方式是0-based</strong>，如下图所示:</p>
-<blockquote>
-<p>可以参考我的另外一篇博客：<a target="_blank" rel="noopener" href="https://chunfu.site/2022/05/08/0-based-1-based%E7%9A%84%E8%A7%A3%E9%87%8A%E5%92%8C%E8%BD%AC%E6%8D%A2%E5%AE%9E%E4%BE%8B/">0-based &amp; 1-based的解释和转换实例</a></p>
-</blockquote>
-<p><img src="figure1.png" alt="0-based &amp; 1-based"></p>
-<p><strong>bed文件每一行对应信息</strong></p>
-<p><strong>必须包含的3列信息：</strong><br>1）chrom：染色体名字 (e.g.chr3, chrY, chr2_random或者scaffold10671)。<br>2）chromStart：基因在染色体或scaffold上的起始位置（0-based）。<br>3）chromEnd：基因在染色体或scaffold上的终止位置 （前闭后开）。</p>
-<p><strong>可选的9列信息：</strong><br>4）name：bed文件的行名。<br>5）score：本条基因在注释数据集文件中的评分（0-1000），在Genome Browser中会根据不同区段的评分显示对应的阴影强度（评分越高灰度越高）。<br>6）strand：链的方向+、-或. (.表示不确定链的方向)<br>7）thickStart：CDS区（编码区）的起始位置，即起始密码子的位置。<br>8）thickEnd：The ending position at which the feature is drawn thickly (for example the stop codon in gene displays).<br>9）itemRgb：RGB颜色值（如：255,0,0），方便在GenomeBrowser中查看。<br>10）blockCount：bed行中外显子的数目。<br>11）blockSizes：逗号分割的列，数目与blockCount值对应，每个数表示对应外显子的碱基数。<br>12）blockStarts：逗号分割的列，数目与blockCount值对应，每个数表示对应外显子的起始位置（数值是相对ChromStart计算的）。</p>
-<h3 id="2、narrow-broad-gapped-peak-三种格式之间的区别与联系"><a href="#2、narrow-broad-gapped-peak-三种格式之间的区别与联系" class="headerlink" title="2、narrow, broad, gapped peak:三种格式之间的区别与联系"></a>2、<strong>narrow, broad, gapped peak:三种格式之间的区别与联系</strong></h3><p>在进行peak calling分析时，经常会接触到以下3种peak格式：narrow peaks format，broad peaks fotmat，gapped peaks format</p>
+<p>1）gtf/gff文件一行表示一个exon/CDS等子区域，多行联合表示一个gene；bed文件一行表示一个gene； 2）<strong>gtf文件中碱基位置定位方式是1-based，而bed中碱基定位方式是0-based</strong>，如下图所示。</p>
+<p><img src="figure1.png" /></p>
+<p>bed文件每一行对应信息</p>
+<p>必须包含的3列信息： 1）chrom：染色体名字 (e.g.chr3, chrY, chr2_random或者scaffold10671)。 2）chromStart：基因在染色体或scaffold上的起始位置（0-based）。 3）chromEnd：基因在染色体或scaffold上的终止位置 （前闭后开）。</p>
+<p>可选的9列信息： 4）name：bed文件的行名。 5）score：本条基因在注释数据集文件中的评分（0-1000），在Genome Browser中会根据不同区段的评分显示对应的阴影强度（评分越高灰度越高）。 6）strand：链的方向+、-或. (.表示不确定链的方向) 7）thickStart：CDS区（编码区）的起始位置，即起始密码子的位置。 8）thickEnd：The ending position at which the feature is drawn thickly (for example the stop codon in gene displays). 9）itemRgb：RGB颜色值（如：255,0,0），方便在GenomeBrowser中查看。 10）blockCount：bed行中外显子的数目。 11）blockSizes：逗号分割的列，数目与blockCount值对应，每个数表示对应外显子的碱基数。 12）blockStarts：逗号分割的列，数目与blockCount值对应，每个数表示对应外显子的起始位置（数值是相对ChromStart计算的）。</p>
+<h2 id="narrow-broad-gapped-peak-三种格式之间的区别与联系">2、<strong>narrow, broad, gapped peak: 三种格式之间的区别与联系</strong></h2>
+<p>在进行peak calling分析时，经常会接触到以下3种peak格式：narrow peaks format，broad peaks fotmat，gapped peaks format</p>
 <p>peak被定义为基因组上一段reads富集的区域，核心信息是在染色体上的起始和终止位置，除此之外，还有软件对于该peak区域的打分，比如常见的pvalue, qvalue, fold_enrichment等值。</p>
-<p>和基因组比对信息用BAM格式来存储类似，为了标准化不同peak calling软件的输出，特意制定了以上3种数据格式。<strong>这三种格式本质上都是bed文件，只不过列数不太类似</strong>。</p>
-<p><strong>1. Narrow Peaks Format；</strong></p>
+<p>和基因组比对信息用BAM格式来存储类似，为了标准化不同peak calling软件的输出，特意制定了以上3种数据格式。这三种格式本质上都是bed文件，只不过列数不太类似。</p>
+<h3 id="narrow-peaks-format">（<strong>1）Narrow Peaks Format；</strong></h3>
 <p>该格式又称之为point-source peaks format, macs2默认输出就是这种格式，是一种BED6+4的格式，列数为10列，如下：</p>
+<p><img src="figure2.png" /></p>
 <blockquote>
-<p>前四列分别代表chrom, chromStart, chromEnd, name, 用于描述peak区间和名称，注意bed格式中起始位置从0开始计数。<br>第五列代表score,在macs2的输出结果中为int(-10*log10qvalue)；<br>第六列代表strand, 在macs2的输出结果中为；<br>第七列代表signalvalue, 通常使用fold_enrichment的值；<br>第八列代表pvalue, 在macs2的输出结果中为-log10(pvalue)；<br>第九列代表qvalue, 在macs2的输出结果中为-log10(qvalue)；<br>第十列代表peak, 在macs2的输出结果中为peak的中心，即summit距离peak起始位置的距离。</p>
+<p>前四列分别代表chrom, chromStart, chromEnd, name, 用于描述peak区间和名称，注意bed格式中起始位置从0开始计数。 第五列代表score,在macs2的输出结果中为int(-10*log10qvalue)； 第六列代表strand, 在macs2的输出结果中为； 第七列代表signalvalue, 通常使用fold_enrichment的值； 第八列代表pvalue, 在macs2的输出结果中为-log10(pvalue)； 第九列代表qvalue, 在macs2的输出结果中为-log10(qvalue)； 第十列代表peak, 在macs2的输出结果中为peak的中心，即summit距离peak起始位置的距离。</p>
 </blockquote>
-<p><strong>2. Broad Peaks Format</strong></p>
+<h3 id="broad-peaks-format">（<strong>2）Broad Peaks Format</strong></h3>
 <p>这种格式就是在narrow peaks format的基础上丢掉了最后一列的信息，为BED6+3的格式， 列数为9列。</p>
-<p><strong>3. Gapped Peaks Format</strong></p>
+<h3 id="gapped-peaks-format">（3）<strong>Gapped Peaks Format</strong></h3>
 <p>前两种格式都是由于描述连续的peak区间，适用于DNA水平上的富集区域信息的存储，比如chip_seq, ATAC_seq鉴定到的peak区间，而gapped peaks format用于描述非连续的peak区间，这里的非连续通常指的是在peak的区间内会包含多个exon区域，适用于RNA水平上的富集区域信息的存储，比如m6A_seq鉴定到的peak区间。</p>
 <p>该格式在BED12的基础上进行延伸，演变为BED12+3的格式，列数为15列，每列的含义示意如下</p>
+<p><img src="figure3.png" /></p>
 <blockquote>
-<p>前6列的含义和上述两种peak格式完全相同，后3列的含义和broad peak完全相同，为了专区表示peak区间内包含的exon信息，借鉴转录本的BED12格式，引入了以下6列：<br><strong>thickStart，thickEnd，itemRgb，blockCount，blockSizes，blockStarts</strong><br>thickStart和thickEnd有点类似转录本中CDS的起始和终止位置，在存储peak信息时，通常的做法是将这两列的值和chromStart和chromEnd的值设置成相同的，itemRgb是一个RGB颜色值，比如255,0,0, 如果没有对应的颜色信息，则用0来表示。<br>blockCount代表该peak区间包含的exon的个数，blockSizes代表每个exon区间的长度，多个exon用逗号连接，blockStarts代表每个exon区间在基因组上的起始位置，多个exon用逗号连接。</p>
+<p>前6列的含义和上述两种peak格式完全相同，后3列的含义和broad peak完全相同，为了专区表示peak区间内包含的exon信息，借鉴转录本的BED12格式，引入了以下6列： <strong>thickStart，thickEnd，itemRgb，blockCount，blockSizes，blockStarts</strong> thickStart和thickEnd有点类似转录本中CDS的起始和终止位置，在存储peak信息时，通常的做法是将这两列的值和chromStart和chromEnd的值设置成相同的，itemRgb是一个RGB颜色值，比如255,0,0, 如果没有对应的颜色信息，则用0来表示。 blockCount代表该peak区间包含的exon的个数，blockSizes代表每个exon区间的长度，多个exon用逗号连接，blockStarts代表每个exon区间在基因组上的起始位置，多个exon用逗号连接。</p>
 </blockquote>
 <p>关于这三种格式的相关介绍请参考以下链接</p>
 <p><a target="_blank" rel="noopener" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format13">https://genome.ucsc.edu/FAQ/FAQformat.html#format13</a></p>
-<h3 id="3、bed数据处理"><a href="#3、bed数据处理" class="headerlink" title="3、bed数据处理"></a><strong>3、bed数据处理</strong></h3><p>详细可以参考官方网页：<a target="_blank" rel="noopener" href="https://bedtools.readthedocs.io/en/latest/content/bedtools-suite.html">The BEDTools Suite</a></p>
-<p>中文参考文档：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f8bbd51b5199">最全Bedtools使用说明–只看本文就够了</a></p>
-<h2 id="五、sam和bam文件"><a href="#五、sam和bam文件" class="headerlink" title="五、sam和bam文件"></a>五、sam和bam文件</h2><h3 id="1、介绍-1"><a href="#1、介绍-1" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>sam文件全称The SequencingAlignment/Map Format，是Alignment/Map步骤bwa/STAR/HISAT2等软件对结果的标准输出文件，用于存储reads比对到参考基因组的比对结果，是一个纯文本格式，文件一般较大。为了节省硬盘存储，一般使用其高效压缩的二进制格式bam文件。</p>
+<h2 id="bed数据处理"><strong>3、bed数据处理</strong></h2>
+<p>详细可以参考官方网页：<a target="_blank" rel="noopener" href="https://bedtools.readthedocs.io/en/latest/content/bedtools-suite.html">The BEDTools Suite</a></p>
+<p>中文参考文档：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f8bbd51b5199">最全Bedtools使用说明--只看本文就够了</a></p>
+<h1 id="五sam和bam文件">五、sam和bam文件</h1>
+<h2 id="介绍-1">1、介绍</h2>
+<p>sam文件全称The SequencingAlignment/Map Format，是Alignment/Map步骤bwa/STAR/HISAT2等软件对结果的标准输出文件，用于存储reads比对到参考基因组的比对结果，是一个纯文本格式，文件一般较大。为了节省硬盘存储，一般使用其高效压缩的二进制格式bam文件。</p>
 <p>利用samtools view的-b参数就能把sam文件转为bam文件。</p>
-<p>1）sam文件查看方式<br>在linux终端直接用less即可进行查看；</p>
-<p>2）bam文件查看方式<br>需要借助samtools view工具进行查看</p>
+<p>1）sam文件查看方式 在linux终端直接用less即可进行查看；</p>
+<p>2）bam文件查看方式 需要借助samtools view工具进行查看</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">samtools view filename.bam | less -S</span><br><span class="line">samtools view -h filename.bam | less -S</span><br></pre></td></tr></table></figure>
-
 <p>NGS分析中大多数文件都是由header和record两部分组成，加上-h参数后可以将header显示出来，默认是不显示的。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@HD    VN:1.5  SO:coordinate</span><br><span class="line">@SQ    SN:chr1 LN:248956422</span><br><span class="line">@SQ    SN:chr10        LN:133797422</span><br><span class="line">......</span><br><span class="line">@SQ    SN:chrKI270392.1        LN:971</span><br><span class="line">@SQ    SN:chrKI270394.1        LN:970</span><br><span class="line">@RG    ID:BH_H3K27ac_2 LB:BH_H3K27ac_2 SM:BH_H3K27ac_2</span><br><span class="line">@PG    ID:bwa  PN:bwa  VN:0.7.15-r1140 CL:bwa mem -M -t 8 -R@RG\tID:BH_H3K27ac_2\tLB:BH_H3K27ac_2\tSM:BH_H3K27ac_2\tPL: /MP</span><br><span class="line">@PG    ID:MarkDuplicates      VN:1.138(aa51703435dc6a423013e74e56b0b68405facd79_1439324166)   CL:picard.sam.markduplicates.</span><br><span class="line">K00141:244:HVL3NBBXX:8:2119:27235:3145399      chr1    10016  32      115M    =      10016   115     CCCTAACCCTAACCCTAACCC</span><br><span class="line">K00141:244:HVL3NBBXX:8:2119:27235:31453147     chr1    10016  32      115M    =      10016   -115   CCCTTACCCTAACCCTAACCC</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <p>header内容</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@HD：是必须的标准文件头，包含版本信息；</span><br><span class="line">@SQ：参考序列染色体名字和长度信息 (SN:scaffold name; LN: length)；</span><br><span class="line">@RG：重要<span class="built_in">read</span> group信息，通常包含测序平台，测序文库和样本ID等信息，分析时用于区分不同样本（重测序时用到）；</span><br><span class="line">@PG：生成此文件的操作过程和参数信息 （program）。</span><br></pre></td></tr></table></figure>
-
 <p>record内容</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">每一行就是一条<span class="built_in">read</span>比对上参考基因组的信息，总共12列，用tab键分割。</span><br><span class="line"><span class="comment"># 1. read名称；也就是ID（如果是双短测序的话，则同一个ID会有两条reads）</span></span><br><span class="line"><span class="comment"># 2. 比对信息位flag值；为各个标志的和</span></span><br><span class="line"><span class="comment"># 3. 参考序列染色体编号；</span></span><br><span class="line"><span class="comment"># 4. 5′端起始位置；</span></span><br><span class="line"><span class="comment"># 5. MAPQ：mapping quality，描述比对的质量，数字越大，特异性越高；</span></span><br><span class="line"><span class="comment"># 6. CIGAR字符串，记录插入、删除、错配等信息；</span></span><br><span class="line"><span class="comment"># 7. mate read所比对到的染色体，仅双端测序的数据才有；如果是“=”，则表示在同一条染色体上</span></span><br><span class="line"><span class="comment"># 8. mate read所比对到的位置，仅双端测序的数据才有；</span></span><br><span class="line"><span class="comment"># 9. 插入片段的长度，仅双端测序的数据才有；</span></span><br><span class="line"><span class="comment"># 10. read序列；</span></span><br><span class="line"><span class="comment"># 11. read质量值；</span></span><br><span class="line"><span class="comment"># 12. 12列以后的信息都是metadata，程序用标记</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、flag信息"><a href="#2、flag信息" class="headerlink" title="2、flag信息"></a>2、flag信息</h3><p>sam文件中第二列flag信息很重要，下面做进一步解释。</p>
+<h2 id="flag信息">2、flag信息</h2>
+<p>sam文件中第二列flag信息很重要，下面做进一步解释。</p>
 <p>利用samtools flagstat工具可以查看bam文件中比对的flag信息，并输出比对的统计结果。</p>
 <p><code>samtools flagstat *.bam</code></p>
 <p>flag一共有12个标签，使用16进制数表示，每个标签值是2^(n-1)，其中n&lt;=12，每个值有其对应的唯一解释含义，具体见下图。</p>
-<img src=figure2.png width=50%/>
-
+<figure>
+<img src="figure4.png" alt="" /><figcaption>.png</figcaption>
+</figure>
 <figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">1 </span>： 代表这个序列采用的是PE双端测序</span><br><span class="line"><span class="number">2</span>： 代表这个序列和参考序列完全匹配，没有插入缺失</span><br><span class="line"><span class="number">4</span>： 代表这个序列没有mapping到参考序列上</span><br><span class="line"><span class="number">8</span>： 代表这个序列的另一端序列没有比对到参考序列上，比如这条序列是R1,它对应的R2端序列没有比对到参考序列上</span><br><span class="line"><span class="number">16</span>：代表这个序列比对到参考序列的负链上</span><br><span class="line"><span class="symbol">32 </span>：代表这个序列对应的另一端序列比对到参考序列的负链上</span><br><span class="line"><span class="symbol">64 </span>： 代表这个序列是R1端序列， read1;</span><br><span class="line"><span class="symbol">128 </span>: 代表这个序列是R2端序列，read2；</span><br><span class="line"><span class="number">256</span>： 代表这个序列不是主要的比对，一条序列可能比对到参考序列的多个位置，只有一个是首要的比对位置，其他都是次要的</span><br><span class="line"><span class="number">512</span>： 代表这个序列在QC时失败了，被过滤不掉了（# 这个标签不常用）</span><br><span class="line"><span class="number">1024</span>: 代表这个序列是PCR重复序列（#这个标签不常用）</span><br><span class="line"><span class="number">2048</span>: 代表这个序列是补充的比对（#这个标签具体什么意思，没搞清楚，但是不常用）</span><br></pre></td></tr></table></figure>
-
 <p>你会发现随机挑选几个值做加和运算，他们的结果都是唯一的，所以在bam文件中第二列flag的值代表这条序列符合下图所示条件的值的和。</p>
 <p>所以根据这个值我们可以判断这条序列是双端测序还是单端测序；如果是双端测序，reads来自左端还是右端。比如65只能是1和64组成，代表这个序列是双端测序，而且是read1。</p>
-<p>每次转换很头疼？别担心，网上有很多解码flag含义的在线工具，如SAM Format（网址：<a target="_blank" rel="noopener" href="https://www.samformat.info/sam-format-flag%EF%BC%89">https://www.samformat.info/sam-format-flag）</a><br>也可以使用我博客中的软件：<a href="https://www.chunfu.site/SAM_FLAG.html">SAM FLAG</a></p>
+<p>每次转换很头疼？别担心，网上有很多解码flag含义的在线工具，如SAM Format（网址：<a target="_blank" rel="noopener" href="https://www.samformat.info/sam-format-flag%EF%BC%89">https://www.samformat.info/sam-format-flag）</a></p>
 <p>输入flag的值，解析工具会返回匹配上的信息。如果是单端测序，flag值都是偶数。</p>
 <p>如果是双端测序，工具会帮我们把另外一端序列的flag值返回，并且将这些数字情况大致分为5类，在右侧进一步显示这个值对应的含义。</p>
-<h3 id="3、sam-bam文件处理"><a href="#3、sam-bam文件处理" class="headerlink" title="3、sam/bam文件处理"></a>3、sam/bam文件处理</h3><p>详细可以参考官方网页：<a target="_blank" rel="noopener" href="http://www.htslib.org/doc/samtools.html">Samtools</a></p>
+<h2 id="sambam文件处理">3、sam/bam文件处理</h2>
+<p>详细可以参考官方网页：<a target="_blank" rel="noopener" href="http://www.htslib.org/doc/samtools.html">Samtools</a></p>
 <p>中文参考文档：****<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/a3791cf16474">samtools常用命令详解</a>****</p>
-<h2 id="wig、bigwig和bedgraph文件"><a href="#wig、bigwig和bedgraph文件" class="headerlink" title="wig、bigwig和bedgraph文件"></a>wig、bigwig和bedgraph文件</h2><p>上述bam和sam文件可以帮助我们探索reads在参考基因组中的比对情况，导入基因组浏览器查看比对状态和突变信息。而wiggle(简称wig)、bigwig(简写bw)以及bedgraph(简写bdg)只包含区域和区域的覆盖度信息，文件更小，用于可视化更方便，可以导入基因组浏览器（Genome Browser）中进行可视化，以查看reads在参考基因组各个区域的覆盖度并检测测序深度。这几个文件在ChIP-seq数据分析Call Peak阶段会生成，可以利用IGV等工具进行可视化，方便查看组蛋白修饰的程度。</p>
-<h2 id="六、wig-bigwig介绍"><a href="#六、wig-bigwig介绍" class="headerlink" title="六、wig/bigwig介绍"></a>六、wig/bigwig介绍</h2><p>wig 文件全称叫 Wiggle Track Format， 用来绘制基因组上的图形轨迹的文件格式。wig 格式是较老的格式，用来显示密集且连续的数据，比如GC含量，概率分数，转录组数据等，而bigwig是wig格式的压缩形式。</p>
+<h1 id="wigbigwig和bedgraph文件">wig、bigwig和bedgraph文件</h1>
+<p>上述bam和sam文件可以帮助我们探索reads在参考基因组中的比对情况，导入基因组浏览器查看比对状态和突变信息。而wiggle(简称wig)、bigwig(简写bw)以及bedgraph(简写bdg)只包含区域和区域的覆盖度信息，文件更小，用于可视化更方便，可以导入基因组浏览器（Genome Browser）中进行可视化，以查看reads在参考基因组各个区域的覆盖度并检测测序深度。这几个文件在ChIP-seq数据分析Call Peak阶段会生成，可以利用IGV等工具进行可视化，方便查看组蛋白修饰的程度。</p>
+<h1 id="六wigbigwig介绍">六、wig/bigwig介绍</h1>
+<p>wig 文件全称叫 Wiggle Track Format， 用来绘制基因组上的图形轨迹的文件格式。wig 格式是较老的格式，用来显示密集且连续的数据，比如GC含量，概率分数，转录组数据等，而bigwig是wig格式的压缩形式。</p>
 <p>wig 数据有两种类型：variableStep 和 fixedStep。</p>
 <p>我们先来研究这两种类型的文件，后面在基因组浏览器中利用这些文件显示轨迹。</p>
-<h3 id="1、variableStep-格式"><a href="#1、variableStep-格式" class="headerlink" title="1、variableStep 格式"></a><strong>1、variableStep 格式</strong></h3><p><strong>（1）特点及适用场景：</strong></p>
+<h2 id="variablestep-格式"><strong>1、variableStep 格式</strong></h2>
+<p><strong>（1）特点及适用场景：</strong></p>
 <ul>
 <li>在指定的染色体片段区域绘制条形图</li>
 <li>用于全基因组数据集（大约百万分之十的数据点）</li>
@@ -328,17 +334,15 @@
 <p>声明行：以单词variableStep开头，后跟染色体规范。</p>
 <p>数据行：两列，分别包含染色体位置和数据值。</p>
 <figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">variableStep  chrom=chrN</span><br><span class="line">[span=windowSize]</span><br><span class="line">chromStartA  dataValueA</span><br><span class="line">chromStartB  dataValueB</span><br><span class="line"><span class="string">...</span> etc <span class="string">...</span>  <span class="string">...</span> etc <span class="string">...</span></span><br></pre></td></tr></table></figure>
-
 <p><strong>（3）例子：</strong></p>
 <p>下面表示在2号染色体上的300701-300705位置均显示12.5</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">variableStep</span> chrom=chr2</span><br><span class="line"><span class="attribute">300701</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300702</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300703</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300704</span> <span class="number">12</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">300705</span> <span class="number">12</span>.<span class="number">5</span></span><br></pre></td></tr></table></figure>
-
 <p>可选的span参数（默认值：span = 1）允许更简洁地指定由连续的具有相同数据值的碱基组成的数据。</p>
 <p>跨度从指定的每个染色体位置开始，并指示数据值应覆盖的碱基数。例如： 应用span=5后，相当于：</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">variableStep <span class="attribute">chrom</span>=chr2 <span class="attribute">span</span>=5</span><br><span class="line">300701 12.5</span><br></pre></td></tr></table></figure>
-
-<p>wiggle 格式用于快速显示非常密集的数据。当每1,024个碱基只有几个数据点时，variableStep格式会变得效率极低。<br>如果variableStep数据点相距大于约100个碱基，则建议使用 BedGraph格式。</p>
-<h3 id="2、fixedStep-格式"><a href="#2、fixedStep-格式" class="headerlink" title="2、fixedStep 格式"></a><strong>2、fixedStep 格式</strong></h3><p><strong>（1）特点及适用场景：</strong></p>
+<p>wiggle 格式用于快速显示非常密集的数据。当每1,024个碱基只有几个数据点时，variableStep格式会变得效率极低。 如果variableStep数据点相距大于约100个碱基，则建议使用 BedGraph格式。</p>
+<h2 id="fixedstep-格式"><strong>2、fixedStep 格式</strong></h2>
+<p><strong>（1）特点及适用场景：</strong></p>
 <ul>
 <li>在指定的染色体片段区域绘制条形</li>
 <li>最适合用于全基因组数据集（大约百万分之十的数据点）</li>
@@ -349,35 +353,31 @@
 <p>声明行：单词fixedStep开头，并包含染色体，起始坐标和步长的规范 。</p>
 <p>数据行：一列，包含数据值。</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fixedStep  <span class="attribute">chrom</span>=chrN</span><br><span class="line"><span class="attribute">start</span>=position  <span class="attribute">step</span>=stepInterval</span><br><span class="line">[<span class="attribute">span</span>=windowSize]</span><br><span class="line">dataValue1</span><br><span class="line">dataValue2</span><br><span class="line"><span class="built_in">..</span>. etc <span class="built_in">..</span>.</span><br></pre></td></tr></table></figure>
-
 <p><strong>（3）例子：</strong></p>
 <p>表示3号染色体上的三个区域（每个区域5个碱基）：400601-400605、400701-400705和400801-400805，分别显示值11、22和33</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fixedStep <span class="attribute">chrom</span>=chr3 <span class="attribute">start</span>=400601 <span class="attribute">step</span>=100 <span class="attribute">span</span>=5</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
-
-<p>对于variableStep和fixedStep格式，必须在整个数据集中使用相同的。如果未指定跨度，则使用默认跨度1。<br>顾名思义，fixedStep 在整个数据集中需要相同的大小步长。如果未指定，则步长为1。</p>
+<p>对于variableStep和fixedStep格式，必须在整个数据集中使用相同的。如果未指定跨度，则使用默认跨度1。 顾名思义，fixedStep 在整个数据集中需要相同的大小步长。如果未指定，则步长为1。</p>
 <p><strong>3、数据值</strong></p>
 <p>wiggle 格式的数据值可以包含整数，实数，正值或负值，但不支持 NaN 值。未指定的位置没有数据，也就不会显示。</p>
 <blockquote>
-<p>需要注意：wiggle文件（variableStep and fixedStep ）的染色体坐标是从1开始。<br>例如，对于长度为N的染色体，第一个位置为1，最后一个位置为N。<br>对于 bigwig 文件，使用 wiggle 转换为 bigwig，使用的染色体坐标是从1开始。<br>而使用bedGraph格式创建的BigWig文件使用0开始。<br>自定义 wiggle 轨迹的参数:</p>
+<p>需要注意：wiggle文件（variableStep and fixedStep ）的染色体坐标是从1开始。 例如，对于长度为N的染色体，第一个位置为1，最后一个位置为N。 对于 bigwig 文件，使用 wiggle 转换为 bigwig，使用的染色体坐标是从1开始。 而使用bedGraph格式创建的BigWig文件使用0开始。 自定义 wiggle 轨迹的参数:</p>
 </blockquote>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">track <span class="attribute">type</span>=wiggle_0 <span class="attribute">name</span>=track_label</span><br><span class="line"><span class="attribute">description</span>=center_label</span><br><span class="line"><span class="attribute">visibility</span>=display_mode <span class="attribute">color</span>=r,g,b</span><br><span class="line"><span class="attribute">altColor</span>=r,g,b <span class="attribute">priority</span>=priority</span><br><span class="line"><span class="attribute">autoScale</span>=on|off <span class="attribute">alwaysZero</span>=on|off</span><br><span class="line"><span class="attribute">gridDefault</span>=on|off</span><br><span class="line"><span class="attribute">maxHeightPixels</span>=max:default:min</span><br><span class="line"><span class="attribute">graphType</span>=bar|points</span><br><span class="line"><span class="attribute">viewLimits</span>=lower:upper</span><br><span class="line"><span class="attribute">yLineMark</span>=real-value <span class="attribute">yLineOnOff</span>=on|off</span><br><span class="line"><span class="attribute">windowingFunction</span>=mean+whiskers|maximum|mean|minimum</span><br><span class="line"><span class="attribute">smoothingWindow</span>=off|2-16</span><br></pre></td></tr></table></figure>
-
 <p>其他参数:</p>
 <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">autoScale         &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">on</span></span><br><span class="line">alwaysZero        &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">gridDefault       &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">maxHeightPixels   max:<span class="keyword">default</span>:min                    # <span class="keyword">default</span> <span class="keyword">is</span> <span class="number">128</span>:<span class="number">128</span>:<span class="number">11</span></span><br><span class="line">graphType         &lt;bar|points&gt;                         # <span class="keyword">default</span> <span class="keyword">is</span> bar</span><br><span class="line">viewLimits        lower:upper                        # <span class="keyword">default</span> <span class="keyword">is</span> range <span class="built_in">found</span> <span class="keyword">in</span> data</span><br><span class="line">viewLimitsMax     lower:upper                        # suggested bounds <span class="keyword">of</span> viewLimits, but <span class="keyword">not</span> enforced</span><br><span class="line">yLineMark         &lt;<span class="type">real</span>-<span class="keyword">value</span>&gt;                         # <span class="keyword">default</span> <span class="keyword">is</span> <span class="number">0.0</span></span><br><span class="line">yLineOnOff        &lt;<span class="keyword">on</span>|<span class="keyword">off</span>&gt;                             # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">windowingFunction &lt;mean+whiskers|maximum|mean|minimum&gt; # <span class="keyword">default</span> <span class="keyword">is</span> maximum, mean+whiskers <span class="keyword">is</span> recommended</span><br><span class="line">smoothingWindow   &lt;<span class="keyword">off</span>|[<span class="number">2</span><span class="number">-16</span>]&gt;                         # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">off</span></span><br><span class="line">transformFunc     &lt;<span class="keyword">NONE</span>|<span class="keyword">LOG</span>&gt;                           # <span class="keyword">default</span> <span class="keyword">is</span> <span class="keyword">NONE</span></span><br></pre></td></tr></table></figure>
-
 <p><strong>4、例子</strong></p>
 <p>（1）下面是 Wig 格式的文件，分别包含 variableStep 和 fixedStep 格式创建的两段轨迹</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">browser position chr19:49304200-49310700</span><br><span class="line">browser hide all</span><br><span class="line"><span class="comment"># 150 base wide bar graph at arbitrarily spaced positions,</span></span><br><span class="line"><span class="comment"># threshold line drawn at y=11.76</span></span><br><span class="line"><span class="comment"># autoScale off viewing range set to [0:25]</span></span><br><span class="line"><span class="comment"># priority = 10 positions this as the first graph</span></span><br><span class="line"><span class="comment"># Note, one-relative coordinate system in use for this format</span></span><br><span class="line">track <span class="attribute">type</span>=wiggle_0 <span class="attribute">name</span>=<span class="string">&quot;variableStep&quot;</span> <span class="attribute">description</span>=<span class="string">&quot;variableStep format&quot;</span> <span class="attribute">visibility</span>=full <span class="attribute">autoScale</span>=off <span class="attribute">viewLimits</span>=0.0:25.0 <span class="attribute">color</span>=50,150,255 <span class="attribute">yLineMark</span>=11.76 <span class="attribute">yLineOnOff</span>=on <span class="attribute">priority</span>=10</span><br><span class="line">variableStep <span class="attribute">chrom</span>=chr19 <span class="attribute">span</span>=150</span><br><span class="line">49304701 10.0</span><br><span class="line">49304901 12.5</span><br><span class="line">49305401 15.0</span><br><span class="line">49305601 17.5</span><br><span class="line">49305901 20.0</span><br><span class="line">49306081 17.5</span><br><span class="line">49306301 15.0</span><br><span class="line">49306691 12.5</span><br><span class="line">49307871 10.0</span><br><span class="line"><span class="comment"># 200 base wide points graph at every 300 bases, 50 pixel high graph</span></span><br><span class="line"><span class="comment"># autoScale off and viewing range set to [0:1000]</span></span><br><span class="line"><span class="comment"># priority = 20 positions this as the second graph</span></span><br><span class="line"><span class="comment"># Note, one-relative coordinate system in use for this format</span></span><br><span class="line">track <span class="attribute">type</span>=wiggle_0 <span class="attribute">name</span>=<span class="string">&quot;fixedStep&quot;</span> <span class="attribute">description</span>=<span class="string">&quot;fixedStep format&quot;</span> <span class="attribute">visibility</span>=full <span class="attribute">autoScale</span>=off <span class="attribute">viewLimits</span>=0:1000 <span class="attribute">color</span>=0,200,100 <span class="attribute">maxHeightPixels</span>=100:50:20 <span class="attribute">graphType</span>=points <span class="attribute">priority</span>=20</span><br><span class="line">fixedStep <span class="attribute">chrom</span>=chr19 <span class="attribute">start</span>=49307401 <span class="attribute">step</span>=300 <span class="attribute">span</span>=200</span><br><span class="line">1000</span><br><span class="line">900</span><br><span class="line">800</span><br><span class="line">700</span><br><span class="line">600</span><br><span class="line">500</span><br><span class="line">400</span><br><span class="line">300</span><br><span class="line">200</span><br><span class="line">100</span><br></pre></td></tr></table></figure>
-
 <p>（2） 选择菜单栏My Data的Custom Tracks</p>
-<p><img src="figure3.png" alt="Untitled"></p>
+<p><img src="figure5.png" /></p>
 <p>（3）将上面的代码粘贴到输入框，点 Submit</p>
-<p><img src="figure4.png" alt="Untitled"></p>
+<p><img src="figure6.png" /></p>
 <p>（4）简要信息显示，点Go进行绘制</p>
-<p><img src="figure5.png" alt="Untitled"></p>
+<p><img src="figure7.png" /></p>
 <p>（5）拿到绘制好的轨迹图</p>
-<p><img src="figure6.png" alt="Untitled"></p>
-<h2 id="七、BedGraph（基因组浏览器绘制）"><a href="#七、BedGraph（基因组浏览器绘制）" class="headerlink" title="七、BedGraph（基因组浏览器绘制）"></a>七、<strong><strong>BedGraph（基因组浏览器绘制）</strong></strong></h2><p>1<strong>、特点及适用场景：</strong></p>
+<p><img src="figure8.png" /></p>
+<h1 id="七bedgraph基因组浏览器绘制">七、BedGraph（基因组浏览器绘制</h1>
+<h2 id="特点及适用场景">1<strong>、特点及适用场景：</strong></h2>
 <ul>
 <li>存放区间的坐标轴信息和相关评分(score)的文件，主要用于存储稀疏，不连续的数据</li>
 <li>后缀名.bedGraph</li>
@@ -385,35 +385,174 @@
 <li>使用WigTobigWig将 bedGraph 转换为bigWig 文件</li>
 <li>需要注意 bedGraph 文件不能转换为 wig 文件</li>
 </ul>
-<p><strong>2、格式</strong></p>
-<p>一共包含四列：chromA  chromStartA  chromEndA  dataValue，<strong>有点类似bed文件</strong><br>分别为：</p>
+<h2 id="格式"><strong>2、格式</strong></h2>
+<p>一共包含四列：chromA chromStartA chromEndA dataValue，<strong>有点类似bed文件</strong> 分别为：</p>
 <blockquote>
-<p>chromA 染色体号<br>chromStartA 起始位点：染色体坐标从 0 开始，这意味着第一个染色体位置为0，而长度为N的染色体的最后位置将为N-1。<br>chromEndA 终止位点<br>dataValue 数据值：数据值可以是整数或实数，正值或负值。输入数据中列出的位置必须按数字顺序，并且仅会绘制指定位置的图。</p>
+<p>chromA 染色体号 chromStartA 起始位点：染色体坐标从 0 开始，这意味着第一个染色体位置为0，而长度为N的染色体的最后位置将为N-1。 chromEndA 终止位点 dataValue 数据值：数据值可以是整数或实数，正值或负值。输入数据中列出的位置必须按数字顺序，并且仅会绘制指定位置的图。</p>
 </blockquote>
 <p>参数:</p>
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">track <span class="attribute">type</span>=bedGraph <span class="attribute">name</span>=track_label <span class="attribute">description</span>=center_label</span><br><span class="line"><span class="attribute">visibility</span>=display_mode <span class="attribute">color</span>=r,g,b <span class="attribute">altColor</span>=r,g,b</span><br><span class="line"><span class="attribute">priority</span>=priority <span class="attribute">autoScale</span>=on|off <span class="attribute">alwaysZero</span>=on|off <span class="attribute">gridDefault</span>=on|off</span><br><span class="line"><span class="attribute">maxHeightPixels</span>=max:default:min <span class="attribute">graphType</span>=bar|points <span class="attribute">viewLimits</span>=lower:upper</span><br><span class="line"><span class="attribute">yLineMark</span>=real-value <span class="attribute">yLineOnOff</span>=on|off</span><br><span class="line"><span class="attribute">windowingFunction</span>=maximum|mean|minimum <span class="attribute">smoothingWindow</span>=off|2-16</span><br></pre></td></tr></table></figure>
-
-<p><strong>3、例子</strong></p>
+<h2 id="例子"><strong>3、例子</strong></h2>
 <p>下面的文件可以描述为：</p>
 <p>在第19号染色体的49,302,001到49,304,701区域的三个轨迹中指定9个独立的数据点。</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">browser</span> position chr19:<span class="number">49302001</span>-<span class="number">49304701</span></span><br><span class="line"><span class="attribute">browser</span> hide <span class="literal">all</span></span><br><span class="line"><span class="attribute">browser</span> pack refGene encodeRegions</span><br><span class="line"><span class="attribute">browser</span> full altGraph</span><br><span class="line"><span class="comment"># 300 base wide bar graph, autoScale is on by default == graphing</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># limits will dynamically change to always show full range of data</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># in viewing window, priority = 20 positions this as the second graph</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Note, zero-relative, half-open coordinate system in use for bedGraph format</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">track</span> type=bedGraph name=<span class="string">&quot;BedGraph Format&quot;</span> description=<span class="string">&quot;BedGraph format&quot;</span> visibility=full color=<span class="number">200</span>,<span class="number">100</span>,<span class="number">0</span> altColor=<span class="number">0</span>,<span class="number">100</span>,<span class="number">200</span> priority=<span class="number">20</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302000</span> <span class="number">49302300</span> -<span class="number">1</span>.<span class="number">0</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302300</span> <span class="number">49302600</span> -<span class="number">0</span>.<span class="number">75</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302600</span> <span class="number">49302900</span> -<span class="number">0</span>.<span class="number">50</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49302900</span> <span class="number">49303200</span> -<span class="number">0</span>.<span class="number">25</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49303200</span> <span class="number">49303500</span> <span class="number">0</span>.<span class="number">0</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49303500</span> <span class="number">49303800</span> <span class="number">0</span>.<span class="number">25</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49303800</span> <span class="number">49304100</span> <span class="number">0</span>.<span class="number">50</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49304100</span> <span class="number">49304400</span> <span class="number">0</span>.<span class="number">75</span></span><br><span class="line"><span class="attribute">chr19</span> <span class="number">49304400</span> <span class="number">49304700</span> <span class="number">1</span>.<span class="number">00</span></span><br></pre></td></tr></table></figure>
-
 <p>粘贴上面的代码，点 Submit</p>
 <p><a target="_blank" rel="noopener" href="https://genome.ucsc.edu/cgi-bin/hgCustom">https://genome.ucsc.edu/cgi-bin/hgCustom</a></p>
-<p><img src="figure7.png" alt="Untitled"></p>
+<p><img src="figure9.png" /></p>
 <p>绘制轨迹</p>
-<p><img src="figure8.png" alt="Untitled"></p>
-<p>上面的示例是一个定制轨迹，其中包括track type = 一行特定于在浏览器中加载数据的行。<br>此行将导致原始bedGraph数据文件无法通过validateFiles浏览器外部的其他工具进行验证。</p>
+<p><img src="figure10.png" /></p>
+<p>上面的示例是一个定制轨迹，其中包括track type = 一行特定于在浏览器中加载数据的行。 此行将导致原始bedGraph数据文件无法通过validateFiles浏览器外部的其他工具进行验证。</p>
 <p>推荐大家阅读UCSC官网对这几个文件的详细解释：</p>
 <p>wiggle(WIG)：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/wiggle.html">https://genome.ucsc.edu/goldenPath/help/wiggle.html</a></p>
 <p>bedGraph：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/bedgraph.html">https://genome.ucsc.edu/goldenPath/help/bedgraph.html</a></p>
 <p>bigWig：<a target="_blank" rel="noopener" href="http://genome.ucsc.edu/goldenPath/help/bigWig.html">http://genome.ucsc.edu/goldenPath/help/bigWig.html</a></p>
-<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qazplm12_3/article/details/108162714">https://blog.csdn.net/qazplm12_3/article/details/108162714</a></p>
+<h1 id="八vcf文件变异记录文件格式">八、VCF文件（变异记录文件格式）</h1>
+<p><code>vcf</code>文件做记录个体或群体突变的文件格式，在生物信息学应用中举足轻重。主流的生物信息分析软件，在处理变异信息时，也基本上需要考虑支持解析或输出vcf格式的文件。本文在介绍vcf文件格式的基本格式的同时，对vcf文件记录的细节进行描述。希望对广大开发者和生物信息学从业人员起到帮助。</p>
+<h2 id="vcf文件概述"><strong>1. vcf文件概述</strong></h2>
+<p><code>vcf</code>文件格式是变异结果存储的标准格式，一般多用于单核苷酸变异（SNV）或小片段的插入缺失（indels）的结果记录。除此之外，<code>vcf</code>文件也可以存储其他变异形式，比如CNV（拷贝数变异）、SV（结构变异）等，但目前难以形成主流。基因组结构类变异，目前相对较多的依然是<code>bed</code>或<code>bedpe</code>文件，后面会陆续为各位进行介绍。</p>
+<p>SNV 是基因组上单个位置的替换。|比如，在参考基因组上记录为 A ，通过检测，某个体由于个体差异或突变，在相同位置变异为C。Indel是指插入或缺失，例如在参考基因组上，某位置为ATCCA，在个体基因组上为ACA（中间位置的TC缺失），则记为A--CA，该位置为deletion。同理若个体基因组存在插入（insertion）情况，与deleltion一样也可以进行记录。insertion和deletion合称为indel。</p>
+<p><code>vcf</code>文件主要有三种模式:</p>
+<ul>
+<li>第一种为仅有位点信息，即对变异发生的位置和变异本身</li>
+<li>第二种为个体变异记录的是某个个体或个体组织的突变情况</li>
+<li>第三种为群体变异检测信息，记录的为突变在群体或家系中发生情况。</li>
+</ul>
+<p>这三种类型文件虽然在记录内容上有所差别，但是都遵循<code>vcf</code>的基本规则。下图为<code>vcf</code>文件实例：</p>
+<figure>
+<img src="http://www.xtaohub.com/BI-solutions/vcffile.png" alt="" /><figcaption>http://www.xtaohub.com/BI-solutions/vcffile.png</figcaption>
+</figure>
+<p>注意： 从上述说明中可以看出，单核苷酸的记录其实相对容易，但是对indel变异而言，由于插入缺失片段的长度不定，其位置并非固定的，因此在样本间的记录难以统一。</p>
+<h2 id="vcf-meta-信息部分"><strong>2. vcf meta 信息部分</strong></h2>
+<p><code>vcf</code>文件头部主要记录文件原信息（meta information），每行以<code>##</code>开始，主要记录内容包括下列内容</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>记录内容</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>文件格式（fileformat）</td>
+<td>记录文件格式；主要记录本文件所采用的vcf格式版本</td>
+</tr>
+<tr class="even">
+<td>信息区域（INFO）描述</td>
+<td>该部分记录的是作为INFO区的基本描述，由于在vcf记录中，对INFO内容采用的是缩写，因此在此部分进行会对其含义以及数据类型进行说明。</td>
+</tr>
+<tr class="odd">
+<td>过滤方式（FILTER）</td>
+<td>该部分主要记录vcf文件经过生成过程中经过哪些过滤程序处理。记录包括命令行及对应参数</td>
+</tr>
+<tr class="even">
+<td>个体区域格式信息（FORMAT）</td>
+<td>对于每个样本，vcf正文部分会记录多种信息，例如变异对应深度，该部分记录个体信息中每个字段含义及类型</td>
+</tr>
+<tr class="odd">
+<td>突变类型（ALT）</td>
+<td>标识出现在正文信息中突变类型，例如，Insertion、Deletion、Duplication 等</td>
+</tr>
+<tr class="even">
+<td>基因组信息（assembly）</td>
+<td>标识对应的基因组版本</td>
+</tr>
+<tr class="odd">
+<td>Contig信息</td>
+<td>由于同一物种肯定存在多个基因组版本（如人类目前常用的有hg19和hg38两个版本），因此可能存在染色体名称相同，但内容不同的情况。因此该部分记录主要用于记录每个染色体的相信信息</td>
+</tr>
+<tr class="even">
+<td>样本基因组信息</td>
+<td>vcf理论上支持不同样本比对于不同基因组的，该部分记录样本和基因组的对应关系（通常较少使用）</td>
+</tr>
+<tr class="odd">
+<td>遗传谱系信息（ Pedigree）</td>
+<td>记录样本间的亲缘关系</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vcf-列名称及正文"><strong>3. vcf 列名称及正文</strong></h2>
+<p><code>vcf</code>文件meta信息记录结束之后，下一行就是列名称，列名称以<code>#</code>作为起始，主要包括以下几列：</p>
+<ul>
+<li>CHROM：表示该列为变异所在的染色体位置。</li>
+<li>POS：表示变异起始坐标，该部分需要注意的是对于结构变异，如Indel，其坐标记录方式不唯一。</li>
+<li>ID：表示变异ID，一般常用的有rs编号或vep编号等。用户也可以根据具体问题自行设定编号，空缺时记为“<code>.</code>”。</li>
+<li>REF：表示位点在参考基因组上的记录。</li>
+<li>ALT：表示位点可能出现的变异情况。</li>
+<li>QUAL：以Phred（即-log10）格式表示变异可靠性。通过不同变异检测软件得到的结果中，该项记录一般无可比性。</li>
+<li>FILTER：表示过滤方式该部分用户也可以自定义，对于不同过滤标准可以进行不同的命名；但是对于通过过滤标准的，统一记为<code>PASS</code>。需要注意的是，对于一般的vcf处理软件来说，FILER只标记某个变异是否通过过滤条件。而不是删除记录。</li>
+<li>INFO：该部分记录的变异的评价性指标以及注释信息，例如<code>AC</code>表示的等因突变的数量。该部分在不同的变异检测软件给出的结果也是不同的，大多数基础统计可以通过<code>bcftools</code>软件来进行追加。</li>
+</ul>
+<p>上述八列信息是<code>vcf</code>中必然含有的部分，对于有样本信息，无论是样本还是单样本，都会有第9列 FORMAT列及后续样本信息列：</p>
+<ul>
+<li>FORMAT：个体区域格式信息记录样本变异的记录格式。由于vcf文件样本记录中除了变异本身是否发生之外，还会记录针对变异的其他信息，例如对应位点的深度（AD）、基因型质量（GQ）等。FORMAT字段规定了这些信息的基本格式。</li>
+<li>个体信息： 个体信息是记录某个样本的具体变异情况，其包含的基本信息格式标准需要符合记录的FORMAT格式。特别需要注意的是基因型GT信息，如果是没有经过phased数据，以<code>/</code>分隔两个等位位点；如果经过phased则以<code>|</code>分隔。其余信息，均会在FORMAT字段有详细说明。</li>
+</ul>
+<h2 id="vcf记录标准问题">4<strong>. vcf记录标准问题</strong></h2>
+<p>虽然<code>vcf</code>可以记录和表述突变具体情况，但是实践中由于不同变异检测工具对变异判定的区别，会造成对于同一个变异信息存在不同纪录的可能性（尤其是Indels类型记录）。因此，对于vcf文件而言，除了要求记录的信息全面这个最基本的要求之外，还需要做到两个标准。</p>
+<h3 id="简约性parsimony">4<strong>.1 简约性（Parsimony）</strong></h3>
+<p>简约性是指，用尽可能少的核苷酸表示变体，而不会将任何等位基因的长度减少到0。其规定主要针对多核苷酸多样性而言（简称为MNP，指连续多处核苷酸发生突变）。下图列举了4种例子：</p>
+<p><img src="figure11.png" /></p>
+<p>这四种颜色（红、绿、橙、蓝）的对于表示同一突变，其实是等效的。但是前三种记录均不是最简方法。因此，只有第四种蓝色的记录方式，符合简约性规范。</p>
+<h3 id="左对齐left-alignment">4<strong>.2 左对齐（Left alignment）</strong></h3>
+<p>左对齐主要针对Indel类型的变异。其是指，当且仅当不再可能将其位置向左移动，同时保持其所有等位位点的长度不变时，则变异已左对齐。例如下图：</p>
+<p><img src="figure12.png" /></p>
+<p>图中给出样本相对对于参考的基因组缺失“CA”碱基的5种记录方式，符合左对齐且简约的，只有最后一种（即紫色）对应的记录方式。</p>
+<h3 id="为什么要遵循上述原则">4<strong>.3 为什么要遵循上述原则</strong></h3>
+<p>上述两个原则，其实并不是<code>vcf</code>文件格式规定的，但是相对而言比较重要。尤其对于变异的后期注释、挖掘和使用中，如果记录不满足上述标准，是很难对样本间进行合并或解读。</p>
+<p>因此，一般拿到不明来源的<code>vcf</code>文件，比较良好的习惯就是对数据进行标准化处理，再进行其他操作。一般而言，<code>GATK</code>和<code>bcftools</code>都提供了相应的功能，用户可以方便实现。</p>
+<h2 id="结构变异">5<strong>. 结构变异</strong></h2>
+<p><code>vcf</code>文件设计之处，对于结构变异的检测还不想目前这么百花齐放。因此虽然在<code>vcf</code>格式设计上考虑了结构变异的问题，但是相对而言记录比较粗糙。目前各类检测软件虽然基本上都保留了将结构变异输出成<code>vcf</code>的功能。</p>
+<p>在<code>vcf</code>中结构变异以以下形式展现</p>
+<table>
+<thead>
+<tr class="header">
+<th>REF</th>
+<th>ALT</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>s</td>
+<td>t[p[</td>
+<td>片段p在以从右侧开始的顺序，从t所在位置取代了s</td>
+</tr>
+<tr class="even">
+<td>s</td>
+<td>t]p]</td>
+<td>片段 p 反转后（从左侧），从t所在位置取代s</td>
+</tr>
+<tr class="odd">
+<td>s</td>
+<td>]p]t</td>
+<td>片段p在以从右侧开始的顺序，在t之前的位置取代s</td>
+</tr>
+<tr class="even">
+<td>s</td>
+<td>[p[t</td>
+<td>片段 p 反转后（从左侧），从t之前位置取代s</td>
+</tr>
+</tbody>
+</table>
+<p>例如：</p>
+<p><img src="figure13.png" /></p>
+<p>由上面的例子可以看出，采用<code>vcf</code>记录结构变异实在不是一个好主意。相比之下，采用<code>bed</code>文件就更加清晰明了。在后面的内容中会向读者陆续介绍。</p>
+<h2 id="小结">6<strong>. 小结</strong></h2>
+<p><code>vcf</code>作为最通用的变异记录文件格式，其格式的表达内容非常丰富，经过压缩后可以快速查询和定位。同时，基于该格式的应用种类相当多，因此是生物信息学重要的文件格式标准之一。</p>
+<p>除了格式要求的明规则之外，使用<code>vcf</code>的时候还应该遵守"潜规则"，目前主流变异检测软件对规范化的要求明显有所提高，因此最好在使用之前，进行一系列校正。</p>
+<p>最后，<code>vcf</code>文件也支持表达结构变异，但是其人工阅读难度和可解析度其实都不太尽如人意。主流的注释工具更多的支持<code>bed</code>或其他格式的结构突变结果。因此，奉劝大家谨慎使用<code>vcf</code>记录结构变异。</p>
+<h1 id="参考">参考：</h1>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qazplm12_3/article/details/108162714">https://blog.csdn.net/qazplm12_3/article/details/108162714</a></p>
 <p><a target="_blank" rel="noopener" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format13">https://genome.ucsc.edu/FAQ/FAQformat.html#format13</a></p>
 <p>wiggle(WIG)：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/wiggle.html">https://genome.ucsc.edu/goldenPath/help/wiggle.html</a></p>
 <p>bedGraph：<a target="_blank" rel="noopener" href="https://genome.ucsc.edu/goldenPath/help/bedgraph.html">https://genome.ucsc.edu/goldenPath/help/bedgraph.html</a></p>
 <p>bigWig：<a target="_blank" rel="noopener" href="http://genome.ucsc.edu/goldenPath/help/bigWig.html">http://genome.ucsc.edu/goldenPath/help/bigWig.html</a></p>
-<p><strong><strong><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011262253/article/details/109367395">生信格式 | wig（基因组浏览器绘制）</a></strong></strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011262253/article/details/109367395">生信格式 | wig（基因组浏览器绘制）</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.xtaohub.com/BI-solutions/vcf-file-format.html">变异记录文件格式 vcf</a></p>
 
 
                 <hr>
@@ -513,8 +652,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "chunfushawn";
-    var disqus_identifier = "https://www.chunfu.site/2022/05/08/%E7%94%9F%E4%BF%A1%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%BB%A5%E5%8F%8A%E6%9F%A5%E7%9C%8B%E6%96%B9%E5%BC%8F/";
-    var disqus_url = "https://www.chunfu.site/2022/05/08/%E7%94%9F%E4%BF%A1%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%BB%A5%E5%8F%8A%E6%9F%A5%E7%9C%8B%E6%96%B9%E5%BC%8F/";
+    var disqus_identifier = "https://www.chunfu.site/2022/05/08/%E7%94%9F%E4%BF%A1%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%BB%A5%E5%8F%8A%E6%9F%A5%E7%9C%8B%E4%B8%8E%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/";
+    var disqus_url = "https://www.chunfu.site/2022/05/08/%E7%94%9F%E4%BF%A1%E5%B8%B8%E8%A7%81%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F%E4%BB%A5%E5%8F%8A%E6%9F%A5%E7%9C%8B%E4%B8%8E%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
