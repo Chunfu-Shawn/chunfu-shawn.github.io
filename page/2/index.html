@@ -63,7 +63,119 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+<!-- hexo injector head_end end --><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
 
 
 <!-- hack iOS CSS :active style -->
@@ -203,6 +315,42 @@
             
                 <!-- Main Content -->
 
+
+<div class="post-preview">
+
+    <a href="/2022/09/20/求解无约束最优化问题的方法总结/">
+        <h2 class="post-title">
+            求解无约束最优化问题的方法总结
+        </h2>
+        <h3 class="post-subtitle">
+            求解无约束最优化问题的方法
+        </h3>
+        <div class="post-content-preview">
+            
+持续填坑中。。。
+
+假设多元目标函数是上具有一阶连续偏导的函数，要求解的无约束最优化如下：
+
+一些经典的无约束优化问题，例如：
+1、数据拟合，类似最小二乘法，但是我们想用一个指数来拟合：
+
+2、假设数据为正态分布，使用正态分布来拟合：
+正态分布模型： 
+代价函数： 
+要求估算出 来最大化概率分布
+3、找到一堆数据的几何中心，几何中心满足跟所有多元数据的二范式最小：
+
+一、分块松弛法
+对于多......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Chunfu Shawn on
+        2022/09/20<br/>
+    </p>
+
+</div>
+<hr>
 
 <div class="post-preview">
 
@@ -447,34 +595,6 @@ BCF
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2022/05/07/是否需要以及如何进行reads去重复/">
-        <h2 class="post-title">
-            是否需要以及如何进行reads去重复
-        </h2>
-        <h3 class="post-subtitle">
-            是否需要去除PCR重复，选择去除的工具？
-        </h3>
-        <div class="post-content-preview">
-            
-转载自简书：****讨厌又迷人的reads去重复****
-
-在NGS分析入门阶段，我们不需要考虑太多的细节，只用知道一个分析的大致流程并完整跑下来即可。太多的细节，只会让我们对于分析产生莫须有的恐惧，因此一些“无关紧要“细节就被我们刻意的忽略了……
-但是随着我们对于测序数据的认识不断加深，我们要考虑的小细节便越来越多。其中，是否去除PCR重复就是一个很值得思考的问题。
-关键点：
-
-RNA-......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chunfu Shawn on
-        2022/05/07<br/>
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -614,7 +734,7 @@ RNA-......
                             
                         
                             
-                            <a href="/tags/#Statistics" title="Statistics" rel="10">Statistics</a>
+                            <a href="/tags/#Statistics" title="Statistics" rel="11">Statistics</a>
                             
                         
                             
@@ -655,6 +775,10 @@ RNA-......
                         
                             
                             <a href="/tags/#Expectation-Maximization" title="Expectation-Maximization" rel="2">Expectation-Maximization</a>
+                            
+                        
+                            
+                            <a href="/tags/#Machine Learning" title="Machine Learning" rel="1">Machine Learning</a>
                             
                         
                     </div>
