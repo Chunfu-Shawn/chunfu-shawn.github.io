@@ -198,7 +198,7 @@
                         Posted by <b>Chunfu Shawn</b> on
                         2022/05/08<br/> 
                         Last Updated by <b>Chunfu Shawn</b> on
-                        4/10/2023<br/>
+                        8/1/2023<br/>
                         <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
                     </span>
                 </div>
@@ -545,6 +545,23 @@
 <p><code>vcf</code>作为最通用的变异记录文件格式，其格式的表达内容非常丰富，经过压缩后可以快速查询和定位。同时，基于该格式的应用种类相当多，因此是生物信息学重要的文件格式标准之一。</p>
 <p>除了格式要求的明规则之外，使用<code>vcf</code>的时候还应该遵守"潜规则"，目前主流变异检测软件对规范化的要求明显有所提高，因此最好在使用之前，进行一系列校正。</p>
 <p>最后，<code>vcf</code>文件也支持表达结构变异，但是其人工阅读难度和可解析度其实都不太尽如人意。主流的注释工具更多的支持<code>bed</code>或其他格式的结构突变结果。因此，奉劝大家谨慎使用<code>vcf</code>记录结构变异。</p>
+<h1 id="九genepred格式表示基因结构和注释">九、GenePred格式（表示基因结构和注释</h1>
+<p>GenePred是一种用于表示基因结构和注释的表格格式。它是一种比较简单的基因结构描述方式，主要用于基因组注释和基因表达分析。</p>
+<p>GenePred格式的每一行描述一个转录本（transcript）或基因（gene），并包含以下列：</p>
+<ol type="1">
+<li><code>name</code>：基因或转录本的名称。</li>
+<li><code>chrom</code>：染色体名称。</li>
+<li><code>strand</code>：方向，表示基因或转录本的正向（+）或负向（-）。</li>
+<li><code>txStart</code>：转录本或基因的起始位置。</li>
+<li><code>txEnd</code>：转录本或基因的结束位置。</li>
+<li><code>cdsStart</code>：编码序列（CDS）的起始位置。如果基因没有CDS，则为起始位置与结束位置相同。</li>
+<li><code>cdsEnd</code>：编码序列（CDS）的结束位置。如果基因没有CDS，则为起始位置与结束位置相同。</li>
+<li><code>exonCount</code>：exon的数量。</li>
+<li><code>exonStarts</code>：以逗号分隔的exon起始位置列表，相对于转录本起始位置。</li>
+<li><code>exonEnds</code>：以逗号分隔的exon结束位置列表，相对于转录本起始位置。</li>
+</ol>
+<p>每个转录本或基因可以有多个exon，其起始位置和结束位置根据exonCount、exonStarts和exonEnds进行描述。</p>
+<p>GenePred格式是一种简洁而灵活的注释文件格式，经常在基因组注释和基因表达分析中使用。它可以与一些生物信息学工具和软件进行交互，并用于计算基因的长度、外显子数量等信息。</p>
 <h1 id="参考">参考：</h1>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qazplm12_3/article/details/108162714">https://blog.csdn.net/qazplm12_3/article/details/108162714</a></p>
 <p><a target="_blank" rel="noopener" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format13">https://genome.ucsc.edu/FAQ/FAQformat.html#format13</a></p>
