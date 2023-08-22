@@ -318,6 +318,36 @@ mjx-container[display="true"] + br {
 
 <div class="post-preview">
 
+    <a href="/2022/09/21/R中离散坐标轴的排序、子集选择与合并/">
+        <h2 class="post-title">
+            R中离散坐标轴的排序、子集选择与合并
+        </h2>
+        <h3 class="post-subtitle">
+            对坐标轴映射的离散数据的排序、选择与合并
+        </h3>
+        <div class="post-content-preview">
+            一、离散坐标轴的排序
+ggplot2中，x轴的排序有一定规则：
+
+如果是factor类型，则使用factor的level属性作为排序依据
+如果是character类型，则按照字母顺序
+
+1、将数据类型变成factor
+我们想要自定义顺序，要设置为factor类型，使用levels来定义顺序；
+例如：
+123456data_percentage$time = factor(data_perce......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Chunfu Shawn on
+        2022/09/21<br/>
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2022/09/20/求解无约束最优化问题的方法总结/">
         <h2 class="post-title">
             求解无约束最优化问题的方法总结
@@ -572,28 +602,6 @@ BCF
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2022/05/08/生信常见文件的格式以及查看与处理方法/">
-        <h2 class="post-title">
-            生信常见文件的格式以及查看与处理方式
-        </h2>
-        <h3 class="post-subtitle">
-            fasta、fastq、gff、gtf、bed、bed12、sam、bam、wig、bigwig、bedgraph、vcf等文件格式的介绍和处理
-        </h3>
-        <div class="post-content-preview">
-            生信常见文件的格式以及查看与处理方法
-生信分析过程中，会与很多不同格式的文件打交道，除了原始测序数据fastq之外，还需要准备基因组文件fasta格式和基因注释文件gtf格式。在分析的过程中还会有众多中间文件的生成，如bed、bed12、sam、bam、wig、bigwig、bedgraph、vcf等，生成后我们一般会查看下内容了解文件每一列的含义，以此来决定需要提取哪些有用信息列来进行下一......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chunfu Shawn on
-        2022/05/08<br/>
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -729,11 +737,11 @@ BCF
                             
                         
                             
-                            <a href="/tags/#Optimization" title="Optimization" rel="1">Optimization</a>
+                            <a href="/tags/#Optimization" title="Optimization" rel="2">Optimization</a>
                             
                         
                             
-                            <a href="/tags/#Statistics" title="Statistics" rel="11">Statistics</a>
+                            <a href="/tags/#Statistics" title="Statistics" rel="12">Statistics</a>
                             
                         
                             
