@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/android-chrome-192x192.png">
+
+    <title>
+        
+          PCA、tSNE和UMAP降维可视化 - Chunfu的博客 | Chunfu的生信、统计知识笔记
+        
+    </title>
+
+    <link rel="canonical" href="https://www.chunfu.site/2023/09/11/PCA、tSNE和UMAP降维可视化的基本原理、优势及代码实例/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/hux-blog.min.css">
+
+
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <!-- xiaocf 2022-5-2 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- xiaocf 2022-5-2 -->
+    <script></script>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chunfu Shawn&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/post-bg-statistics.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
+                        
+                          <a class="tag" href="/tags/#Machine Learning" title="Machine Learning">Machine Learning</a>
+                        
+                          <a class="tag" href="/tags/#Bioinfomatics" title="Bioinfomatics">Bioinfomatics</a>
+                        
+                    </div>
+                    <h1>PCA、tSNE和UMAP降维可视化</h1>
+                    <h2 class="subheading">基本原理、优势及代码实例</h2>
+                    <span class="meta">
+                        Posted by <b>Chunfu Shawn</b> on
+                        2023/09/11<br/> 
+                        Last Updated by <b>Chunfu Shawn</b> on
+                        2023/09/11<br/>
+                        <span id="busuanzi_container_site_pv" style='display:none'> Total page visits: <span id="busuanzi_value_page_pv"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-9 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+                <br>
+
+                <h1 id="一、降维目的与方法概述"><a href="#一、降维目的与方法概述" class="headerlink" title="一、降维目的与方法概述"></a>一、降维目的与方法概述</h1><p>在实际的机器学习项目中，特征选择/降维是必须进行的，因为在数据中存在以下几个方面的问题：</p>
+<ol>
+<li>数据的多重共线性：特征属性之间存在着相互关联关系。多重共线性会导致解的空间不稳定， 从而导致模型的泛化能力弱；</li>
+<li>高纬空间样本具有稀疏性，导致模型比较难找到数据特征；过多的变量会妨碍模型查找规律；</li>
+<li>仅仅考虑单个变量对于目标属性的影响可能忽略变量之间的潜在关系。</li>
+</ol>
+<p>降维是指通过保留一些比较重要的特征，去除一些冗余的特征，减少数据特征的维度。而特征的重要性取决于该特征能够表达多少数据集的信息，也取决于使用什么方法进行降维。一般情况会先使用线性的降维方法再使用非线性的降维方法，通过结果去判断哪种方法比较合适。</p>
+<h2 id="1-通过特征选择-降维的目的是："><a href="#1-通过特征选择-降维的目的是：" class="headerlink" title="1. 通过特征选择/降维的目的是："></a>1. 通过特征选择/降维的目的是：</h2><ol>
+<li>减少特征属性的个数，确保特征属性之间是相互独立的（原数据中既有平方米和平方英里的特征–即相关性大的特征）</li>
+<li>解决特征矩阵过大， 导致计算量比较大，训练时间长的问题；并且能够使用那些不适合于高维度的算法；</li>
+<li>便于观察和挖掘信息（如将数据维度降到2维或者3维使之能可视化）</li>
+<li>特征太多或者太复杂会使得模型过拟合。</li>
+</ol>
+<h2 id="2-降维算法一般分为两类"><a href="#2-降维算法一般分为两类" class="headerlink" title="2. 降维算法一般分为两类:"></a>2. 降维算法一般分为两类:</h2><ol>
+<li>寻求在数据中保存距离结构的：PCA、MDS等算法</li>
+<li>倾向于保存局部距离而不是全局距离的。t-SNE、UMAP</li>
+</ol>
+<p>下面我们对这些方法的原理进行介绍，并在此基础上采取iris经典数据集进行绘制图</p>
+<h1 id="二、PCA（Principal-Component-Analysis，主成分分析）"><a href="#二、PCA（Principal-Component-Analysis，主成分分析）" class="headerlink" title="二、PCA（Principal Component Analysis，主成分分析）"></a>二、PCA（Principal Component Analysis，主成分分析）</h1><h2 id="1-PCA概念"><a href="#1-PCA概念" class="headerlink" title="1. PCA概念"></a>1. PCA概念</h2><p>PCA 分析(Principal Component Analysis)，即主成分分析，是一种对数据进行简化分析的技术，这种方法可以有效的找出数据中最“主要”的元素和结构，去除噪音和冗余，将原有的复杂数据降维，揭示隐藏在复杂数据背后的简单结构。</p>
+<p>PCA的主要思想是将n维特征映射到k维上，这k维是全新的正交特征也被称为主成分，是在原有n维特征的基础上重新构造出来的k维特征。<br>PCA的工作就是从原始的空间中顺序地找一组相互正交的坐标轴，新的坐标轴的选择与数据本身是密切相关的。</p>
+<p>可以看到下图中，原本不同维度（Gene）经过正交特征提取后，变为2维，便于我们更好地观测结果，注意新构建的特征是在原本特征的基础上构建的，包含其主要信息。</p>
+<img src="20210627095052962.png" width="800px">
+
+<p>问题是怎样抽取数据的主要成分，如何衡量投影后保存的信息呢？PCA算法使用方差来度量信息量，为了确保降维后的低维度数据尽可能多的保留原始数据的有效信息，需要使降维后的数据尽可能的分散，从方差角度理解就是保留最大的方差。那么如何得到包含最大差异性的主成分呢？实际上，计算数据矩阵的协方差矩阵，得到协方差矩阵的特征值和特征向量，然后选择特征值最大的k个特征对应的特征向量组成的矩阵，就将原始数据矩阵投影到了新的k维特征空间，实现了数据特征的降维。</p>
+<h2 id="2-PCA代码实例"><a href="#2-PCA代码实例" class="headerlink" title="2. PCA代码实例"></a>2. PCA代码实例</h2><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用经典iris数据集，df读入前四列</span></span><br><span class="line">df <span class="operator">&lt;-</span> iris<span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span><span class="number">4</span><span class="punctuation">]</span></span><br><span class="line"><span class="comment">#查看数据的结构，head查看前5行，tail查看后6行</span></span><br><span class="line">head<span class="punctuation">(</span>df，<span class="number">5</span><span class="punctuation">)</span></span><br><span class="line">tail<span class="punctuation">(</span>df<span class="punctuation">,</span><span class="number">6</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##======================= Caculate the principal components（计算主成分）</span></span><br><span class="line"><span class="comment">##prcomp的功能是计算PCA</span></span><br><span class="line">df_pca <span class="operator">&lt;-</span>prcomp<span class="punctuation">(</span>df<span class="punctuation">)</span></span><br><span class="line">str<span class="punctuation">(</span>df_pca<span class="punctuation">)</span>  <span class="comment">#可以查看数据结构</span></span><br><span class="line">df_pcs  <span class="operator">&lt;-</span>data.frame<span class="punctuation">(</span>df_pca<span class="operator">$</span>x<span class="punctuation">,</span>Species <span class="operator">=</span> iris<span class="operator">$</span>Species<span class="punctuation">)</span></span><br><span class="line">head<span class="punctuation">(</span>df_pcs<span class="punctuation">,</span><span class="number">10</span><span class="punctuation">)</span>   <span class="comment">#查看前10行主成分结果</span></span><br><span class="line"><span class="comment">##======================= ggplot2包进行绘图</span></span><br><span class="line">library<span class="punctuation">(</span>ggplot2<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>tidyverse<span class="punctuation">)</span></span><br><span class="line">ggplot<span class="punctuation">(</span>df_pcs<span class="punctuation">,</span>aes<span class="punctuation">(</span>x<span class="operator">=</span>PC1<span class="punctuation">,</span>y<span class="operator">=</span>PC2<span class="punctuation">,</span>color<span class="operator">=</span>Species<span class="punctuation">)</span><span class="punctuation">)</span><span class="operator">+</span></span><br><span class="line">geom_point<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#去掉背景及网格线</span></span><br><span class="line">ggplot<span class="punctuation">(</span>df_pcs<span class="punctuation">,</span>aes<span class="punctuation">(</span>x<span class="operator">=</span>PC1<span class="punctuation">,</span>y<span class="operator">=</span>PC2<span class="punctuation">,</span>color<span class="operator">=</span>Species<span class="punctuation">)</span><span class="punctuation">)</span><span class="operator">+</span></span><br><span class="line">geom_point<span class="punctuation">(</span><span class="punctuation">)</span><span class="operator">+</span></span><br><span class="line">stat_ellipse<span class="punctuation">(</span>level <span class="operator">=</span> <span class="number">0.95</span><span class="punctuation">,</span> show.legend <span class="operator">=</span> <span class="built_in">T</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">annotate<span class="punctuation">(</span><span class="string">'text'</span><span class="punctuation">,</span> label <span class="operator">=</span> <span class="string">'setosa'</span><span class="punctuation">,</span> x <span class="operator">=</span> <span class="operator">-</span><span class="number">2</span><span class="punctuation">,</span> y <span class="operator">=</span> <span class="operator">-</span><span class="number">1.25</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">5</span><span class="punctuation">,</span> colour <span class="operator">=</span> <span class="string">'red'</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">annotate<span class="punctuation">(</span><span class="string">'text'</span><span class="punctuation">,</span> label <span class="operator">=</span> <span class="string">'versicolor'</span><span class="punctuation">,</span> x <span class="operator">=</span> <span class="number">0</span><span class="punctuation">,</span> y <span class="operator">=</span> <span class="operator">-</span> <span class="number">0.5</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">5</span><span class="punctuation">,</span> colour <span class="operator">=</span> <span class="string">'#00ba38'</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">annotate<span class="punctuation">(</span><span class="string">'text'</span><span class="punctuation">,</span> label <span class="operator">=</span> <span class="string">'virginica'</span><span class="punctuation">,</span> x <span class="operator">=</span> <span class="number">3</span><span class="punctuation">,</span> y <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">,</span> size <span class="operator">=</span> <span class="number">5</span><span class="punctuation">,</span> colour <span class="operator">=</span> <span class="string">'#619cff'</span><span class="punctuation">)</span></span><br><span class="line">theme_bw<span class="punctuation">(</span><span class="punctuation">)</span><span class="operator">+</span></span><br><span class="line">theme<span class="punctuation">(</span>panel.border<span class="operator">=</span>element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span>panel.grid.major<span class="operator">=</span>element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">panel.grid.minor<span class="operator">=</span>element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span>axis.line<span class="operator">=</span> element_line<span class="punctuation">(</span>colour <span class="operator">=</span> <span class="string">"blue"</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<img src="20210627130356726.png" width="600px">
+
+<h1 id="三、-tSNE-t-distributed-Stochastic-Neighbor-Embedding"><a href="#三、-tSNE-t-distributed-Stochastic-Neighbor-Embedding" class="headerlink" title="三、 tSNE (t-distributed Stochastic Neighbor Embedding)"></a>三、 tSNE (t-distributed Stochastic Neighbor Embedding)</h1><h2 id="1-tSNE概念"><a href="#1-tSNE概念" class="headerlink" title="1. tSNE概念"></a>1. tSNE概念</h2><p>t-SNE （全称为 t-distributed Stochastic Neighbor Embedding，翻译为 t分布-随机邻近嵌入）是通过将数据点之间的相似度转化为条件概率，<strong>原始空间中数据点的相似度由高斯联合分布</strong>表示，嵌入空间中数据点的<strong>相似度由学生t分布</strong>表示，能够将高维空间中的数据映射到低维空间中，并保留数据集的<strong>局部特性</strong>。</p>
+<h2 id="2-t-SNE原理"><a href="#2-t-SNE原理" class="headerlink" title="2. t-SNE原理"></a>2. t-SNE原理</h2><p>t-SNE本质是一种嵌入模型，主要用于高维数据的降维和可视化。<br>如果想象在一个三维的球里面有均匀分布的点，如果把这些点投影到一个二维的圆上一定会有很多点是重合的。所以，为了在二维的圆上想尽可能表达出三维里的点的信息，大神Hinton采取的方法：把由于投影所重合的点用不同的距离（差别很小）表示。这样就会占用原来在那些距离上的点，原来那些点会被赶到更远一点的地方。t分布是长尾的，意味着距离更远的点依然能给出和高斯分布下距离小的点相同的概率值。从而达到高维空间和低维空间对应的点概率相同的目的。</p>
+<h2 id="3-tSNE的应用（代码）"><a href="#3-tSNE的应用（代码）" class="headerlink" title="3. tSNE的应用（代码）"></a>3. tSNE的应用（代码）</h2><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">################# 数据预处理</span></span><br><span class="line">rm<span class="punctuation">(</span><span class="built_in">list</span> <span class="operator">=</span> ls<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>tidyverse<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>palmerpenguins<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>Rtsne<span class="punctuation">)</span></span><br><span class="line">theme_set<span class="punctuation">(</span>theme_bw<span class="punctuation">(</span><span class="number">18</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">penguins <span class="operator">&lt;-</span> penguins <span class="operator">%&gt;%</span> </span><br><span class="line">  drop_na<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">%&gt;%</span></span><br><span class="line">  select<span class="punctuation">(</span><span class="operator">-</span>year<span class="punctuation">)</span><span class="operator">%&gt;%</span></span><br><span class="line">  mutate<span class="punctuation">(</span>ID<span class="operator">=</span>row_number<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">penguins_meta <span class="operator">&lt;-</span> penguins <span class="operator">%&gt;%</span></span><br><span class="line">  select<span class="punctuation">(</span>ID<span class="punctuation">,</span>species<span class="punctuation">,</span>island<span class="punctuation">,</span>sex<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">################## 使用Rtsne 包进行tSNE 分析</span></span><br><span class="line">set.seed<span class="punctuation">(</span><span class="number">142</span><span class="punctuation">)</span></span><br><span class="line">tSNE_fit <span class="operator">&lt;-</span> penguins <span class="operator">%&gt;%</span></span><br><span class="line">  select<span class="punctuation">(</span>where<span class="punctuation">(</span><span class="built_in">is.numeric</span><span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">%&gt;%</span></span><br><span class="line">  column_to_rownames<span class="punctuation">(</span><span class="string">"ID"</span><span class="punctuation">)</span> <span class="operator">%&gt;%</span></span><br><span class="line">  scale<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">%&gt;%</span> </span><br><span class="line">  Rtsne<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line">tSNE_df <span class="operator">&lt;-</span> tSNE_fit<span class="operator">$</span>Y <span class="operator">%&gt;%</span> </span><br><span class="line">  as.data.frame<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">%&gt;%</span></span><br><span class="line">  rename<span class="punctuation">(</span>tSNE1<span class="operator">=</span><span class="string">"V1"</span><span class="punctuation">,</span></span><br><span class="line">         tSNE2<span class="operator">=</span><span class="string">"V2"</span><span class="punctuation">)</span> <span class="operator">%&gt;%</span></span><br><span class="line">  mutate<span class="punctuation">(</span>ID<span class="operator">=</span>row_number<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">tSNE_df <span class="operator">&lt;-</span> tSNE_df <span class="operator">%&gt;%</span></span><br><span class="line">  inner_join<span class="punctuation">(</span>penguins_meta<span class="punctuation">,</span> by<span class="operator">=</span><span class="string">"ID"</span><span class="punctuation">)</span></span><br><span class="line">tSNE_df <span class="operator">%&gt;%</span> head<span class="punctuation">(</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">################## 可视化</span></span><br><span class="line">tSNE_df <span class="operator">%&gt;%</span></span><br><span class="line">  ggplot<span class="punctuation">(</span>aes<span class="punctuation">(</span>x <span class="operator">=</span> tSNE1<span class="punctuation">,</span> </span><br><span class="line">             y <span class="operator">=</span> tSNE2<span class="punctuation">,</span></span><br><span class="line">             color <span class="operator">=</span> species<span class="punctuation">,</span></span><br><span class="line">             shape <span class="operator">=</span> sex<span class="punctuation">)</span><span class="punctuation">)</span><span class="operator">+</span></span><br><span class="line">  geom_point<span class="punctuation">(</span><span class="punctuation">)</span><span class="operator">+</span></span><br><span class="line">  theme<span class="punctuation">(</span>legend.position<span class="operator">=</span><span class="string">"bottom"</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+
+<img src="v2-0528edc3061dbcf9d0f7cc7246cd752f_1440w.webp" width="600px">
+
+<h1 id="四、UMAP（Uniform-Manifold-Approximation-and-Projection）"><a href="#四、UMAP（Uniform-Manifold-Approximation-and-Projection）" class="headerlink" title="四、UMAP（Uniform Manifold Approximation and Projection）"></a>四、UMAP（Uniform Manifold Approximation and Projection）</h1><h2 id="1-UMAP概念"><a href="#1-UMAP概念" class="headerlink" title="1. UMAP概念"></a>1. UMAP概念</h2><p>对高维单细胞数据的可视化展示，以t-SNE为代表的非线性降维技术，由于其能够避免集群表示的过度拥挤，在重叠区域上能表示出不同的集群而被广泛运用。然而，任何技术方法都不是完美的，t-SNE也一样，它的局限性体现在<strong>丢失大规模信息（集群间关系）</strong>、计算时间较慢以及无法有效地表示非常大的数据集等方面。</p>
+<p>那么，有没有其它方法能在一定程度上克服这些弱点呢？UMAP就是这样一个能解决这些问题的降维和可视化的工具。</p>
+<p>UMAP：统一流形逼近与投影(UMAP，Uniform Manifold Approximation and Projection)是一种新的降维流形学习技术。UMAP是建立在黎曼几何和代数拓扑理论框架上的。UMAP是一种非常有效的可视化和可伸缩降维算法。在可视化质量方面，UMAP算法与t-SNE具有竞争优势，但是它保留了更多全局结构、具有优越的运行性能、更好的可扩展性。此外，UMAP对嵌入维数没有计算限制，这使得它可以作为机器学习的通用维数约简技术。</p>
+<p>t-SNE和UMAP、PCA的应用比较：</p>
+<p>1.小数据集中，t-SNE和UMAP差别不是很大<br>2.大数据集中，UMAP优势明显（30多万个细胞的降维可视化分析）<br>3.通过数据降维和可视化展示的比较显示，PCA分群效果最差，UMAP和t-SNE都成功将与相似细胞群相对应的簇聚集在一起。<br>4.与t-SNE相比，UMAP还提供了有用的和直观的特性、保留了更多的全局结构，特别是细胞子集的连续性。</p>
+<h2 id="3-2-UMAP的应用（代码）"><a href="#3-2-UMAP的应用（代码）" class="headerlink" title="3.2 UMAP的应用（代码）"></a>3.2 UMAP的应用（代码）</h2><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">下面以公共数据集iris为例（无需导入）在 R语言 中展示UMAP的实现过程，<span class="comment">##为运行结果，可以删除</span></span><br><span class="line"><span class="comment">#清除当前环境中的变量</span></span><br><span class="line">rm<span class="punctuation">(</span><span class="built_in">list</span><span class="operator">=</span>ls<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#设置工作目录（需更改）</span></span><br><span class="line">setwd<span class="punctuation">(</span><span class="string">"D:/RStudio/project/UMAP"</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">#查看示例数据</span></span><br><span class="line">head<span class="punctuation">(</span>iris<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span></span><br><span class="line"><span class="comment">## 1          5.1         3.5          1.4         0.2  setosa</span></span><br><span class="line"><span class="comment">## 2          4.9         3.0          1.4         0.2  setosa</span></span><br><span class="line"><span class="comment">## 3          4.7         3.2          1.3         0.2  setosa</span></span><br><span class="line"><span class="comment">## 4          4.6         3.1          1.5         0.2  setosa</span></span><br><span class="line"><span class="comment">## 5          5.0         3.6          1.4         0.2  setosa</span></span><br><span class="line"><span class="comment">## 6          5.4         3.9          1.7         0.4  setosa</span></span><br><span class="line">iris.data <span class="operator">=</span> iris<span class="punctuation">[</span><span class="punctuation">,</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="operator">:</span><span class="number">4</span><span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line"></span><br><span class="line">head<span class="punctuation">(</span>iris.data<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##   Sepal.Length Sepal.Width Petal.Length Petal.Width</span></span><br><span class="line"><span class="comment">## 1          5.1         3.5          1.4         0.2</span></span><br><span class="line"><span class="comment">## 2          4.9         3.0          1.4         0.2</span></span><br><span class="line"><span class="comment">## 3          4.7         3.2          1.3         0.2</span></span><br><span class="line"><span class="comment">## 4          4.6         3.1          1.5         0.2</span></span><br><span class="line"><span class="comment">## 5          5.0         3.6          1.4         0.2</span></span><br><span class="line"><span class="comment">## 6          5.4         3.9          1.7         0.4</span></span><br><span class="line"></span><br><span class="line">iris.labels <span class="operator">=</span> iris<span class="operator">$</span>Species</span><br><span class="line">head<span class="punctuation">(</span>iris.labels<span class="punctuation">)</span></span><br><span class="line"><span class="comment">## [1] setosa setosa setosa setosa setosa setosa</span></span><br><span class="line"><span class="comment">## Levels: setosa versicolor virginica</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######### 使用**umap**包进行UMAP降纬可视化分析</span></span><br><span class="line">library<span class="punctuation">(</span>umap<span class="punctuation">)</span></span><br><span class="line"> iris.umap <span class="operator">=</span> umap<span class="operator">::</span>umap<span class="punctuation">(</span>iris.data<span class="punctuation">)</span></span><br><span class="line"> iris.umap</span><br><span class="line"><span class="comment">##umap embedding of 150 items in 2 dimensions</span></span><br><span class="line"><span class="comment">##object components: layout, data, knn, config</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查看降维后的结果</span></span><br><span class="line">head<span class="punctuation">(</span>iris.umap<span class="operator">$</span>layout<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用plot函数可视化UMAP的结果</span></span><br><span class="line">plot<span class="punctuation">(</span>iris.umap<span class="operator">$</span>layout<span class="punctuation">,</span>col<span class="operator">=</span>iris.labels<span class="punctuation">,</span>pch<span class="operator">=</span><span class="number">16</span><span class="punctuation">,</span>asp <span class="operator">=</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    xlab <span class="operator">=</span> <span class="string">"UMAP_1"</span><span class="punctuation">,</span>ylab <span class="operator">=</span> <span class="string">"UMAP_2"</span><span class="punctuation">,</span></span><br><span class="line">    main <span class="operator">=</span> <span class="string">"A UMAP visualization of the iris dataset"</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 添加分隔线</span></span><br><span class="line">abline<span class="punctuation">(</span>h<span class="operator">=</span><span class="number">0</span><span class="punctuation">,</span>v<span class="operator">=</span><span class="number">0</span><span class="punctuation">,</span>lty<span class="operator">=</span><span class="number">2</span><span class="punctuation">,</span>col<span class="operator">=</span><span class="string">"gray"</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加图例 legend=图例</span></span><br><span class="line">legend<span class="punctuation">(</span><span class="string">"topleft"</span><span class="punctuation">,</span>title <span class="operator">=</span> <span class="string">"Species"</span><span class="punctuation">,</span>inset <span class="operator">=</span> <span class="number">0.01</span><span class="punctuation">,</span></span><br><span class="line">      legend <span class="operator">=</span> unique<span class="punctuation">(</span>iris.labels<span class="punctuation">)</span><span class="punctuation">,</span>pch<span class="operator">=</span><span class="number">16</span><span class="punctuation">,</span></span><br><span class="line">      col <span class="operator">=</span> unique<span class="punctuation">(</span>iris.labels<span class="punctuation">)</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+
+<img src="20210627125134326.png" width="400px">
+
+<h1 id="五、PCA、tSNE和UMAP降维可视化的区别"><a href="#五、PCA、tSNE和UMAP降维可视化的区别" class="headerlink" title="五、PCA、tSNE和UMAP降维可视化的区别"></a>五、PCA、tSNE和UMAP降维可视化的区别</h1><p>PCA主成分分析法降维是线性降维，对于数据量庞大、细胞类型之间异质性大的单细胞转录组数据来说，单个主成分的协方差偏低（即单个主成分对数据的解释力偏低），我们很难通过一个点代表一个细胞的PCA降维可视化图进行呈现，因为在二维或三维的效果下，可视化图会有大量的点（细胞）重叠，仅通过2~3个主成分特征无法很好地将不同亚群之间的数据区分开来。</p>
+<img src="bea13b0a40e54adabfa6a16058455f1f.png" width="400px">
+
+<p>而tSNE与UMAP可以将高维空间的结构特征投影至低维空间（二维、三维）之中：在得到低维分布的具体特征后，计算降维过程中空间位置的信息缺失，优化低维分布的位置信息，保留高维特征信息。这两个降维方式也因此成为了单细胞转录组最主要的可视化方式。那在实际应用中，该如何选择使用哪一个降维方式呢？</p>
+<img src="f12d4819cca246e789f1eca92948503f.png" width="600px">
+
+<h3 id="1-在高维空间内描述两个点的距离算法不一样"><a href="#1-在高维空间内描述两个点的距离算法不一样" class="headerlink" title="1. 在高维空间内描述两个点的距离算法不一样"></a>1. 在高维空间内描述两个点的距离算法不一样</h3><p>tSNE通过正态分布将高维距离数据转换成概率，若两个点距离比较近的话，它所对应的概率较大；而UMAP使用的计算方法有很多，除了传统的欧式距离（即该n维空间中两个点间的真实距离）外，邻近KNN算法、皮尔森相似性、cosin相似性（R包seurat默认方法）都可以。总之来说，只要能代表两个点之间的相似性的计算方式，UMAP都可以使用。</p>
+<p>由于每个亚群间/内点的疏散程度不一样，不利于将高维空间的距离映射到低维空间，因此tSNE会额外对距离进行标准化处理。</p>
+<h3 id="2-对全局结构与局部结构的调整不一样"><a href="#2-对全局结构与局部结构的调整不一样" class="headerlink" title="2. 对全局结构与局部结构的调整不一样"></a>2. 对全局结构与局部结构的调整不一样</h3><p>tSNE会通过Perplexity（困惑度）参数对全局结构（即亚群间）与局部结构（即亚群内）间的软边界进行调整。Perplexity越大，细胞分布越紧密，局部结构信息越弱化。对于较低的Perplexity，tSNE更倾向于将投影数据“区分”开，几乎不保留全局结构。</p>
+<p>相比之下，UMAP通过直接用邻近个数代替Perplexity，限定了各点受影响的邻近点数量，倾向于在低纬中将高维结构的相邻点分组在一起，体现了其对全局结构保留的重视性。</p>
+<img src="61b96c6656174d91a8e30f6fa9d979ef.png" width="800px">
+
+<p><strong>然而UMAP也会存在一定缺陷：无法区分丰度较高、距离较近和丰度较低、距离较远的亚群。</strong></p>
+<img src="7c0d00db389c449a8356c82e6f41a08e.png" width="800px">
+
+<h3 id="3-映射到低维空间的方法不一样"><a href="#3-映射到低维空间的方法不一样" class="headerlink" title="3. 映射到低维空间的方法不一样"></a>3. 映射到低维空间的方法不一样</h3><p>tSNE使用随机分布初始化低维数据，而UMAP则是根据高维数据特征进行低维数据的初始化，故UMAP的结果具有更高的稳定性。</p>
+<p>在向低维度进行转换的过程中，数据都会有部分信息缺失，因此，不论是tSNE还是UMAP都会对初始化的低维数据进行优化，尽可能的还原高维空间的数据信息。</p>
+<h3 id="4-优化维度转换计算过程中信息的缺失"><a href="#4-优化维度转换计算过程中信息的缺失" class="headerlink" title="4. 优化维度转换计算过程中信息的缺失"></a>4. <strong>优化维度转换计算过程中信息的缺失</strong></h3><p>tSNE所使用的损失函数为相对熵（KL散度），对低维近、高维远的调整程度较小，致使在低纬空间中，整体差异较小的亚群可能比差异较大的亚群距离更远。UMAP损失函数使用的是二元交叉熵（Cross-Entropy），对低维近、高维远或低维远、高维近的调整程度都较高，所以UMAP比tSNE更能体现真实的全局结构。</p>
+<img src="2f38b310de4647be91c8a9aee522ef95.png" width="800px">
+
+<p>图5 相对熵（左）的调整是不对称的，X（高维距离）小、Y（低维距离）大时调整高，X大Y小时调整趋近于0，而二元交叉熵（右）罚分则是对称的，无论X大Y小还是X小Y大，均有较高调整</p>
+<h3 id="5-低维度距离的计算"><a href="#5-低维度距离的计算" class="headerlink" title="5. 低维度距离的计算"></a>5. <strong>低维度距离的计算</strong></h3><p>低维数据tSNE使用t分布转换概率进行矫正，使得高维距离近的点在低维空间中更近，反之更远。而UMAP不直接用t分布拟合低维数据，而是添加最小距离参数min_dist进行动态调整，小于该距离的会被认为是一个点，故而会隐藏一部分局部结构信息。</p>
+<p>此外，关于低维的坐标信息——不论是tSNE还是UMAP，坐标轴数值本身是没有意义的（而PCA的横纵坐标是主成分特征值，可被赋予生物学意义）。但由于UMAP是根据高维数据特征进行低维数据的初始化，所以UMAP图中亚群间的远近距离，一定程度上可以反应亚群间的相似性。</p>
+<img src="Untitled.png" width="800px">
+
+<p>图6 二维UMAP下对三维猛犸图的还原，两支三维内相近且高度相似的前足在二维中距离甚远；象牙则是三维、二维中距离都很接近</p>
+<p><strong>简而言之，UMAP更容易将相似的亚群聚集在一块，而tSNE则是注重将不同亚群区分开。两种方法在选择上没有绝对的好坏，只要能体现目标亚群间的差异性即可。</strong></p>
+<p>最后，附上一个总结性的差异图</p>
+<img src="12bacc9448584dd5a51d8a8f3b08ddd0.png" width="800px">
+
+<h1 id="六、其他降维方法"><a href="#六、其他降维方法" class="headerlink" title="六、其他降维方法"></a>六、其他降维方法</h1><h2 id="1-NMDS"><a href="#1-NMDS" class="headerlink" title="1. NMDS"></a>1. NMDS</h2><p>非度量多维尺度分析（NMDS分析）是一种将多维空间的研究对象（样品或变量）简化到低维空间进行定位、分析和归类，同时又保留对象间原始关系的数据分析方法。 适用于无法获得研究对象间精确的相似性或相异性数据，仅能得到他们之间等级关系数据的情形。</p>
+<h1 id="七、参考"><a href="#七、参考" class="headerlink" title="七、参考"></a>七、参考</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43337249/article/details/116612811?ydreferer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS5oay8=">https://blog.csdn.net/qq_43337249/article/details/116612811?ydreferer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS5oay8%3D</a></p>
+<p><a target="_blank" rel="noopener" href="https://pair-code.github.io/understanding-umap/">Understanding UMAP</a></p>
+<p><a target="_blank" rel="noopener" href="https://m.sohu.com/a/614370774_121123706/?pvid=000115_3w_a">单细胞转录组tSNE和UMAP可视化有什么区别？别再问啦，这就告诉你！_数据_距离_高维</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1549992">https://cloud.tencent.com/developer/article/1549992</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.360doc.com/content/19/0403/11/51784026_826128783.shtml">http://www.360doc.com/content/19/0403/11/51784026_826128783.shtml</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bio-equip.com/showarticle.asp?id=453107027">单细胞数据降维可视化</a></p>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2023/08/22/正则化Regularization/" data-toggle="tooltip" data-placement="top" title="正则化 Regularization">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Statistics" title="Statistics">Statistics</a>
+                        
+                          <a class="tag" href="/tags/#Machine Learning" title="Machine Learning">Machine Learning</a>
+                        
+                          <a class="tag" href="/tags/#Bioinfomatics" title="Bioinfomatics">Bioinfomatics</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="#" target="_blank">Maddy</a></li>
+                    
+                        <li><a href="https://devinzhu.website" target="_blank">Devin Zhu</a></li>
+                    
+                        <li><a href="https://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="https://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "chunfushawn";
+    var disqus_identifier = "https://www.chunfu.site/2023/09/11/PCA%E3%80%81tSNE%E5%92%8CUMAP%E9%99%8D%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E3%80%81%E4%BC%98%E5%8A%BF%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E4%BE%8B/";
+    var disqus_url = "https://www.chunfu.site/2023/09/11/PCA%E3%80%81tSNE%E5%92%8CUMAP%E9%99%8D%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E3%80%81%E4%BC%98%E5%8A%BF%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E4%BE%8B/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank"  href="xiaochunfu@126.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                <! -- xiaocf 2022-4-28 !>
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ChunfuShawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/chun-fu-82-50">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Chunfu-Shawn">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/chunfu-shawn-092343239">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chunfu Shawn&#39;s Blog 2023
+                    <span id="busuanzi_container_site_pv" style='display:none'> | Total Site visits: <span id="busuanzi_value_site_pv"></span></span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://img.shields.io/github/stars/Huxpro/huxpro.github.io?style=social" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://www.chunfu.site/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'chunfu.site';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="https://www.chunfu.site/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

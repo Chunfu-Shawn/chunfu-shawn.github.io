@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.chunfu.site/2023/09/11/PCA%E3%80%81tSNE%E5%92%8CUMAP%E9%99%8D%E7%BB%B4%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E3%80%81%E4%BC%98%E5%8A%BF%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%AE%9E%E4%BE%8B/</loc>
+    <lastmod>2023-09-11</lastmod>
+  </url>
+  <url>
+    <loc>https://www.chunfu.site/2022/09/20/%E6%B1%82%E8%A7%A3%E6%97%A0%E7%BA%A6%E6%9D%9F%E6%9C%80%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98%E7%9A%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2023-09-04</lastmod>
+  </url>
+  <url>
     <loc>https://www.chunfu.site/2023/08/22/%E6%AD%A3%E5%88%99%E5%8C%96Regularization/</loc>
     <lastmod>2023-08-22</lastmod>
   </url>
@@ -51,10 +59,6 @@
   <url>
     <loc>https://www.chunfu.site/2022/09/21/R%E4%B8%AD%E7%A6%BB%E6%95%A3%E5%9D%90%E6%A0%87%E8%BD%B4%E7%9A%84%E6%8E%92%E5%BA%8F%E3%80%81%E5%AD%90%E9%9B%86%E9%80%89%E6%8B%A9%E4%B8%8E%E5%90%88%E5%B9%B6/</loc>
     <lastmod>2022-10-06</lastmod>
-  </url>
-  <url>
-    <loc>https://www.chunfu.site/2022/09/20/%E6%B1%82%E8%A7%A3%E6%97%A0%E7%BA%A6%E6%9D%9F%E6%9C%80%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98%E7%9A%84%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/</loc>
-    <lastmod>2022-09-26</lastmod>
   </url>
   <url>
     <loc>https://www.chunfu.site/2022/08/11/%E6%B7%B1%E7%A9%B6JS%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC%EF%BC%88R%E8%AF%AD%E8%A8%80%E7%B1%BB%E4%BC%BC%EF%BC%89/</loc>
